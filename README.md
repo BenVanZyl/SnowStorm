@@ -1,6 +1,11 @@
 # Introduction 
 TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
 
+NOTE:  This is still under development and not ready for production.
+
+This is an support package implementing the CQRS pattern.  For implementation sample and more info see the following:
+https://github.com/BenVanZyl/Reliance
+
 # Getting Started
 TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
 1.	Installation process
