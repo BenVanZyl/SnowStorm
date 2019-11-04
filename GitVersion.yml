@@ -1,0 +1,11 @@
+assembly-versioning-scheme: MajorMinorPatch
+assembly-informational-format: '{MajorMinorPatch}'
+branches: 
+  master: 
+    regex: master
+    increment: Minor
+  hotfix:
+    regex: hotfix(es)?[/-]
+    increment: Patch
+mode: ContinuousDeployment
+next-version: "0.0.0"

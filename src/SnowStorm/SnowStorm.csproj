@@ -3,12 +3,18 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <Version>0.0.1</Version>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Authors>BvZ</Authors>
-    <Company>-</Company>
   </PropertyGroup>
-
+  
+  <PropertyGroup>
+    <IncludeSymbols>true</IncludeSymbols>	
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>	
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <None Remove="License.txt" />
+    <None Remove="SnowStorm.nuspec" />
+  </ItemGroup>
+  
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="9.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
@@ -21,6 +27,15 @@
     </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
     <PackageReference Include="System.Data.SqlClient" Version="4.7.0" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Content Include="License.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SnowStorm.nuspec">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

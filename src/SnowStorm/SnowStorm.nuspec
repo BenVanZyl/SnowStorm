@@ -1,0 +1,17 @@
+<package>
+  <metadata>
+    <id>SnowStorm</id>
+    <version>$version$</version>
+    <authors>Ben van Zyl</authors>
+    <owners>Ben van Zyl</owners>
+    <projectUrl>https://github.com/benvanzyl/snowstorm</projectUrl>
+	<license src="license.txt"/>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>This is class library to support implementing the CQRS pattern. For implementation sample and more info see the following: https://github.com/BenVanZyl/Reliance</description>
+    <releaseNotes></releaseNotes>
+  </metadata>
+  <files>
+    <!-- targeting netcore2.2 -->
+    <file src="bin\$configuration$\netcoreapp2.2\SnowStorm.*" target="lib\netcore2.2" />
+  </files>
+</package>

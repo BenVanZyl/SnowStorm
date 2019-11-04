@@ -1,0 +1,72 @@
+
+
+Implement GetById...
+
+//Task<List<TDto>> IProjectedQueryExecutor<TDto>.ExecuteAsync<T, TKeyBy, TKeyThenBy>(IProjectableQuery<T> query, System.Linq.Expressions.Expression<Func<TDto, TKeyBy>> orderBy, SortOrder sortOrder, System.Linq.Expressions.Expression<Func<TDto, TKeyThenBy>> thenBy, SortOrder thenByOrder)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        public async Task<TDto> GetByIdAsync<T>(int id) where T : class, IDomainEntityWithId
+        {
+            throw new NotImplementedException();
+
+            var stopwatch = new System.Diagnostics.Stopwatch();
+            var stringBuilder = new StringBuilder();
+            try
+            {
+                stopwatch.Start();
+                //_dbContext.Database.Log = lm => stringBuilder.Append(lm);
+
+                var item = await _dbContext.Set<T>().Where(e => e.Id == id).ProjectToSingleOrDefaultAsync<TDto>(_automapperConfiguration);
+                if (item == null)
+                {
+                    throw new Exception($"Error retrieving entity by Id for '{typeof(T).Name}': id '{id}' not found");
+                }
+                return item;
+            }
+            catch (Exception ex)
+            {
+                //Log.Error(
+                //    ex,
+                //    "Execution of {@Query} failed after {ElapsedMilliseconds:n} ms. {QueryLog}",
+                //    typeof(T).Name, stopwatch.Elapsed.TotalMilliseconds, stringBuilder.ToString());
+                throw ex;
+            }
+        }
+
+
+
+Implement \ Investigate Decompile options....
+	//return orderedQueryable.DecompileAsync().ToListAsync();
+
+
+Implement logging and diagnostics...
+        internal static async Task<T> ExecuteAsync<T>(Func<Task<T>> getResult, DbContext dbContext, object query)
+        {
+            var stopwatch = new System.Diagnostics.Stopwatch();
+            var stringBuilder = new StringBuilder();
+            try
+            {
+                stopwatch.Start();
+                //dbContext.Database.Log = lm => stringBuilder.Append(lm);
+                var result = await getResult();
+                var totalMilliseconds = stopwatch.Elapsed.TotalMilliseconds;
+                //Log.Debug("Query {@Query} completed successfully in {ElapsedMilliseconds:n} ms", query, totalMilliseconds);
+                //if (totalMilliseconds > 1000)
+                //    Log.Warning("Query {@Query} took over 1 second, {QueryLog}", query, stringBuilder.ToString());
+                return result;
+            }
+            catch (Exception ex)
+            {
+                //Log.Error(
+                //    ex,
+                //    "Execution of {@Query} failed after {ElapsedMilliseconds:n} ms. {QueryLog}",
+                //    query, stopwatch.Elapsed.TotalMilliseconds, stringBuilder.ToString());
+                throw ex;
+            }
+        }
+
+git remote set-url origin https://BushveldTiger@dev.azure.com/BushveldTiger/Reliance/_git/Reliance.Web
+
+git push -u origin -all
