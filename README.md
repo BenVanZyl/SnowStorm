@@ -1,25 +1,23 @@
 # Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+Making it easy to implement the CQRS pattern:
+Query executors
+MediatR
+Swagger
 
-NOTE:  This is still under development and not ready for production.
+CQRS stands for Command Query Responsibility Segregation
 
-This is an support package implementing the CQRS pattern.  For implementation sample and more info see the following:
-https://github.com/BenVanZyl/Reliance
+At its heart is the notion that you can use a different model to update information than the model you use to read information.
+https://www.martinfowler.com/bliki/CQRS.html
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+https://en.wikipedia.org/wiki/CQRS
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+https://microservices.io/patterns/data/cqrs.html
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+Microsoft reference
+https://docs.microsoft.com/en-us/azure/architecture/patterns/cqrs
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+https://docs.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/apply-simplified-microservice-cqrs-ddd-patterns
+
+# Supported Platforms
+.Net Core 3.0 (Latest version)
+.Net Core 2.2 (0.3.0)

@@ -12,6 +12,6 @@
   </metadata>
   <files>
     <!-- targeting netcore2.2 -->
-    <file src="bin\$configuration$\netcoreapp2.2\SnowStorm.*" target="lib\netcore2.2" />
+    <file src="bin\$configuration$\netcoreapp3.0\SnowStorm.*" target="lib\netcore3.0" />
   </files>
 </package>
