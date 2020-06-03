@@ -3,21 +3,15 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Linq;
 using System.Reflection;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace SnowStorm.Infrastructure.Domain
 {
-    //public interface IEntityTypeConfiguration<TEntityType> where TEntityType : class
-    //{
-    //    void Map(EntityTypeBuilder<TEntityType> builder);
-    //}
-
     public class AppDbContext : DbContext
     {
-        //public AppCoreDbContext(string connectionstring)
-        //{
-        //    AppCoreDbContext(o => o.UseSqlServer(connectionString));
-        //}
+
+        public AuditUserInfo AuditUser { get; set; } = new AuditUserInfo(); //TODO: Get audit user info automaticly
 
         public AppDbContext(DbContextOptions<AppDbContext> options)
            : base(options)
@@ -34,7 +28,8 @@ namespace SnowStorm.Infrastructure.Domain
             builder.ApplyConfigurationsFromAssembly(Assembly.GetEntryAssembly()); // Here UseConfiguration is any IEntityTypeConfiguration
 
         }
-        
+
+
         public override int SaveChanges()
         {
             AddAuitInfo();
@@ -47,20 +42,19 @@ namespace SnowStorm.Infrastructure.Domain
             return await base.SaveChangesAsync();
         }
 
-        private void AddAuitInfo()
+        public virtual void AddAuitInfo()
         {
-            //TODO: implement variation of this sample
+            //TODO: Get User information to log audit info correctly.  Might need to do this from app...
 
-            var entries = ChangeTracker.Entries().Where(x => x.Entity is DomainEntityWithIdAudit && (x.State == EntityState.Added || x.State == EntityState.Modified));
+            var entries = ChangeTracker.Entries().Where(x => x.Entity is DomainEntityWithIdWithAudit && (x.State == EntityState.Added || x.State == EntityState.Modified));
             foreach (var entry in entries)
             {
                 if (entry.State == EntityState.Added)
                 {
-                    ((DomainEntityWithIdAudit)entry.Entity).CreateDateTime = DateTime.UtcNow;
+                    ((DomainEntityWithIdWithAudit)entry.Entity).CreateDateTime = DateTime.UtcNow;
                 }
-                ((DomainEntityWithIdAudit)entry.Entity).ModifyDateTime = DateTime.UtcNow;
+                ((DomainEntityWithIdWithAudit)entry.Entity).ModifyDateTime = DateTime.UtcNow;
             }
         }
-
     }
 }

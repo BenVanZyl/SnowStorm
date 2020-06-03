@@ -7,5 +7,8 @@ branches:
   hotfix:
     regex: hotfix(es)?[/-]
     increment: Patch
-mode: ContinuousDeployment
+  feature:
+    regex: feature(s)?[/-]
+    increment: Patch
+mode: ContinuousDelivery
 next-version: "0.0.0"

@@ -19,14 +19,14 @@ namespace SnowStorm.Infrastructure.QueryExecutors
         private readonly IMapper _mapper;
 
 
-        public MappingBuilder(DbContext dbContext, IQueryableProvider queryableProvider, IMapper mapper) 
+        public MappingBuilder(DbContext dbContext, IQueryableProvider queryableProvider, IMapper mapper)
         {
             _dbContext = dbContext;
             _queryableProvider = queryableProvider;
             _mapper = mapper;
         }
 
-        public Task<List<TDto>> ExecuteAsync<T, TKeyBy>(IMappableQuery<T> query, Expression<Func<TDto, TKeyBy>> orderBy, SortOrder sortOrder = SortOrder.Ascending) where T : class, IDomainEntity
+        public Task<List<TDto>> Execute<T, TKeyBy>(IMappableQuery<T> query, Expression<Func<TDto, TKeyBy>> orderBy, SortOrder sortOrder = SortOrder.Ascending) where T : class, IDomainEntity
         {
             return QueryExecutor.ExecuteAsync(() =>
             {
@@ -37,7 +37,7 @@ namespace SnowStorm.Infrastructure.QueryExecutors
             }, _dbContext, query);
         }
 
-        public Task<TDto> ExecuteAsync<T>(IMappableSingleItemQuery<T> query, bool defaultIfMissing = true) where T : class, IDomainEntity
+        public Task<TDto> Execute<T>(IMappableSingleItemQuery<T> query, bool defaultIfMissing = true) where T : class, IDomainEntity
         {
             try
             {
@@ -59,7 +59,7 @@ namespace SnowStorm.Infrastructure.QueryExecutors
         }
 
         // TODO: Implement GetByIdAsync
-        public async Task<TDto> GetByIdAsync<T>(int id) where T : class, IDomainEntityWithId
+        public async Task<TDto> GetById<T>(long id) where T : class, IDomainEntityWithId
         {
             throw new NotImplementedException();
         }

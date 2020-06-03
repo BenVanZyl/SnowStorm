@@ -8,14 +8,12 @@ namespace SnowStorm.Infrastructure.Domain
 
     public class DomainEntityWithId : IDomainEntity
     {
-        public int Id { get; private set; }
+        public long Id { get; private set; }
     }
 
-    public class DomainEntityWithIdAudit : DomainEntityWithId
+    public class DomainEntityWithIdWithAudit : DomainEntityWithId
     {
-        public string CreateUserId { get; set; }
         public DateTime CreateDateTime { get; set; }
-        public string ModifyUserId { get; set; }
         public DateTime ModifyDateTime { get; set; }
     }
 }

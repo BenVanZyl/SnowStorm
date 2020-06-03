@@ -11,6 +11,8 @@ namespace SnowStorm.Infrastructure.Configurations
 
             services.AddScoped<IQueryExecutor, QueryExecutor>();
 
+            //TODO: inject user info data object here.
+
         }
     }
 }

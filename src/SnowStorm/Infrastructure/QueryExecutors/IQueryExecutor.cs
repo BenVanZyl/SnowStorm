@@ -38,11 +38,11 @@ namespace SnowStorm.Infrastructure.QueryExecutors
 
     public interface IMappedQueryExecutor<TDto>
     {
-        Task<List<TDto>> ExecuteAsync<T, TKeyBy>(IMappableQuery<T> query, Expression<Func<TDto, TKeyBy>> orderBy, SortOrder sortOrder = SortOrder.Ascending) where T : class, IDomainEntity;
+        Task<List<TDto>> Execute<T, TKeyBy>(IMappableQuery<T> query, Expression<Func<TDto, TKeyBy>> orderBy, SortOrder sortOrder = SortOrder.Ascending) where T : class, IDomainEntity;
 
-        Task<TDto> ExecuteAsync<T>(IMappableSingleItemQuery<T> query, bool defaultIfMissing = true) where T : class, IDomainEntity;
+        Task<TDto> Execute<T>(IMappableSingleItemQuery<T> query, bool defaultIfMissing = true) where T : class, IDomainEntity;
 
-        Task<TDto> GetByIdAsync<T>(int id) where T : class, IDomainEntityWithId;
+        Task<TDto> GetById<T>(long id) where T : class, IDomainEntityWithId;
     }
 
 

@@ -9,11 +9,12 @@ namespace SnowStorm.Infrastructure.Domain
 
     public interface IDomainEntityWithId : IDomainEntity
     {
-        int Id { get; }
+        long Id { get; set; }
+    }
 
-        string CreateUserId { get; set; }
+    public interface IDomainEntityWithIdWithAudit : IDomainEntityWithId
+    {
         DateTime CreateDateTime { get; set; }
-        string ModifyUserId { get; set; }
         DateTime ModifyDateTime { get; set; }
     }
 }
