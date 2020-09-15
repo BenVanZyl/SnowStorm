@@ -51,9 +51,9 @@ namespace SnowStorm.Infrastructure.Domain
             {
                 if (entry.State == EntityState.Added)
                 {
-                    ((DomainEntityWithIdWithAudit)entry.Entity).CreateDateTime = DateTime.UtcNow;
+                    ((DomainEntityWithIdWithAudit)entry.Entity).CreatedOn = DateTime.UtcNow;
                 }
-                ((DomainEntityWithIdWithAudit)entry.Entity).ModifyDateTime = DateTime.UtcNow;
+                ((DomainEntityWithIdWithAudit)entry.Entity).ModifiedOn = DateTime.UtcNow;
             }
         }
     }

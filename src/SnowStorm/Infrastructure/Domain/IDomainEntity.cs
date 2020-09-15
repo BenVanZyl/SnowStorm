@@ -14,7 +14,7 @@ namespace SnowStorm.Infrastructure.Domain
 
     public interface IDomainEntityWithIdWithAudit : IDomainEntityWithId
     {
-        DateTime CreateDateTime { get; set; }
-        DateTime ModifyDateTime { get; set; }
+        DateTime CreatedOn { get; set; }
+        DateTime ModifiedOn { get; set; }
     }
 }

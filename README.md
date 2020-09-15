@@ -21,3 +21,10 @@ https://docs.microsoft.com/en-us/dotnet/architecture/microservices/microservice-
 # Supported Platforms
 .Net Core 3.0 (Latest version)
 .Net Core 2.2 (0.3.0)
+
+# Release Notes
+
+2020-09-15 -- 0.14.0
+- Changed CreateDateTime to CreatedOn
+- Changed ModifyDateTime to ModiefiedOn
+- Removed DomainException class

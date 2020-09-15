@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SnowStorm.Infrastructure.Domain;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,30 +15,30 @@ namespace SnowStorm.Infrastructure.QueryExecutors
         private readonly IQueryableProvider _queryableProvider;
         private readonly IMapper _mapper;
 
-        public QueryExecutor(AppDbContext dbContext, IQueryableProvider queryableProvider, IMapper mapper) 
+        public QueryExecutor(AppDbContext dbContext, IQueryableProvider queryableProvider, IMapper mapper)
         {
             _dbContext = dbContext;
             _queryableProvider = queryableProvider;
             _mapper = mapper;
-        }       
-
-        public Task<T> ExecuteAsync<T>(INonMappableQuery<T> query)
-        {
-            return ExecuteAsync(() => query.Execute(_queryableProvider), _dbContext, query);
         }
 
-        public Task<List<T>> ExecuteAsync<T>(IMappableQuery<T> query) where T : class, IDomainEntity
+        public Task<T> Execute<T>(INonMappableQuery<T> query)
         {
-            return ExecuteAsync(() => query.Execute(_queryableProvider).ToListAsync(), _dbContext, query);
+            return Execute(() => query.Execute(_queryableProvider), _dbContext, query);
         }
 
-        public Task<T> ExecuteAsync<T>(IMappableSingleItemQuery<T> query, bool defaultIfMissing = true) where T : class, IDomainEntity
+        public Task<List<T>> Execute<T>(IMappableQuery<T> query) where T : class, IDomainEntity
         {
-            return ExecuteAsync(async () =>
+            return Execute(() => query.Execute(_queryableProvider).ToListAsync(), _dbContext, query);
+        }
+
+        public Task<T> Execute<T>(IMappableSingleItemQuery<T> query, bool defaultIfMissing = true) where T : class, IDomainEntity
+        {
+            return Execute(async () =>
             {
                 var result = await query.Execute(_queryableProvider).FirstOrDefaultAsync();
                 if (!defaultIfMissing && result == null)
-                    throw new DomainException($"Error executing projectable single item query over '{typeof(T).Name}' (with no default if missing): no results returned");
+                    throw new Exception($"Error executing projectable single item query over '{typeof(T).Name}' (with no default if missing): no results returned");
 
                 return result;
             }, _dbContext, query);
@@ -47,7 +48,7 @@ namespace SnowStorm.Infrastructure.QueryExecutors
         {
             return new MappingBuilder<TDto>(_dbContext, _queryableProvider, _mapper);
         }
-        
+
         public async Task<T> Add<T>(T domainEntity, bool saveChanges = true) where T : class, IDomainEntity
         {
             _dbContext.Set<T>().Add(domainEntity);
@@ -64,23 +65,26 @@ namespace SnowStorm.Infrastructure.QueryExecutors
             return true;
         }
 
-        public Task Save()
+        public async Task Save()
         {
-            return _dbContext.SaveChangesAsync();
-        }                
+            await _dbContext.SaveChangesAsync();
+        }
 
-        internal static async Task<T> ExecuteAsync<T>(Func<Task<T>> getResult, DbContext dbContext, object query)
+        internal static async Task<T> Execute<T>(Func<Task<T>> getResult, DbContext dbContext, object query)
         {
             var stopwatch = new System.Diagnostics.Stopwatch();
-            var stringBuilder = new StringBuilder();
+            //var stringBuilder = new StringBuilder();
             try
             {
-                stopwatch.Start();
+                stopwatch.Start(); //TODO: log query time events...
                 var result = await getResult();
+                stopwatch.Stop();
                 return result;
             }
             catch (Exception ex)
             {
+                //TODO: log errors
+                stopwatch.Stop();
                 throw ex;
             }
         }

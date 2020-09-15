@@ -13,7 +13,7 @@ namespace SnowStorm.Infrastructure.Domain
 
     public class DomainEntityWithIdWithAudit : DomainEntityWithId
     {
-        public DateTime CreateDateTime { get; set; }
-        public DateTime ModifyDateTime { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public DateTime ModifiedOn { get; set; }
     }
 }

@@ -10,9 +10,9 @@ namespace SnowStorm.Infrastructure.QueryExecutors
 {
     public interface IQueryExecutor
     {
-        Task<T> ExecuteAsync<T>(INonMappableQuery<T> query);
-        Task<List<T>> ExecuteAsync<T>(IMappableQuery<T> query) where T : class, IDomainEntity;
-        Task<T> ExecuteAsync<T>(IMappableSingleItemQuery<T> query, bool defaultIfMissing = true) where T : class, IDomainEntity;
+        Task<T> Execute<T>(INonMappableQuery<T> query);
+        Task<List<T>> Execute<T>(IMappableQuery<T> query) where T : class, IDomainEntity;
+        Task<T> Execute<T>(IMappableSingleItemQuery<T> query, bool defaultIfMissing = true) where T : class, IDomainEntity;
 
         IMappedQueryExecutor<TDto> WithMapping<TDto>();
 
@@ -42,7 +42,7 @@ namespace SnowStorm.Infrastructure.QueryExecutors
 
         Task<TDto> Execute<T>(IMappableSingleItemQuery<T> query, bool defaultIfMissing = true) where T : class, IDomainEntity;
 
-        Task<TDto> GetById<T>(long id) where T : class, IDomainEntityWithId;
+        //Task<TDto> GetById<T>(long id, Func<IQueryable<T>, IQueryable<T>> includes) where T : class, IDomainEntityWithId;
     }
 
 

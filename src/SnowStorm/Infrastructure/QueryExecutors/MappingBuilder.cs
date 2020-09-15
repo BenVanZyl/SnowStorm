@@ -28,7 +28,7 @@ namespace SnowStorm.Infrastructure.QueryExecutors
 
         public Task<List<TDto>> Execute<T, TKeyBy>(IMappableQuery<T> query, Expression<Func<TDto, TKeyBy>> orderBy, SortOrder sortOrder = SortOrder.Ascending) where T : class, IDomainEntity
         {
-            return QueryExecutor.ExecuteAsync(() =>
+            return QueryExecutor.Execute(() =>
             {
                 var queryable = query.Execute(_queryableProvider).ProjectTo<TDto>(_mapper.ConfigurationProvider);
                 var orderedQueryable = sortOrder == SortOrder.Descending ? queryable.OrderByDescending(orderBy) : queryable.OrderBy(orderBy);
@@ -41,12 +41,12 @@ namespace SnowStorm.Infrastructure.QueryExecutors
         {
             try
             {
-                return QueryExecutor.ExecuteAsync(async () =>
+                return QueryExecutor.Execute(async () =>
                 {
                     var result = await query.Execute(_queryableProvider).ProjectTo<TDto>(_mapper.ConfigurationProvider).FirstOrDefaultAsync();
 
                     if (!defaultIfMissing && result == null)
-                        throw new DomainException($"Error executing projectable single item query over '{typeof(T).Name}' (with no default if missing): no results returned");
+                        throw new Exception($"Error executing projectable single item query over '{typeof(T).Name}' (with no default if missing): no results returned");
 
                     return result;
 
@@ -58,10 +58,27 @@ namespace SnowStorm.Infrastructure.QueryExecutors
             }
         }
 
-        // TODO: Implement GetByIdAsync
-        public async Task<TDto> GetById<T>(long id) where T : class, IDomainEntityWithId
-        {
-            throw new NotImplementedException();
-        }
+        //public async Task<T> GetById<T>(long id, Func<IQueryable<T>, IQueryable<T>> includes) where T : class, IDomainEntityWithId
+        //{
+        //    var stopwatch = new System.Diagnostics.Stopwatch();
+        //    try
+        //    {
+        //        stopwatch.Start();
+        //        var result = await includes(_dbContext.Set<T>()).SingleOrDefaultAsync(w => w.Id == id);
+        //        stopwatch.Stop(); //TODO: Log query time
+        //        //null checks to be handle by client
+        //        return result;
+        //    }
+        //    catch (Exception ex)
+        //    {   //TODO: Log error occurred
+        //        stopwatch.Stop();
+        //        throw ex;
+        //    }
+        //}
+
+        //Task<TDto> IMappedQueryExecutor<TDto>.GetById<T>(long id, Func<IQueryable<T>, IQueryable<T>> includes)
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }
