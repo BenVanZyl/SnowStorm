@@ -10,40 +10,40 @@ namespace SnowStorm.Infrastructure.QueryExecutors
 {
     public interface IQueryExecutor
     {
-        Task<T> Execute<T>(INonMappableQuery<T> query);
-        Task<List<T>> Execute<T>(IMappableQuery<T> query) where T : class, IDomainEntity;
-        Task<T> Execute<T>(IMappableSingleItemQuery<T> query, bool defaultIfMissing = true) where T : class, IDomainEntity;
+        Task<T> Execute<T>(IQueryResult<T> query);
+        Task<List<T>> Execute<T>(IQueryResultList<T> query) where T : class, IDomainEntity;
+        Task<T> Execute<T>(IQueryResultSingle<T> query, bool defaultIfMissing = true) where T : class, IDomainEntity;
 
-        IMappedQueryExecutor<TDto> WithMapping<TDto>();
+        //Task<T> GetForId<T>(long id, Func<IQueryable<T>, IQueryable<T>> includes) where T : class, IDomainEntityWithId;
+
+        ICastingQueryExecutor<TDto> CastTo<TDto>();
 
         Task<T> Add<T>(T domainEntity, bool saveChanges = true) where T : class, IDomainEntity;
         Task<bool> Delete<T>(T domainEntity, bool saveChanges = true) where T : class, IDomainEntity;
         Task Save();
     }
 
-    public interface INonMappableQuery<T>
+    public interface IQueryResult<T>
     {
         Task<T> Execute(IQueryableProvider queryableProvider);
     }
 
-    public interface IMappableQuery<out T> where T : class, IDomainEntity
+    public interface IQueryResultList<out T> where T : class, IDomainEntity
     {
         IQueryable<T> Execute(IQueryableProvider queryableProvider);
     }
 
-    public interface IMappableSingleItemQuery<out T> where T : class, IDomainEntity
+    public interface IQueryResultSingle<out T> where T : class, IDomainEntity
     {
         IQueryable<T> Execute(IQueryableProvider queryableProvider);
     }
 
-    public interface IMappedQueryExecutor<TDto>
+    public interface ICastingQueryExecutor<TDto>
     {
-        Task<List<TDto>> Execute<T, TKeyBy>(IMappableQuery<T> query, Expression<Func<TDto, TKeyBy>> orderBy, SortOrder sortOrder = SortOrder.Ascending) where T : class, IDomainEntity;
+        Task<List<TDto>> Execute<T>(IQueryResultList<T> query) where T : class, IDomainEntity;
+        Task<TDto> Execute<T>(IQueryResultSingle<T> query, bool defaultIfMissing = true) where T : class, IDomainEntity;
 
-        Task<TDto> Execute<T>(IMappableSingleItemQuery<T> query, bool defaultIfMissing = true) where T : class, IDomainEntity;
-
-        //Task<TDto> GetById<T>(long id, Func<IQueryable<T>, IQueryable<T>> includes) where T : class, IDomainEntityWithId;
+        //Task<TDto> GetForId<T>(long id, Func<IQueryable<T>, IQueryable<T>> includes) where T : class, IDomainEntityWithId;
     }
-
 
 }
