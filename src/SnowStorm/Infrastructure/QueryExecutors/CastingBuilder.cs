@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using SnowStorm.Infrastructure.Domain;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace SnowStorm.Infrastructure.QueryExecutors
@@ -51,6 +54,18 @@ namespace SnowStorm.Infrastructure.QueryExecutors
             {
                 throw ex;
             }
+        }
+
+        public Task<List<TDto>> Execute<T, TKeyBy>(IQueryResultList<T> query, Expression<Func<TDto, TKeyBy>> orderBy, SortOrder sortOrder = SortOrder.Ascending) where T : class, IDomainEntity
+        {
+            return QueryExecutor.Execute(() =>
+            {
+                var queryable = query.Execute(_queryableProvider).ProjectTo<TDto>(_mapper.ConfigurationProvider);
+                if (sortOrder != SortOrder.Unspecified)
+                    queryable = sortOrder == SortOrder.Descending ? queryable.OrderByDescending(orderBy) : queryable.OrderBy(orderBy);
+                return queryable.ToListAsync();
+
+            }, _dbContext, query);
         }
 
         //public async Task<T> GetForId<T>(long id, Func<IQueryable<T>, IQueryable<T>> includes) where T : class, IDomainEntityWithId

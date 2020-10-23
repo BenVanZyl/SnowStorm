@@ -42,6 +42,7 @@ namespace SnowStorm.Infrastructure.QueryExecutors
     {
         Task<List<TDto>> Execute<T>(IQueryResultList<T> query) where T : class, IDomainEntity;
         Task<TDto> Execute<T>(IQueryResultSingle<T> query, bool defaultIfMissing = true) where T : class, IDomainEntity;
+        Task<List<TDto>> Execute<T, TKeyBy>(IQueryResultList<T> query, Expression<Func<TDto, TKeyBy>> orderBy, SortOrder sortOrder = SortOrder.Ascending) where T : class, IDomainEntity;
 
         //Task<TDto> GetForId<T>(long id, Func<IQueryable<T>, IQueryable<T>> includes) where T : class, IDomainEntityWithId;
     }
