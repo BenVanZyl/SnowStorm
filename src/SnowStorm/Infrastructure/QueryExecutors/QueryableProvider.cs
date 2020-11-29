@@ -1,20 +1,21 @@
-﻿using SnowStorm.Infrastructure.Domain;
+﻿using Microsoft.EntityFrameworkCore;
+using SnowStorm.Infrastructure.Domain;
 using System.Linq;
 
 namespace SnowStorm.Infrastructure.QueryExecutors
 {
     public class QueryableProvider : IQueryableProvider
     {
-        private readonly AppDbContext _context;
+        private readonly AppDbContext _dbContext;
 
-        public QueryableProvider(AppDbContext context)
+        public QueryableProvider(AppDbContext dbContext)
         {
-            _context = context;
+            _dbContext = dbContext;
         }
 
         public IQueryable<T> Query<T>() where T : class
         {
-            return _context.Set<T>();
+            return _dbContext.Set<T>();
         }
     }
 }
