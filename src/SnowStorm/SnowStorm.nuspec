@@ -9,7 +9,10 @@
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>This is class library to support implementing the CQRS pattern. For implementation sample and more info see the following: https://github.com/BenVanZyl/Reliance  This is work in progress (WiP) and nowhere near to production ready code.  Welcome to throw a Pull Request in the hat.
     </description>
-    <releaseNotes> -- Work in Progress -- </releaseNotes>
+    <releaseNotes> 
+      -- Work in Progress -- 
+      
+    </releaseNotes>
   </metadata>
   <files>
     <!-- targeting netcore3.1 -->

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SnowStorm.Infrastructure
+namespace SnowStorm
 {
     /// <summary>
     /// TODO:  Implement a way to add user info to audit changes

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
-using SnowStorm.Infrastructure.Domain;
+using SnowStorm.Domain;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -9,7 +9,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace SnowStorm.Infrastructure.QueryExecutors
+namespace SnowStorm.QueryExecutors
 {
     internal class CastingBuilder<TDto> : ICastingQueryExecutor<TDto>
     {

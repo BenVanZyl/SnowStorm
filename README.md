@@ -28,14 +28,28 @@ https://docs.microsoft.com/en-us/dotnet/architecture/microservices/microservice-
    
        services.AddSingleton<AzureServiceTokenProvider>(new AzureServiceTokenProvider()); 
 
+       todo: code sample to enable az ad auth
+
 3. Your connection string should only contain the 'Server' and 'Database' parameters.
 
 
 # Supported Platforms
 .Net Core 3.1 (Latest version)
-.Net Core 2.2 (0.3.0) -- Not actively supported.
 
 # Release Notes
+
+2021-04-05 -- 0.20.0
+ - Breaking changes!
+ - Removed 'Infrastructure' from the namespace
+ - Introduced 'ExternalAssemblyName' for configuration of AppDbContext and MediatR for following reasons:
+   - to use an external Library (project) for domain, command, etc. objects.
+   - assist in setting up AppDbContext when doing integration testing in the test project.
+
+2020-11-29 -- 0.17.0
+- Bugfix -> supporting Azure Active Directory Integrated Authentication failed testing.
+  - Removed code supporting Azure Active Directory Integrated Authentication.  
+  - This is done in 'startup.cs' in method 'ConfigureServices(...)'
+  
 
 2020-11-29 -- 0.17.0
 - Now supporting Azure Active Directory Integrated Authentication.
