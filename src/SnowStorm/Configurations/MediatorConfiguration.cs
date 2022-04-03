@@ -6,10 +6,9 @@ namespace SnowStorm.Configurations
 {
     public static class MediatorConfiguration
     {
-        public static void Configure(IServiceCollection services, Assembly startup, string externalAssemblyName = "")
+        public static void Configure(IServiceCollection services, Assembly appAssembly, string externalAssemblyName = "")
         {
-            //services.AddMediatR(typeof(startup).GetTypeInfo().Assembly);
-            services.AddMediatR(startup);
+            services.AddMediatR(appAssembly);
 
             if (!string.IsNullOrWhiteSpace(externalAssemblyName))
                 services.AddMediatR(Assembly.Load(externalAssemblyName));

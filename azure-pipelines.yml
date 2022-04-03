@@ -10,7 +10,7 @@ trigger:
 
 # the build will run on a Microsoft hosted agent, using the lastest Windows VM Image
 pool:
-  vmImage: 'windows-latest'
+  vmImage: 'windows-2022'
 
 # these variables are available throughout the build file
 # just the build configuration is defined, in this case we are building Release packages
@@ -19,9 +19,11 @@ variables:
 
 #The build has 3 seperate tasks run under 1 step
 steps:
-- task: GitVersion@5
+- task: gitversion/setup@0
   inputs:
-    runtime: 'core'
+    versionspec: '5.x'
+
+- task: gitversion/execute@0
 
 #Powershell to check variable values
 - task: PowerShell@2

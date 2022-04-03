@@ -34,9 +34,19 @@ https://docs.microsoft.com/en-us/dotnet/architecture/microservices/microservice-
 
 
 # Supported Platforms
-.Net Core 3.1 (Latest version)
+.Net 6 (Latest version)
 
 # Release Notes
+2021-11-26 -- 1.0.0
+ - Breaking changes!
+ - Upgraded to .Net 6
+ - Changed queryExecutor.Execute to queryExecutor.Get
+ - Expanded AppDbContext to return the underlaying connectionstring and DbConnection
+ - Expanded AppDbContext to run raw sql command
+
+2021-07-27 -- 0.21.0 -- FAILED TO DEPLOY AS .NET 5
+ - Updated to .Net 5
+ - There might be breaking changes due to the framework update.
 
 2021-04-05 -- 0.20.0
  - Breaking changes!

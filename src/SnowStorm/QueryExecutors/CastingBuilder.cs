@@ -1,7 +1,10 @@
-﻿using AutoMapper;
+﻿
+using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using SnowStorm.Domain;
+using SnowStorm.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -16,35 +19,45 @@ namespace SnowStorm.QueryExecutors
         private readonly DbContext _dbContext;
         private readonly IQueryableProvider _queryableProvider;
         private readonly IMapper _mapper;
+        private readonly ILogger<QueryExecutor> _logger;
 
-        public CastingBuilder(DbContext dbContext, IQueryableProvider queryableProvider, IMapper mapper)
+        public CastingBuilder(DbContext dbContext, IQueryableProvider queryableProvider, IMapper mapper, ILogger<QueryExecutor> logger)
         {
             _dbContext = dbContext;
             _queryableProvider = queryableProvider;
             _mapper = mapper;
+            _logger = logger;
         }
 
-        public Task<List<TDto>> Execute<T>(IQueryResultList<T> query) where T : class, IDomainEntity
-        {
-            return QueryExecutor.Execute(() =>
-            {
-                var queryable = query.Execute(_queryableProvider).ProjectTo<TDto>(_mapper.ConfigurationProvider);
-
-                return queryable.ToListAsync();
-
-            }, _dbContext, query);
-        }
-
-        public Task<TDto> Execute<T>(IQueryResultSingle<T> query, bool defaultIfMissing) where T : class, IDomainEntity
+        public Task<List<TDto>> Get<T>(IQueryResultList<T> query) where T : class, IDomainEntity
         {
             try
             {
-                return QueryExecutor.Execute(async () =>
+                return QueryExecutor.Get(async () =>
                 {
-                    var result = await query.Execute(_queryableProvider).ProjectTo<TDto>(_mapper.ConfigurationProvider).FirstOrDefaultAsync();
+                    var queryable = query.Get(_queryableProvider).ProjectTo<TDto>(_mapper.ConfigurationProvider);
+
+                    return await queryable.ToListAsync();
+
+                }, _dbContext, query);
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, $"Error: CastingBuilder.Get<T>(IQueryResultList<T>...) : {ex.Message} ");
+                throw;
+            }
+        }
+
+        public Task<TDto> Get<T>(IQueryResultSingle<T> query, bool defaultIfMissing = true) where T : class, IDomainEntity
+        {
+            try
+            {
+                return QueryExecutor.Get(async () =>
+                {
+                    var result = await query.Get(_queryableProvider).ProjectTo<TDto>(_mapper.ConfigurationProvider).FirstOrDefaultAsync();
 
                     if (!defaultIfMissing && result == null)
-                        throw new Exception($"Error executing projectable single item query over '{typeof(T).Name}' (with no default if missing): no results returned");
+                        throw new GenericException($"'{typeof(T).Name}': Status404 - NotFound");
 
                     return result;
 
@@ -52,37 +65,48 @@ namespace SnowStorm.QueryExecutors
             }
             catch (Exception ex)
             {
-                throw ex;
+                _logger?.LogError(ex, $"Error: CastingBuilder.Get<T>(IQueryResultSingle<T>...) : {ex.Message} ");
+                throw;
             }
         }
 
-        public Task<List<TDto>> Execute<T, TKeyBy>(IQueryResultList<T> query, Expression<Func<TDto, TKeyBy>> orderBy, SortOrder sortOrder = SortOrder.Ascending) where T : class, IDomainEntity
+        public Task<List<TDto>> Get<T, TKeyBy>(IQueryResultList<T> query, Expression<Func<TDto, TKeyBy>> orderBy, SortOrder sortOrder = SortOrder.Ascending) where T : class, IDomainEntity
         {
-            return QueryExecutor.Execute(() =>
+            try
             {
-                var queryable = query.Execute(_queryableProvider).ProjectTo<TDto>(_mapper.ConfigurationProvider);
-                if (sortOrder != SortOrder.Unspecified)
-                    queryable = sortOrder == SortOrder.Descending ? queryable.OrderByDescending(orderBy) : queryable.OrderBy(orderBy);
-                return queryable.ToListAsync();
+                return QueryExecutor.Get(async () =>
+                {
+                    var queryable = query.Get(_queryableProvider).ProjectTo<TDto>(_mapper.ConfigurationProvider);
+                    if (sortOrder != SortOrder.Unspecified)
+                        queryable = sortOrder == SortOrder.Descending ? queryable.OrderByDescending(orderBy) : queryable.OrderBy(orderBy);
+                    return await queryable.ToListAsync();
 
-            }, _dbContext, query);
+                }, _dbContext, query);
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, $"Error: CastingBuilder.Get<T>(IQueryResultList<T>...) with sorting : {ex.Message} ");
+                throw;
+            }
         }
 
-        //public async Task<T> GetForId<T>(long id, Func<IQueryable<T>, IQueryable<T>> includes) where T : class, IDomainEntityWithId
+        //public async Task<T> GetById<T>(long id, Func<IQueryable<T>, IQueryable<T>> includes) where T : class, IDomainEntityWithId
         //{
         //    var stopwatch = new System.Diagnostics.Stopwatch();
         //    try
         //    {
         //        stopwatch.Start();
         //        var result = await includes(_dbContext.Set<T>()).SingleOrDefaultAsync(w => w.Id == id);
-        //        stopwatch.Stop(); //TODO: Log query time
+        //        stopwatch.Stop(); 
+        //        _logger?.LogDebug(message: $"GetById query ran for {stopwatch.Elapsed.TotalSeconds} seconds.");
         //        //null checks to be handle by client
         //        return result;
         //    }
         //    catch (Exception ex)
-        //    {   //TODO: Log error occurred
+        //    {   
         //        stopwatch.Stop();
-        //        throw ex;
+        //        _logger?.LogError(ex, $"Error.  GetForId({id}) : {ex.Message}");
+        //        throw;
         //    }
         //}
 

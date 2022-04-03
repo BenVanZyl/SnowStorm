@@ -10,11 +10,15 @@ namespace SnowStorm.QueryExecutors
 {
     public interface IQueryExecutor
     {
-        Task<T> Execute<T>(IQueryResult<T> query);
-        Task<List<T>> Execute<T>(IQueryResultList<T> query) where T : class, IDomainEntity;
-        Task<T> Execute<T>(IQueryResultSingle<T> query, bool defaultIfMissing = true) where T : class, IDomainEntity;
+        Task<T> Get<T>(IQueryResult<T> query);
+        Task<List<T>> Get<T>(IQueryResultList<T> query) where T : class, IDomainEntity;
+        Task<T> Get<T>(IQueryResultSingle<T> query, bool defaultIfMissing = true) where T : class, IDomainEntity;
 
-        //Task<T> GetForId<T>(long id, Func<IQueryable<T>, IQueryable<T>> includes) where T : class, IDomainEntityWithId;
+        //Task<T> GetById<T>(long id, Func<IQueryable<T>, IQueryable<T>> includes) where T : class, IDomainEntityWithId;
+        //Task<T> GetById<T>(long id) where T : class, IDomainEntityWithId;
+
+        //Task<List<T>> GetAll<T>(Func<IQueryable<T>, IQueryable<T>> includes) where T : class, IDomainEntityWithId;
+        //Task<List<T>> GetAll<T>() where T : class, IDomainEntityWithId;
 
         ICastingQueryExecutor<TDto> CastTo<TDto>();
 
@@ -25,26 +29,27 @@ namespace SnowStorm.QueryExecutors
 
     public interface IQueryResult<T>
     {
-        Task<T> Execute(IQueryableProvider queryableProvider);
+        Task<T> Get(IQueryableProvider queryableProvider);
     }
 
     public interface IQueryResultList<out T> where T : class, IDomainEntity
     {
-        IQueryable<T> Execute(IQueryableProvider queryableProvider);
+        IQueryable<T> Get(IQueryableProvider queryableProvider);
     }
 
     public interface IQueryResultSingle<out T> where T : class, IDomainEntity
     {
-        IQueryable<T> Execute(IQueryableProvider queryableProvider);
+        IQueryable<T> Get(IQueryableProvider queryableProvider);
     }
 
     public interface ICastingQueryExecutor<TDto>
     {
-        Task<List<TDto>> Execute<T>(IQueryResultList<T> query) where T : class, IDomainEntity;
-        Task<TDto> Execute<T>(IQueryResultSingle<T> query, bool defaultIfMissing = true) where T : class, IDomainEntity;
-        Task<List<TDto>> Execute<T, TKeyBy>(IQueryResultList<T> query, Expression<Func<TDto, TKeyBy>> orderBy, SortOrder sortOrder = SortOrder.Ascending) where T : class, IDomainEntity;
+        Task<List<TDto>> Get<T>(IQueryResultList<T> query) where T : class, IDomainEntity;
+        Task<TDto> Get<T>(IQueryResultSingle<T> query, bool defaultIfMissing = true) where T : class, IDomainEntity;
+        Task<List<TDto>> Get<T, TKeyBy>(IQueryResultList<T> query, Expression<Func<TDto, TKeyBy>> orderBy, SortOrder sortOrder = SortOrder.Ascending) where T : class, IDomainEntity;
 
-        //Task<TDto> GetForId<T>(long id, Func<IQueryable<T>, IQueryable<T>> includes) where T : class, IDomainEntityWithId;
+        //Task<TDto> GetById<T>(long id, Func<IQueryable<T>, IQueryable<T>> includes) where T : class, IDomainEntityWithId;
+        //Task<List<TDto>> GetAll<T>(Func<IQueryable<T>, IQueryable<T>> includes) where T : class, IDomainEntityWithId;
     }
 
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
+using System.Data.Common;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -18,23 +19,33 @@ namespace SnowStorm.Domain
         /// </summary>
         public static string ExternalAssemblyName { get; set; } = "";
 
-        protected override void OnModelCreating(ModelBuilder builder)
+        /// <summary>
+        /// Get the underlaying connectionstring for this DB Context
+        /// </summary>
+        public string ConnectionString => this.Database.GetConnectionString();
+
+        /// <summary>
+        /// Get the underlaying connection for this DB Context
+        /// </summary>
+        public DbConnection Connection => this.Database.GetDbConnection();
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(builder);
+            base.OnModelCreating(modelBuilder);
 
             // Here UseConfiguration is any IEntityTypeConfiguration
 
             //snowstorm (this package)
-            builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
             //ef core
-            builder.ApplyConfigurationsFromAssembly(Assembly.GetCallingAssembly());
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetCallingAssembly());
 
             // (web)app or test host.  Note that test host will not have domain classes, must be supplied using DaminAssemblyName property.
-            builder.ApplyConfigurationsFromAssembly(Assembly.GetEntryAssembly());       //
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetEntryAssembly());       //
 
             if (!string.IsNullOrWhiteSpace(ExternalAssemblyName))
-                builder.ApplyConfigurationsFromAssembly(Assembly.Load(ExternalAssemblyName));
+                modelBuilder.ApplyConfigurationsFromAssembly(Assembly.Load(ExternalAssemblyName));
         }
 
 
@@ -59,10 +70,16 @@ namespace SnowStorm.Domain
             {
                 if (entry.State == EntityState.Added)
                 {
-                    ((DomainEntityWithIdWithAudit)entry.Entity).CreatedOn = DateTime.UtcNow;
+                    ((DomainEntityWithIdWithAudit)entry.Entity).CreatedOn = DateTime.Now;
                 }
-                ((DomainEntityWithIdWithAudit)entry.Entity).ModifiedOn = DateTime.UtcNow;
+                ((DomainEntityWithIdWithAudit)entry.Entity).ModifiedOn = DateTime.Now;
             }
+        }
+
+        public async Task<object> Run(string sql)
+        {
+            var results = await this.Database.ExecuteSqlRawAsync(sql);
+            return results;
         }
     }
 }

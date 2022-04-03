@@ -51,22 +51,24 @@ namespace SnowStorm
         public static void DbContext(ref IServiceCollection services, string connectionString, string externalAssemblyName = "")
         {
             AppDbContext.ExternalAssemblyName = externalAssemblyName;
-            services.AddDbContext<AppDbContext>(o => o.UseSqlServer(connectionString)); // TODO: Move Azure Vault
+            //services.AddDbContext<AppDbContext>(o => o.UseSqlServer(connectionString)) // straight sql connection
 
-            //todo: investigate using azure managed identity
-            //services.AddDbContext<AppDbContext>
-            //(o =>
-            //{
-            //    if (connectionString.Contains(".database.windows.net", System.StringComparison.OrdinalIgnoreCase) && !connectionString.Contains("password", System.StringComparison.OrdinalIgnoreCase))
-            //    {   // SQL Server Db in Azure, using Azure AD integrated auth
-            //        SqlConnection connection = new SqlConnection();
-            //        connection.ConnectionString = connectionString;
-            //        connection.AccessToken = (new AzureServiceTokenProvider()).GetAccessTokenAsync("https://database.windows.net/").Result;
-            //        o.UseSqlServer(connection);
-            //    }
-            //    else
-            //        o.UseSqlServer(connectionString); //identity provided in string, not
-            //});
+            //Auto apply azure managed identity connection to sql server if needed
+            services.AddDbContext<AppDbContext>
+            (o =>
+            {
+                if (connectionString.Contains(".database.windows.net", System.StringComparison.OrdinalIgnoreCase) && !connectionString.Contains("password", System.StringComparison.OrdinalIgnoreCase))
+                {   // SQL Server Db in Azure, using Azure AD integrated auth
+                    SqlConnection connection = new()
+                    {
+                        ConnectionString = connectionString,
+                        AccessToken = (new AzureServiceTokenProvider()).GetAccessTokenAsync("https://database.windows.net/").Result
+                    };
+                    o.UseSqlServer(connection);
+                }
+                else
+                    o.UseSqlServer(connectionString); //identity provided in string, not
+            });
         }
     }
 }
