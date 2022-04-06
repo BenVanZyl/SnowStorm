@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.Azure.Services.AppAuthentication;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SnowStorm.Configurations;
 using SnowStorm.Domain;
 using System;
-using System.Data.SqlClient;
 using System.Reflection;
 
 namespace SnowStorm
