@@ -156,7 +156,7 @@ namespace SnowStorm.QueryExecutors
             catch (Exception ex)
             {
                 _logger?.LogError(ex, $"QueryExecutor.Add() Failed [{ex.Message}]");
-                throw new GenericException("Error adding data.");
+                throw new GenericException("Error adding data.", ex);
             }
             
         }
@@ -173,7 +173,7 @@ namespace SnowStorm.QueryExecutors
             catch (Exception ex)
             {
                 _logger?.LogError(ex, $"QueryExecutor.Delete() Failed [{ex.Message}]");
-                throw new GenericException("Error deleting data.");
+                throw new GenericException("Error deleting data.", ex);
             }
         }
 
@@ -186,7 +186,7 @@ namespace SnowStorm.QueryExecutors
             catch (Exception ex)
             {
                 _logger?.LogError(ex, $"QueryExecutor.Save() Failed [{ex.Message}]");
-                throw new GenericException("Error saving data.");
+                throw new GenericException("Error saving data.", ex);
             }
         }
 
