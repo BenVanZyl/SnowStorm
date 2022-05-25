@@ -12,6 +12,7 @@ namespace SnowStorm
 {
     public static class Setup
     {
+        
         public static void All(ref IServiceCollection services, Assembly startup, Profile mappingProfile, string connectionString, string externalAssemblyName = "")
         {
             if (startup is null)
@@ -67,7 +68,7 @@ namespace SnowStorm
                     o.UseSqlServer(connection);
                 }
                 else
-                    o.UseSqlServer(connectionString); //identity provided in string, not
+                    o.UseSqlServer(connectionString); //identity provided in string, straight sql connection
             });
         }
     }

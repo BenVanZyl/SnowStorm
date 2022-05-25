@@ -6,9 +6,9 @@ namespace SnowStorm.Domain
     {
     }
 
-    public class DomainEntityWithId : IDomainEntity
+    public class DomainEntityWithId : IDomainEntityWithId
     {
-        public long Id { get; private set; }
+        public long Id { get; set; }
     }
 
     public class DomainEntityWithIdWithAudit : DomainEntityWithId

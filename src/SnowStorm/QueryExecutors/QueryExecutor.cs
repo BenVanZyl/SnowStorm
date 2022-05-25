@@ -77,25 +77,25 @@ namespace SnowStorm.QueryExecutors
         //    //}
         //}
 
-        //public async Task<T> GetById<T>(long id) where T : class, IDomainEntityWithId
-        //{
-        //    var stopwatch = new System.Diagnostics.Stopwatch();
-        //    try
-        //    {
-        //        stopwatch.Start();
-        //        var result = await DbContext.Set<T>().SingleOrDefaultAsync(w => w.Id == id);
-        //        stopwatch.Stop();
-        //        _logger?.LogDebug(message: $"GetById query ran for {stopwatch.Elapsed.TotalSeconds} seconds.");
-        //        //null checks to be handle by client
-        //        return result;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        stopwatch.Stop();
-        //        _logger?.LogError(ex, $"Error.  GetById({id}) : {ex.Message}");
-        //        throw;
-        //    }
-        //}
+        public async Task<T> GetById<T>(long id) where T : class, IDomainEntityWithId
+        {
+            var stopwatch = new System.Diagnostics.Stopwatch();
+            try
+            {
+                stopwatch.Start();
+                var result = await DbContext.Set<T>().SingleOrDefaultAsync(w => w.Id == id);
+                stopwatch.Stop();
+                _logger?.LogDebug(message: $"GetById query ran for {stopwatch.Elapsed.TotalSeconds} seconds.");
+                //null checks to be handle by client
+                return result;
+            }
+            catch (Exception ex)
+            {
+                stopwatch.Stop();
+                _logger?.LogError(ex, $"Error.  GetById({id}) : {ex.Message}");
+                throw;
+            }
+        }
 
         //public async Task<List<T>> GetAll<T>(Func<IQueryable<T>, IQueryable<T>> includes) where T : class, IDomainEntityWithId
         //{
@@ -211,7 +211,7 @@ namespace SnowStorm.QueryExecutors
             {
                 string message = $"QueryExecutor.Get() failed. [{ex.Message}]";
                 _logger?.LogError(exception: ex, message: message);
-                throw;
+                throw new GenericException("Error getting data.", ex);
             }
             finally
             {

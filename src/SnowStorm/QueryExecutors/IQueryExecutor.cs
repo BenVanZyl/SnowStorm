@@ -15,7 +15,7 @@ namespace SnowStorm.QueryExecutors
         Task<T> Get<T>(IQueryResultSingle<T> query, bool defaultIfMissing = true) where T : class, IDomainEntity;
 
         //Task<T> GetById<T>(long id, Func<IQueryable<T>, IQueryable<T>> includes) where T : class, IDomainEntityWithId;
-        //Task<T> GetById<T>(long id) where T : class, IDomainEntityWithId;
+        Task<T> GetById<T>(long id) where T : class, IDomainEntityWithId;
 
         //Task<List<T>> GetAll<T>(Func<IQueryable<T>, IQueryable<T>> includes) where T : class, IDomainEntityWithId;
         //Task<List<T>> GetAll<T>() where T : class, IDomainEntityWithId;
@@ -48,8 +48,9 @@ namespace SnowStorm.QueryExecutors
         Task<TDto> Get<T>(IQueryResultSingle<T> query, bool defaultIfMissing = true) where T : class, IDomainEntity;
         Task<List<TDto>> Get<T, TKeyBy>(IQueryResultList<T> query, Expression<Func<TDto, TKeyBy>> orderBy, SortOrder sortOrder = SortOrder.Ascending) where T : class, IDomainEntity;
 
+        Task<TDto> GetById<T>(long id) where T : class, IDomainEntityWithId;
         //Task<TDto> GetById<T>(long id, Func<IQueryable<T>, IQueryable<T>> includes) where T : class, IDomainEntityWithId;
-        //Task<List<TDto>> GetAll<T>(Func<IQueryable<T>, IQueryable<T>> includes) where T : class, IDomainEntityWithId;
+        //Task<List<TDto>> GetAll<T>(Func<IQueryable<T>, IQueryable<T>> includes) where T : class, IDomainEntity;
     }
 
 }
