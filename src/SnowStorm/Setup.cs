@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
+using MediatR;
 using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.DependencyInjection;
-using SnowStorm.Configurations;
 using SnowStorm.Domain;
+using SnowStorm.QueryExecutors;
 using System;
 using System.Reflection;
 
@@ -13,80 +14,42 @@ namespace SnowStorm
 {
     public static class Setup
     {
-        
-        /// <summary>
-        /// Depreciated
-        /// </summary>
-        /// <param name="services"></param>
-        /// <param name="startup"></param>
-        /// <param name="mappingProfile"></param>
-        /// <param name="connectionString"></param>
-        /// <param name="externalAssemblyName"></param>
-        /// <exception cref="ArgumentNullException"></exception>
-        public static void All(ref IServiceCollection services, Assembly startup, Profile mappingProfile, string connectionString, string externalAssemblyName = "")
+        public static void AddSnowStorm(this IServiceCollection services, string connectionString, string externalAssemblyName = "")
         {
-            if (startup is null)
-                throw new ArgumentNullException(nameof(startup));
-
-            if (mappingProfile == null)
-                throw new ArgumentNullException(nameof(mappingProfile));
-
             //setup DbContext
-            DbContext(ref services, connectionString, externalAssemblyName);
+            AddAppDbContext(ref services, connectionString, externalAssemblyName);
 
             //setup query executors
-            QueryExecutor(ref services);
+            AddQueryExecutor(ref services);
 
             //Setup MediatR
-            Mediator(ref services, startup, externalAssemblyName);
+            AddMediator(ref services, externalAssemblyName);
 
             //setup automapper
-            AutoMapper(ref services, mappingProfile);
+            AddAutoMapper(ref services);
         }
 
-        public static void All(ref IServiceCollection services, Assembly startup, string connectionString, string externalAssemblyName = "")
+        public static void AddQueryExecutor(ref IServiceCollection services)
         {
-            if (startup is null)
-                throw new ArgumentNullException(nameof(startup));
-
-            //setup DbContext
-            DbContext(ref services, connectionString, externalAssemblyName);
-
-            //setup query executors
-            QueryExecutor(ref services);
-
-            //Setup MediatR
-            Mediator(ref services, startup, externalAssemblyName);
-
-            //setup automapper
-            AutoMapper(ref services);
+            services.AddScoped<IQueryableProvider, QueryableProvider>();
+            services.AddScoped<IQueryExecutor, QueryExecutor>();
         }
 
-        public static void QueryExecutor(ref IServiceCollection services)
+        public static void AddMediator(ref IServiceCollection services, string externalAssemblyName = "")
         {
-            QueryExecutorConfiguration.Configure(ref services);
+            services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
+            
+            if (!string.IsNullOrWhiteSpace(externalAssemblyName))
+                services.AddMediatR(Assembly.Load(externalAssemblyName));
+        }
+                
+        public static void AddAutoMapper(ref IServiceCollection services)
+        {
+            // Auto Mapper Configurations
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         }
 
-        public static void Mediator(ref IServiceCollection services, Assembly startup, string externalAssemblyName = "")
-        {
-            MediatorConfiguration.Configure(services, startup, externalAssemblyName);
-        }
-
-        /// <summary>
-        /// Depreciated
-        /// </summary>
-        /// <param name="services"></param>
-        /// <param name="mappingProfile"></param>
-        public static void AutoMapper(ref IServiceCollection services, Profile mappingProfile)
-        {
-            AutoMapperConfiguration.Configure(ref services, mappingProfile);
-        }
-        public static void AutoMapper(ref IServiceCollection services)
-        {
-            AutoMapperConfiguration.Configure(ref services);
-        }
-
-        public static void DbContext(ref IServiceCollection services, string connectionString, string externalAssemblyName = "")
+        public static void AddAppDbContext(ref IServiceCollection services, string connectionString, string externalAssemblyName = "")
         {
             AppDbContext.ExternalAssemblyName = externalAssemblyName;
             //services.AddDbContext<AppDbContext>(o => o.UseSqlServer(connectionString)) // straight sql connection
@@ -117,3 +80,13 @@ namespace SnowStorm
         }
     }
 }
+
+
+/// Notes
+/// https://ovaismehboob.com/2018/01/31/implementing-mediator-pattern-in-net-core-using-mediatr/
+/// https://github.com/jbogard/MediatR/wiki
+/// https://github.com/jbogard/MediatR.Extensions.Microsoft.DependencyInjection
+///
+/// Install-Package MediatR
+///
+

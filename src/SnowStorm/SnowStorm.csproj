@@ -11,10 +11,6 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <Compile Remove="Configurations\SwaggerConfiguration.cs" />
-  </ItemGroup>
-  
-  <ItemGroup>
     <None Remove="License.txt" />
     <None Remove="SnowStorm.nuspec" />
   </ItemGroup>
