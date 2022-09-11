@@ -14,6 +14,15 @@ namespace SnowStorm
     public static class Setup
     {
         
+        /// <summary>
+        /// Depreciated
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="startup"></param>
+        /// <param name="mappingProfile"></param>
+        /// <param name="connectionString"></param>
+        /// <param name="externalAssemblyName"></param>
+        /// <exception cref="ArgumentNullException"></exception>
         public static void All(ref IServiceCollection services, Assembly startup, Profile mappingProfile, string connectionString, string externalAssemblyName = "")
         {
             if (startup is null)
@@ -35,6 +44,24 @@ namespace SnowStorm
             AutoMapper(ref services, mappingProfile);
         }
 
+        public static void All(ref IServiceCollection services, Assembly startup, string connectionString, string externalAssemblyName = "")
+        {
+            if (startup is null)
+                throw new ArgumentNullException(nameof(startup));
+
+            //setup DbContext
+            DbContext(ref services, connectionString, externalAssemblyName);
+
+            //setup query executors
+            QueryExecutor(ref services);
+
+            //Setup MediatR
+            Mediator(ref services, startup, externalAssemblyName);
+
+            //setup automapper
+            AutoMapper(ref services);
+        }
+
         public static void QueryExecutor(ref IServiceCollection services)
         {
             QueryExecutorConfiguration.Configure(ref services);
@@ -45,9 +72,18 @@ namespace SnowStorm
             MediatorConfiguration.Configure(services, startup, externalAssemblyName);
         }
 
+        /// <summary>
+        /// Depreciated
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="mappingProfile"></param>
         public static void AutoMapper(ref IServiceCollection services, Profile mappingProfile)
         {
             AutoMapperConfiguration.Configure(ref services, mappingProfile);
+        }
+        public static void AutoMapper(ref IServiceCollection services)
+        {
+            AutoMapperConfiguration.Configure(ref services);
         }
 
         public static void DbContext(ref IServiceCollection services, string connectionString, string externalAssemblyName = "")
