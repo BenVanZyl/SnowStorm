@@ -2,6 +2,7 @@
 using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using SnowStorm.Configurations;
 using SnowStorm.Domain;
@@ -55,21 +56,28 @@ namespace SnowStorm
             //services.AddDbContext<AppDbContext>(o => o.UseSqlServer(connectionString)) // straight sql connection
 
             //Auto apply azure managed identity connection to sql server if needed
-            services.AddDbContext<AppDbContext>
+            services.AddDbContextPool<AppDbContext>
             (o =>
-            {
-                if (connectionString.Contains(".database.windows.net", System.StringComparison.OrdinalIgnoreCase) && !connectionString.Contains("password", System.StringComparison.OrdinalIgnoreCase))
-                {   // SQL Server Db in Azure, using Azure AD integrated auth
-                    SqlConnection connection = new()
-                    {
-                        ConnectionString = connectionString,
-                        AccessToken = (new AzureServiceTokenProvider()).GetAccessTokenAsync("https://database.windows.net/").Result
-                    };
-                    o.UseSqlServer(connection);
+                {
+                    if (connectionString.Contains(".database.windows.net", System.StringComparison.OrdinalIgnoreCase) && !connectionString.Contains("password", System.StringComparison.OrdinalIgnoreCase))
+                    {   // SQL Server Db in Azure, using Azure AD integrated auth
+                        SqlConnection connection = new()
+                        {
+                            ConnectionString = connectionString,
+                            AccessToken = (new AzureServiceTokenProvider()).GetAccessTokenAsync("https://database.windows.net/").Result
+                        };
+                        o.UseSqlServer(connection, sqlServerOptionsAction: sqlOptions =>
+                        {
+                            sqlOptions.EnableRetryOnFailure();
+                        });
+                    }
+                    else
+                        o.UseSqlServer(connectionString, sqlServerOptionsAction: sqlOptions =>
+                        {
+                            sqlOptions.EnableRetryOnFailure(5);
+                        }); //identity provided in string, straight sql connection
                 }
-                else
-                    o.UseSqlServer(connectionString); //identity provided in string, straight sql connection
-            });
+            );
         }
     }
 }

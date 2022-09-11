@@ -1,38 +1,44 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
 using SnowStorm.Domain;
 using SnowStorm.Exceptions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SnowStorm.QueryExecutors
 {
-    public class QueryExecutor : IQueryExecutor
+    public class QueryExecutor : IQueryExecutor, IDisposable
     {
+        //public IDbContextFactory<AppDbContext> DbContextFactory { get; set; }
         public AppDbContext DbContext { get; set; }
         public IQueryableProvider QueryableProvider { get; set; }
         public IMapper Mapper { get; set; }
 
         private readonly ILogger<QueryExecutor> _logger;
 
+        //public QueryExecutor(IDbContextFactory<AppDbContext> dbContextFactory, IQueryableProvider queryableProvider, IMapper mapper, ILogger<QueryExecutor> logger)
         public QueryExecutor(AppDbContext dbContext, IQueryableProvider queryableProvider, IMapper mapper, ILogger<QueryExecutor> logger)
         {
+            //DbContextFactory = dbContextFactory;
+            //DbContext = dbContextFactory.CreateDbContext();
             DbContext = dbContext;
-            QueryableProvider = queryableProvider;
+            QueryableProvider = queryableProvider; 
             Mapper = mapper;
             _logger = logger;
         }
 
         public Task<T> Get<T>(IQueryResult<T> query)
         {
-            return Get(() => query.Get(QueryableProvider), DbContext, query);
+            return Get(async () => await query.Get(QueryableProvider), DbContext, query);
         }
 
         public Task<List<T>> Get<T>(IQueryResultList<T> query) where T : class, IDomainEntity
         {
-            return Get(() => query.Get(QueryableProvider).ToListAsync(), DbContext, query);
+            return Get(async () => await query.Get(QueryableProvider).ToListAsync(), DbContext, query);
         }
 
         public Task<T> Get<T>(IQueryResultSingle<T> query, bool defaultIfMissing = true) where T : class, IDomainEntity
@@ -83,7 +89,7 @@ namespace SnowStorm.QueryExecutors
             try
             {
                 stopwatch.Start();
-                var result = await DbContext.Set<T>().SingleOrDefaultAsync(w => w.Id == id);
+                var result = await DbContext.Set<T>().OrderByDescending(o => o.Id).SingleOrDefaultAsync(w => w.Id == id);
                 stopwatch.Stop();
                 _logger?.LogDebug(message: $"GetById query ran for {stopwatch.Elapsed.TotalSeconds} seconds.");
                 //null checks to be handle by client
@@ -158,7 +164,7 @@ namespace SnowStorm.QueryExecutors
                 _logger?.LogError(ex, $"QueryExecutor.Add() Failed [{ex.Message}]");
                 throw new GenericException("Error adding data.", ex);
             }
-            
+
         }
 
         public async Task<bool> Delete<T>(T domainEntity, bool saveChanges = true) where T : class, IDomainEntity
@@ -190,7 +196,7 @@ namespace SnowStorm.QueryExecutors
             }
         }
 
-        internal static async Task<T> Get<T>(Func<Task<T>> getResult, DbContext dbContext, object query, ILogger<QueryExecutor> _logger = null)
+        public static async Task<T> Get<T>(Func<Task<T>> GetResult, DbContext dbContext, object query, ILogger<QueryExecutor> _logger = null)
         {
             var stopwatch = new System.Diagnostics.Stopwatch();
 
@@ -202,9 +208,9 @@ namespace SnowStorm.QueryExecutors
 
             try
             {
-                stopwatch.Start(); 
+                stopwatch.Start();
                 _logger?.LogDebug(message: $"QueryExecutor.Get() => {query}");
-                var result = await getResult();
+                var result = await GetResult();
                 return result;
             }
             catch (Exception ex)
@@ -219,8 +225,21 @@ namespace SnowStorm.QueryExecutors
                     stopwatch.Stop();
                 string message = $"QueryExecutor.Get() => {stopwatch.Elapsed.TotalSeconds}";
                 _logger?.LogDebug(message: message);
-                
+
             }
+        }
+
+        public async Task Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                await DbContext.DisposeAsync();
+            }
+        }
+
+        public async void Dispose()
+        {
+            await Dispose(true);
         }
 
     }

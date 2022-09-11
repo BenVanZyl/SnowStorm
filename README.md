@@ -32,11 +32,29 @@ https://docs.microsoft.com/en-us/dotnet/architecture/microservices/microservice-
 
 3. Your connection string should only contain the 'Server' and 'Database' parameters.
 
+# Performance considerations for connection string
+
+The foiloing connection properties shpould be considered 
+
+ - MultipleActiveResultSets=true;
+ - Enlist=true;
+ - Pooling=true;Min Pool Size=1;Max Pool Size=128;
+ - Timeout=35;
+ - Connection Lifetime=1;
+
+ Notes:
+  - Retry is handle by the DbContext EnableRetryOnFailure option
+  - Connection Lifetime would need to be adjusted according to your setup. ex. 5 secs for server, 1 sec for local.
+  - See SnowStorm.PerformanceTesting on GitHub for example of how this could be tested.
 
 # Supported Platforms
 .Net 6 (Latest version)
 
 # Release Notes
+2022-09-11
+ - Performance enhancement by implementing db context pool
+ - Bugfix for missing async operations for query executor
+
 2021-11-26 -- 1.0.0
  - Breaking changes!
  - Upgraded to .Net 6
