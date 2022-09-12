@@ -1,9 +1,7 @@
-﻿using AutoMapper;
-using MediatR;
+﻿using MediatR;
 using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using SnowStorm.Domain;
 using SnowStorm.QueryExecutors;
@@ -14,7 +12,7 @@ namespace SnowStorm
 {
     public static class Setup
     {
-        public static void AddSnowStorm(this IServiceCollection services, string connectionString, string externalAssemblyName = "")
+        public static void AddSnowStorm(this IServiceCollection services, string connectionString, bool includeAuditUserInfo = true, string externalAssemblyName = "")
         {
             //setup DbContext
             AddAppDbContext(ref services, connectionString, externalAssemblyName);
@@ -27,6 +25,20 @@ namespace SnowStorm
 
             //setup automapper
             AddAutoMapper(ref services);
+
+            //audit user info
+            if (includeAuditUserInfo)
+                AddUserInfo(ref services);
+        }
+
+        /// <summary>
+        /// builder.Services.AddHttpContextAccessor();  -- Required First
+        /// </summary>
+        /// <param name="services"></param>
+        private static void AddUserInfo(ref IServiceCollection services)
+        {
+            //services.AddHttpContextAccessor()
+            services.AddScoped<ICurrentUserInfo, CurrentUserInfo>();
         }
 
         public static void AddQueryExecutor(ref IServiceCollection services)
@@ -52,7 +64,6 @@ namespace SnowStorm
         public static void AddAppDbContext(ref IServiceCollection services, string connectionString, string externalAssemblyName = "")
         {
             AppDbContext.ExternalAssemblyName = externalAssemblyName;
-            //services.AddDbContext<AppDbContext>(o => o.UseSqlServer(connectionString)) // straight sql connection
 
             //Auto apply azure managed identity connection to sql server if needed
             services.AddDbContextPool<AppDbContext>

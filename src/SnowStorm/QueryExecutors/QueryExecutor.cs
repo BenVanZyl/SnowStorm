@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace SnowStorm.QueryExecutors
 {
-    public class QueryExecutor : IQueryExecutor, IDisposable
+    public class QueryExecutor : IQueryExecutor
     {
         //public IDbContextFactory<AppDbContext> DbContextFactory { get; set; }
         public AppDbContext DbContext { get; set; }
@@ -229,18 +229,18 @@ namespace SnowStorm.QueryExecutors
             }
         }
 
-        public async Task Dispose(bool disposing)
+        public async Task DisposeAsync(bool disposing)
         {
-            if (disposing)
-            {
-                await DbContext.DisposeAsync();
-            }
+            if (!disposing)
+                return;
+
+            if (DbContext != null && DbContext.Connection != null && DbContext.Connection.State != System.Data.ConnectionState.Closed)
+                await DbContext.Connection.CloseAsync();
         }
 
-        public async void Dispose()
+        public async ValueTask DisposeAsync()
         {
-            await Dispose(true);
+            await DisposeAsync(true);
         }
-
     }
 }
