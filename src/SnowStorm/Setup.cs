@@ -12,10 +12,10 @@ namespace SnowStorm
 {
     public static class Setup
     {
-        public static void AddSnowStorm(this IServiceCollection services, string connectionString, bool includeAuditUserInfo = true, string externalAssemblyName = "")
+        public static void AddSnowStorm(this IServiceCollection services, string connectionString, bool includeAuditUserInfo = true, int poolSize = 128, string externalAssemblyName = "")
         {
             //setup DbContext
-            AddAppDbContext(ref services, connectionString, externalAssemblyName);
+            AddAppDbContext(ref services, connectionString, poolSize: poolSize, externalAssemblyName: externalAssemblyName);
 
             //setup query executors
             AddQueryExecutor(ref services);
@@ -61,7 +61,7 @@ namespace SnowStorm
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         }
 
-        public static void AddAppDbContext(ref IServiceCollection services, string connectionString, string externalAssemblyName = "")
+        public static void AddAppDbContext(ref IServiceCollection services, string connectionString, int poolSize = 128, string externalAssemblyName = "")
         {
             AppDbContext.ExternalAssemblyName = externalAssemblyName;
 
@@ -84,9 +84,10 @@ namespace SnowStorm
                     else
                         o.UseSqlServer(connectionString, sqlServerOptionsAction: sqlOptions =>
                         {
-                            sqlOptions.EnableRetryOnFailure(5);
+                            sqlOptions.EnableRetryOnFailure();
                         }); //identity provided in string, straight sql connection
-                }
+                },
+                poolSize: poolSize
             );
         }
     }
