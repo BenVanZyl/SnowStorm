@@ -12,19 +12,24 @@ namespace SnowStorm
 {
     public static class Setup
     {
-        public static void AddSnowStorm(this IServiceCollection services, string connectionString, bool includeAuditUserInfo = true, int poolSize = 128, string externalAssemblyName = "")
+        public static void AddSnowStorm(this IServiceCollection services, string assemblyName, string connectionString, bool includeAuditUserInfo = true, int poolSize = 128)
         {
+            if (string.IsNullOrWhiteSpace(assemblyName))
+                throw new InvalidOperationException($"SnowStorm.Setup.AddSnowStorm(...) : Missing assemblyName");
+
+            Assembly appAssembly = Assembly.Load(assemblyName);
+
             //setup DbContext
-            AddAppDbContext(ref services, connectionString, poolSize: poolSize, externalAssemblyName: externalAssemblyName);
+            AddAppDbContext(ref services, ref appAssembly, connectionString, poolSize: poolSize);
 
             //setup query executors
             AddQueryExecutor(ref services);
 
             //Setup MediatR
-            AddMediator(ref services, externalAssemblyName);
+            AddMediator(ref services, ref appAssembly);
 
             //setup automapper
-            AddAutoMapper(ref services);
+            AddAutoMapper(ref services, ref appAssembly);
 
             //audit user info
             if (includeAuditUserInfo)
@@ -47,23 +52,25 @@ namespace SnowStorm
             services.AddScoped<IQueryExecutor, QueryExecutor>();
         }
 
-        public static void AddMediator(ref IServiceCollection services, string externalAssemblyName = "")
+        public static void AddMediator(ref IServiceCollection services, ref Assembly appAssembly)
         {
-            services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
-            
-            if (!string.IsNullOrWhiteSpace(externalAssemblyName))
-                services.AddMediatR(Assembly.Load(externalAssemblyName));
+            if (appAssembly == null)
+                throw new InvalidOperationException($"SnowStorm.Setup.AddMediator(...) : Missing appAssembly.");
+
+            services.AddMediatR(appAssembly);
         }
                 
-        public static void AddAutoMapper(ref IServiceCollection services)
+        public static void AddAutoMapper(ref IServiceCollection services, ref Assembly appAssembly)
         {
-            // Auto Mapper Configurations
-            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            if (appAssembly == null)
+                throw new InvalidOperationException($"SnowStorm.Setup.AddMediator(...) : Missing appAssembly.");
+
+            services.AddAutoMapper(appAssembly);
         }
 
-        public static void AddAppDbContext(ref IServiceCollection services, string connectionString, int poolSize = 128, string externalAssemblyName = "")
+        public static void AddAppDbContext(ref IServiceCollection services, ref Assembly appAssembly, string connectionString, int poolSize = 128)
         {
-            AppDbContext.ExternalAssemblyName = externalAssemblyName;
+            AppDbContext.AppAssembly = appAssembly;
 
             //Auto apply azure managed identity connection to sql server if needed
             services.AddDbContextPool<AppDbContext>

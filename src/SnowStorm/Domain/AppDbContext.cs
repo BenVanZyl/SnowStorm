@@ -17,7 +17,7 @@ namespace SnowStorm.Domain
         /// <summary>
         /// Static helper property to assist with Unit and Integration Testingor were the Domain classes is in a different assembly...ll
         /// </summary>
-        public static string ExternalAssemblyName { get; set; } = "";
+        public static Assembly? AppAssembly { get; set; } 
 
         /// <summary>
         /// Get the underlaying connectionstring for this DB Context
@@ -33,21 +33,11 @@ namespace SnowStorm.Domain
         {
             base.OnModelCreating(modelBuilder);
 
-            // Here UseConfiguration is any IEntityTypeConfiguration
+            if (AppAssembly == null)
+                throw new InvalidOperationException($"SnowStorm.Domain.AppDbContext(...) : Missing appAssembly.");
 
-            //snowstorm (this package)
-            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-
-            //ef core
-            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetCallingAssembly());
-
-            // (web)app or test host.  Note that test host will not have domain classes, must be supplied using DaminAssemblyName property.
-            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetEntryAssembly());       //
-
-            if (!string.IsNullOrWhiteSpace(ExternalAssemblyName))
-                modelBuilder.ApplyConfigurationsFromAssembly(Assembly.Load(ExternalAssemblyName));
+            modelBuilder.ApplyConfigurationsFromAssembly(AppAssembly);
         }
-
 
         public override int SaveChanges()
         {
