@@ -47,11 +47,20 @@ namespace SnowStorm.QueryExecutors
             {
                 return Get(async () =>
                 {
-                    var result = await query.Get(QueryableProvider).FirstOrDefaultAsync();
-                    if (!defaultIfMissing && result == null)
-                        throw new ArgumentNullException($"'{typeof(T).Name}': Status404 - NotFound");
+                    try
+                    {
+                        var result = await query.Get(QueryableProvider).FirstOrDefaultAsync();
+                        if (!defaultIfMissing && result == null)
+                            throw new ArgumentNullException($"'{typeof(T).Name}': Status404 - NotFound");
 
-                    return result;
+                        return result;
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger?.LogError(ex, $"Error: QueryExecutor.Get<T>(IQueryResultList<T>...) with sorting : {ex.Message} ");
+                        throw;
+                    }
+                    
                 }, DbContext, query);
             }
             catch (Exception ex)

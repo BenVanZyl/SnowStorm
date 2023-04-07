@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SnowStorm.Domain;
 using SnowStorm.QueryExecutors;
 using System;
+using System.Net.NetworkInformation;
 using System.Reflection;
 
 namespace SnowStorm
@@ -26,7 +27,7 @@ namespace SnowStorm
             AddQueryExecutor(ref services);
 
             //Setup MediatR
-            AddMediator(ref services, ref appAssembly);
+            AddMediator(ref services, appAssembly);
 
             //setup automapper
             AddAutoMapper(ref services, ref appAssembly);
@@ -43,7 +44,7 @@ namespace SnowStorm
         private static void AddUserInfo(ref IServiceCollection services)
         {
             //services.AddHttpContextAccessor()
-            services.AddScoped<ICurrentUserInfo, CurrentUserInfo>();
+            //services.AddScoped<ICurrentUserInfo, CurrentUserInfo>();
         }
 
         public static void AddQueryExecutor(ref IServiceCollection services)
@@ -52,12 +53,13 @@ namespace SnowStorm
             services.AddScoped<IQueryExecutor, QueryExecutor>();
         }
 
-        public static void AddMediator(ref IServiceCollection services, ref Assembly appAssembly)
+        public static void AddMediator(ref IServiceCollection services, Assembly appAssembly)
         {
             if (appAssembly == null)
                 throw new InvalidOperationException($"SnowStorm.Setup.AddMediator(...) : Missing appAssembly.");
 
-            services.AddMediatR(appAssembly);
+            //services.AddMediatR(appAssembly);
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(appAssembly));
         }
                 
         public static void AddAutoMapper(ref IServiceCollection services, ref Assembly appAssembly)

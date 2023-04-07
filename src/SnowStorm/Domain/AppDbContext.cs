@@ -60,9 +60,9 @@ namespace SnowStorm.Domain
             {
                 if (entry.State == EntityState.Added)
                 {
-                    ((DomainEntityWithIdWithAudit)entry.Entity).CreatedOn = DateTime.Now;
+                    ((DomainEntityWithIdWithAudit)entry.Entity).SetCreatedOn();
                 }
-                ((DomainEntityWithIdWithAudit)entry.Entity).ModifiedOn = DateTime.Now;
+                ((DomainEntityWithIdWithAudit)entry.Entity).SetModifiedOn();
             }
         }
 

@@ -11,47 +11,58 @@ namespace SnowStorm
 
     public interface ICurrentUserInfo
     {
-        public IQueryExecutor Executor { get; }
-        public IHttpContextAccessor HttpContextAccessor { get; }
+        public IHttpContextAccessor ContextAccessor { get; set; }
         public HttpContext Context { get; }
         public long? UserId { get; set; }
         public string UserName { get; }
-
         public bool IsAuthenticated { get; }
     }
 
-    public class CurrentUserInfo: ICurrentUserInfo
+    public class CurrentUserInfo : ICurrentUserInfo
     {
-        public CurrentUser(IQueryExecutor executor, IHttpContextAccessor httpContextAccessor)
+        public CurrentUserInfo(IQueryExecutor executor, IHttpContextAccessor httpContextAccessor)
         {
-            Executor = executor;
-            HttpContextAccessor = httpContextAccessor;
+            _executor = executor;
+            ContextAccessor = httpContextAccessor;
         }
 
-        public IQueryExecutor Executor { get; }
-        public IHttpContextAccessor HttpContextAccessor { get; }
-
-        public HttpContext Context => HttpContextAccessor.HttpContext;
+        private IQueryExecutor _executor { get; }
+        public IHttpContextAccessor ContextAccessor { get; set; }
+        public HttpContext Context => GetHttpContext();
 
         public long? UserId { get; set; }
 
-        public string UserName
-        {
-            get
-            {
-                return GetUserName();
-            }
-        }
-
+        public string UserName => GetUserName();
+        
         public bool IsAuthenticated => Context.User.Identity.IsAuthenticated;
 
         public virtual string GetUserName()
         {
-            string userName = Context.User.Identity.Name;
+            string userName = "";
+
+            if (Context != null)
+            {
+                if (Context.User != null && Context.User.Identity != null)
+                {
+                    userName = Context.User.Identity.Name;
+                }
+            }
 
             Task.Run(async () => await GetUserId());
 
             return userName;
+        }
+
+        public virtual HttpContext GetHttpContext()
+        {
+            if (ContextAccessor != null)
+            {
+                if (ContextAccessor.HttpContext != null)
+                {
+                    return ContextAccessor.HttpContext;
+                }
+            }
+            return null;
         }
 
         public virtual Task GetUserId()
@@ -59,26 +70,5 @@ namespace SnowStorm
             UserId = null;
             return Task.CompletedTask;
         }
-        public CurrentUserInfo(IHttpContextAccessor contextAccessor) 
-        { 
-            if (contextAccessor != null)
-            {
-                ContextAccessor = contextAccessor;
-                if (contextAccessor.HttpContext != null)
-                {
-                    Context = contextAccessor.HttpContext;
-                    if (Context.User != null && Context.User.Identity != null)
-                    {
-                        UserName = Context.User.Identity.Name;
-                    }
-                }
-            }
-        }
-
-        public IHttpContextAccessor ContextAccessor { get; } = null;
-        public HttpContext Context { get; } = null;
-
-        public string UserName { get; set; }
-        public long? UserId { get; set; }
     }
 }
