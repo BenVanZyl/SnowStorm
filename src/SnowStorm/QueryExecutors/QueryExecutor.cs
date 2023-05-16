@@ -14,7 +14,6 @@ namespace SnowStorm.QueryExecutors
     [Obsolete]
     public class QueryExecutor : IQueryExecutor
     {
-        //public IDbContextFactory<AppDbContext> DbContextFactory { get; set; }
         public AppDbContext DbContext { get; set; }
         public IQueryableProvider QueryableProvider { get; set; }
         public IMapper Mapper { get; set; }
