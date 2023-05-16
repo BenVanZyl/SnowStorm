@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace SnowStorm.QueryExecutors
 {
+    [Obsolete]
     public interface IQueryExecutor : IAsyncDisposable
     {
         Task<T> Get<T>(IQueryResult<T> query);

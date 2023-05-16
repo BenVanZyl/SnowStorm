@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 
 namespace SnowStorm.QueryExecutors
 {
+    [Obsolete]
     internal class CastingBuilder<TDto> : ICastingQueryExecutor<TDto>
     {
         private readonly DbContext _dbContext;

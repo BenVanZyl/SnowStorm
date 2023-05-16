@@ -2,7 +2,7 @@
 using SnowStorm.QueryExecutors;
 using System.Threading.Tasks;
 
-namespace SnowStorm
+namespace SnowStorm.Users
 {
     /// <summary>
     /// TODO:  Implement a way to add user info to audit changes
@@ -33,7 +33,7 @@ namespace SnowStorm
         public long? UserId { get; set; }
 
         public string UserName => GetUserName();
-        
+
         public bool IsAuthenticated => Context.User.Identity.IsAuthenticated;
 
         public virtual string GetUserName()

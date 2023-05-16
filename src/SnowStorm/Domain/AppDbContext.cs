@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SnowStorm.Domain
 {
-    public class AppDbContext : DbContext
+    public partial class AppDbContext : DbContext
     {
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)

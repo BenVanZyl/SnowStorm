@@ -1,12 +1,9 @@
-﻿using MediatR;
-using Microsoft.Azure.Services.AppAuthentication;
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SnowStorm.Domain;
 using SnowStorm.QueryExecutors;
 using System;
-using System.Net.NetworkInformation;
 using System.Reflection;
 
 namespace SnowStorm
@@ -35,6 +32,9 @@ namespace SnowStorm
             //audit user info
             if (includeAuditUserInfo)
                 AddUserInfo(ref services);
+
+            //setup IOC container provider
+            Container.SetInstance(services.BuildServiceProvider());
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace SnowStorm
             //services.AddMediatR(appAssembly);
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(appAssembly));
         }
-                
+
         public static void AddAutoMapper(ref IServiceCollection services, ref Assembly appAssembly)
         {
             if (appAssembly == null)
@@ -70,7 +70,7 @@ namespace SnowStorm
             services.AddAutoMapper(appAssembly);
         }
 
-        public static void AddAppDbContext(ref IServiceCollection services, ref Assembly appAssembly, string connectionString, int poolSize = 128)
+        public static void AddAppDbContext(ref IServiceCollection services, ref Assembly appAssembly, string connectionString, int poolSize = 32)
         {
             AppDbContext.AppAssembly = appAssembly;
 
@@ -80,10 +80,12 @@ namespace SnowStorm
                 {
                     if (connectionString.Contains(".database.windows.net", System.StringComparison.OrdinalIgnoreCase) && !connectionString.Contains("password", System.StringComparison.OrdinalIgnoreCase))
                     {   // SQL Server Db in Azure, using Azure AD integrated auth
+                        var credential = new Azure.Identity.DefaultAzureCredential();
+                        var token = credential.GetToken(new Azure.Core.TokenRequestContext(new[] { "https://database.windows.net/.default" }));
                         SqlConnection connection = new()
                         {
                             ConnectionString = connectionString,
-                            AccessToken = (new AzureServiceTokenProvider()).GetAccessTokenAsync("https://database.windows.net/").Result
+                            AccessToken = token.Token
                         };
                         o.UseSqlServer(connection, sqlServerOptionsAction: sqlOptions =>
                         {

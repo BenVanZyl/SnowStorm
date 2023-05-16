@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace SnowStorm.QueryExecutors
 {
+    [Obsolete]
     public class QueryExecutor : IQueryExecutor
     {
         //public IDbContextFactory<AppDbContext> DbContextFactory { get; set; }
@@ -20,11 +21,8 @@ namespace SnowStorm.QueryExecutors
 
         private readonly ILogger<QueryExecutor> _logger;
 
-        //public QueryExecutor(IDbContextFactory<AppDbContext> dbContextFactory, IQueryableProvider queryableProvider, IMapper mapper, ILogger<QueryExecutor> logger)
         public QueryExecutor(AppDbContext dbContext, IQueryableProvider queryableProvider, IMapper mapper, ILogger<QueryExecutor> logger)
         {
-            //DbContextFactory = dbContextFactory;
-            //DbContext = dbContextFactory.CreateDbContext();
             DbContext = dbContext;
             QueryableProvider = queryableProvider; 
             Mapper = mapper;
@@ -161,81 +159,52 @@ namespace SnowStorm.QueryExecutors
 
         public async Task<T> Add<T>(T domainEntity, bool saveChanges = true) where T : class, IDomainEntity
         {
-            try
-            {
-                DbContext.Set<T>().Add(domainEntity);
-                if (saveChanges)
-                    await Save();
-                return domainEntity;
-            }
-            catch (Exception ex)
-            {
-                _logger?.LogError(ex, $"QueryExecutor.Add() Failed [{ex.Message}]");
-                throw new GenericException("Error adding data.", ex);
-            }
-
+            return await DbContext.Add<T>(domainEntity, saveChanges);
         }
 
         public async Task<bool> Delete<T>(T domainEntity, bool saveChanges = true) where T : class, IDomainEntity
         {
-            try
-            {
-                DbContext.Set<T>().Remove(domainEntity);
-                if (saveChanges)
-                    await Save();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                _logger?.LogError(ex, $"QueryExecutor.Delete() Failed [{ex.Message}]");
-                throw new GenericException("Error deleting data.", ex);
-            }
+            return await DbContext.Delete<T>(domainEntity, saveChanges);
         }
 
         public async Task Save()
         {
-            try
-            {
-                await DbContext.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                _logger?.LogError(ex, $"QueryExecutor.Save() Failed [{ex.Message}]");
-                throw new GenericException("Error saving data.", ex);
-            }
+            await DbContext.Save();
         }
 
-        public static async Task<T> Get<T>(Func<Task<T>> GetResult, DbContext dbContext, object query, ILogger<QueryExecutor> _logger = null)
+        public static async Task<T> Get<T>(Func<Task<T>> GetResult, DbContext dbContext, object query, ILogger<AppDbContext> _logger = null)
         {
-            var stopwatch = new System.Diagnostics.Stopwatch();
+            return await ((AppDbContext)dbContext).Get(GetResult, dbContext, query, _logger);
 
-            if (dbContext == null)
-                throw new GenericException("No database connection found.");
+            //var stopwatch = new System.Diagnostics.Stopwatch();
 
-            if (query == null)
-                throw new GenericException("No query object defined.");
+            //if (dbContext == null)
+            //    throw new GenericException("No database connection found.");
 
-            try
-            {
-                stopwatch.Start();
-                _logger?.LogDebug(message: $"QueryExecutor.Get() => {query}");
-                var result = await GetResult();
-                return result;
-            }
-            catch (Exception ex)
-            {
-                string message = $"QueryExecutor.Get() failed. [{ex.Message}]";
-                _logger?.LogError(exception: ex, message: message);
-                throw new GenericException("Error getting data.", ex);
-            }
-            finally
-            {
-                if (stopwatch.IsRunning)
-                    stopwatch.Stop();
-                string message = $"QueryExecutor.Get() => {stopwatch.Elapsed.TotalSeconds}";
-                _logger?.LogDebug(message: message);
+            //if (query == null)
+            //    throw new GenericException("No query object defined.");
 
-            }
+            //try
+            //{
+            //    stopwatch.Start();
+            //    _logger?.LogDebug(message: $"QueryExecutor.Get() => {query}");
+            //    var result = await GetResult();
+            //    return result;
+            //}
+            //catch (Exception ex)
+            //{
+            //    string message = $"QueryExecutor.Get() failed. [{ex.Message}]";
+            //    _logger?.LogError(exception: ex, message: message);
+            //    throw new GenericException("Error getting data.", ex);
+            //}
+            //finally
+            //{
+            //    if (stopwatch.IsRunning)
+            //        stopwatch.Stop();
+            //    string message = $"QueryExecutor.Get() => {stopwatch.Elapsed.TotalSeconds}";
+            //    _logger?.LogDebug(message: message);
+
+            //}
         }
 
         public async Task DisposeAsync(bool disposing)
