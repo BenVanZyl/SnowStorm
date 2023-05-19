@@ -97,7 +97,7 @@ namespace SnowStorm.Domain
             }
         }
 
-        public async Task<T> Get<T>(Func<Task<T>> GetResult, DbContext dbContext, object query, ILogger<AppDbContext> _logger = null)
+        public async Task<T> Get<T>(Func<Task<T>> GetResult, DbContext dbContext, object query)
         {
             var stopwatch = new System.Diagnostics.Stopwatch();
 
@@ -110,14 +110,14 @@ namespace SnowStorm.Domain
             try
             {
                 stopwatch.Start();
-                _logger?.LogDebug(message: $"AppDbContext.Get() => {query}");
+                Logger?.LogDebug(message: $"AppDbContext.Get() => {query}");
                 var result = await GetResult();
                 return result;
             }
             catch (Exception ex)
             {
                 string message = $"AppDbContext.Get() failed. [{ex.Message}]";
-                _logger?.LogError(exception: ex, message: message);
+                Logger?.LogError(exception: ex, message: message);
                 throw new GenericException("Error getting data.", ex);
             }
             finally
@@ -125,7 +125,7 @@ namespace SnowStorm.Domain
                 if (stopwatch.IsRunning)
                     stopwatch.Stop();
                 string message = $"AppDbContext.Get() => {stopwatch.Elapsed.TotalSeconds}";
-                _logger?.LogDebug(message: message);
+                Logger?.LogDebug(message: message);
 
             }
         }

@@ -173,7 +173,7 @@ namespace SnowStorm.QueryExecutors
 
         public static async Task<T> Get<T>(Func<Task<T>> GetResult, DbContext dbContext, object query, ILogger<AppDbContext> _logger = null)
         {
-            return await ((AppDbContext)dbContext).Get(GetResult, dbContext, query, _logger);
+            return await ((AppDbContext)dbContext).Get(GetResult, dbContext, query);
 
             //var stopwatch = new System.Diagnostics.Stopwatch();
 

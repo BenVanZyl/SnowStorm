@@ -24,6 +24,8 @@ namespace SnowStorm.Users
         {
             DataContext = dataContext;
             HttpContextAccessor = httpContextAccessor;
+
+            
         }
 
         public virtual AppDbContext DataContext { get; }

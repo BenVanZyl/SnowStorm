@@ -12,19 +12,31 @@ namespace SnowStorm.Domain
 {
     public partial class AppDbContext
     {
-        public IQueryableProvider QueryableProvider { get; set; }
+        private IQueryableProvider _queryableProvider;
+        public IQueryableProvider QueryableProvider
+        {
+            get
+            {
+                if (_queryableProvider == null)
+                {
+                    var serviceProvider = Container.Instance;
+                    _queryableProvider = serviceProvider.GetService<IQueryableProvider>();
+                }
+                return _queryableProvider;
+            }
+        }
 
-        private IMapper mapper;
+        private IMapper _mapper;
         public IMapper Mapper
         {
             get
             {
-                if (mapper == null)
+                if (_mapper == null)
                 {
                     var serviceProvider = Container.Instance;
-                    mapper = serviceProvider.GetService<IMapper>();
+                    _mapper = serviceProvider.GetService<IMapper>();
                 }
-                return mapper;
+                return _mapper;
             }
         }
 

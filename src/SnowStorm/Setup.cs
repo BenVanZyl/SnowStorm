@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SnowStorm.Domain;
 using SnowStorm.QueryExecutors;
+using SnowStorm.Users;
 using System;
 using System.Reflection;
 
@@ -10,7 +11,7 @@ namespace SnowStorm
 {
     public static class Setup
     {
-        public static void AddSnowStorm(this IServiceCollection services, string assemblyName, string connectionString, bool includeAuditUserInfo = true, int poolSize = 128)
+        public static void AddSnowStorm(this IServiceCollection services, string assemblyName, string connectionString, bool includeAuditUserInfo = false, int poolSize = 32)
         {
             if (string.IsNullOrWhiteSpace(assemblyName))
                 throw new InvalidOperationException($"SnowStorm.Setup.AddSnowStorm(...) : Missing assemblyName");
@@ -30,8 +31,8 @@ namespace SnowStorm
             AddAutoMapper(ref services, ref appAssembly);
 
             //audit user info
-            if (includeAuditUserInfo)
-                AddUserInfo(ref services);
+            //if (includeAuditUserInfo)
+            AddUserInfo(ref services);
 
             //setup IOC container provider
             Container.SetInstance(services.BuildServiceProvider());
@@ -43,13 +44,13 @@ namespace SnowStorm
         /// <param name="services"></param>
         private static void AddUserInfo(ref IServiceCollection services)
         {
-            //services.AddHttpContextAccessor()
-            //services.AddScoped<ICurrentUserInfo, CurrentUserInfo>();
+            //services.AddHttpContextAccessor();
+            services.AddScoped<ICurrentUser, CurrentUser>();
         }
 
+        [Obsolete]
         public static void AddQueryExecutor(ref IServiceCollection services)
         {
-            services.AddScoped<IQueryableProvider, QueryableProvider>();
             services.AddScoped<IQueryExecutor, QueryExecutor>();
         }
 
@@ -73,6 +74,8 @@ namespace SnowStorm
         public static void AddAppDbContext(ref IServiceCollection services, ref Assembly appAssembly, string connectionString, int poolSize = 32)
         {
             AppDbContext.AppAssembly = appAssembly;
+
+            services.AddScoped<IQueryableProvider, QueryableProvider>();
 
             //Auto apply azure managed identity connection to sql server if needed
             services.AddDbContextPool<AppDbContext>
