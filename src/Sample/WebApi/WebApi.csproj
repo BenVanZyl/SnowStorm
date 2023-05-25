@@ -12,12 +12,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\Commands\" />
+    <ProjectReference Include="..\..\SnowStorm\SnowStorm.csproj" />
+    <ProjectReference Include="..\WebApi.Shared\WebApi.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\SnowStorm\SnowStorm.csproj" />
-    <ProjectReference Include="..\WebApi.Shared\WebApi.Shared.csproj" />
+    <Folder Include="Services\Commands\Orders\" />
   </ItemGroup>
 
 </Project>

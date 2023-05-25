@@ -1,11 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore;
-using SnowStorm.QueryExecutors;
-using System.ComponentModel.DataAnnotations.Schema;
-using SnowStorm.Domain;
-using System;
-using WebApi.Shared.Dto;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SnowStorm;
+using SnowStorm.Domain;
+using System.ComponentModel.DataAnnotations.Schema;
+using WebApi.Shared.Dto;
 
 namespace WebApi.Services.Domain
 {
@@ -179,6 +177,7 @@ namespace WebApi.Services.Domain
                 builder.Property(p => p.ShipRegion).HasMaxLength(15);
                 builder.Property(p => p.ShipPostalCode).HasMaxLength(10);
                 builder.Property(p => p.ShipCountry).HasMaxLength(15);
+                builder.Property(p => p.Freight).HasColumnType("Money").HasPrecision(19);//.HasConversion();
             }
         }
         #endregion //config

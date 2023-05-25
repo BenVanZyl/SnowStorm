@@ -1,6 +1,9 @@
-﻿namespace WebApi.Services.Domain
+﻿using SnowStorm.Domain;
+
+namespace WebApi.Services.Domain
 {
-    public class Customer
+    public class Customer : IDomainEntity
     {
+        public int CustomerID { get; set; }
     }
 }

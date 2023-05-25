@@ -8,7 +8,10 @@ namespace WebApi.Services.Infrastructure
     {
         public MappingProfiles()
         {
-            CreateMap<Order, OrderDto>();
+            CreateMap<Region, RegionDto>().ReverseMap();
+
+            CreateMap<Order, OrderDto>().ReverseMap();
+                       
 
 
         }

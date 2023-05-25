@@ -102,10 +102,10 @@ namespace SnowStorm.Domain
             var stopwatch = new System.Diagnostics.Stopwatch();
 
             if (dbContext == null)
-                throw new GenericException("No database connection found.");
+                throw new NullReferenceException("No database connection found.");
 
             if (query == null)
-                throw new GenericException("No query object defined.");
+                throw new NullReferenceException("No query object defined.");
 
             try
             {
@@ -126,9 +126,7 @@ namespace SnowStorm.Domain
                     stopwatch.Stop();
                 string message = $"AppDbContext.Get() => {stopwatch.Elapsed.TotalSeconds}";
                 Logger?.LogDebug(message: message);
-
             }
         }
-
     }
 }
