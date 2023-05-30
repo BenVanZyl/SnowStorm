@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SnowStorm.Domain;
 using SnowStorm.Users;
 using WebApi.Services.Commands.Locations;
+using WebApi.Services.Domain;
 using WebApi.Services.Queries.Locations;
 using WebApi.Services.Queries.Orders;
 using WebApi.Shared.Dto;
@@ -24,7 +25,7 @@ namespace WebApi.Services.Api
         {
             try
             {
-                var result = await DataContext.Get(new GetRegionsQuery());
+                var result = await DataContext.Get<Region, RegionDto>(new GetRegionsQuery());
                 return Ok(result);
             }
             catch (System.Exception ex)

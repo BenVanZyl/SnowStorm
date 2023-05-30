@@ -3,6 +3,7 @@ using Shouldly;
 using Tests.Infrastructure;
 using WebApi.Services.Domain;
 using WebApi.Shared;
+using WebApi.Shared.Dto;
 
 namespace Tests.IntegrationTests
 {
@@ -24,7 +25,7 @@ namespace Tests.IntegrationTests
             //Assert
             response.IsSuccessStatusCode.ShouldBeTrue();
             string apiResponse = await response.Content.ReadAsStringAsync();
-            var regions = JsonConvert.DeserializeObject<List<Region>>(apiResponse);
+            var regions = JsonConvert.DeserializeObject<List<RegionDto>>(apiResponse);
 
             regions.Any(w => w.RegionDescription.Trim() == "Eastern").ShouldBeTrue();
             regions.Any(w => w.RegionDescription.Trim() == "Western").ShouldBeTrue();

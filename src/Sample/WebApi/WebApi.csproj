@@ -1,23 +1,24 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<PreserveCompilationContext>true</PreserveCompilationContext>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.5" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.5" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\SnowStorm\SnowStorm.csproj" />
-    <ProjectReference Include="..\WebApi.Shared\WebApi.Shared.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\SnowStorm\SnowStorm.csproj" />
+		<ProjectReference Include="..\WebApi.Shared\WebApi.Shared.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Services\Commands\Orders\" />
-  </ItemGroup>
+	<ItemGroup>
+		<Folder Include="Services\Commands\Orders\" />
+	</ItemGroup>
 
 </Project>

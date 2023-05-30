@@ -1,11 +1,16 @@
 ﻿using DbScripts;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.VisualStudio.TestPlatform.TestHost;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WebApi.Services.Infrastructure;
 
 namespace Tests.Infrastructure
 {
@@ -23,13 +28,13 @@ namespace Tests.Infrastructure
             CreateTestDbWithDbUp();
 
             var webBuilder = new WebHostBuilder()
-                //.UseStartup<Startup>()  //startup in test project.
-                //.UseStartup<WebApi.Program>()
-                .UseStartup("WebApi")
+                .UseStartup<Startup>()  //startup in web api project.
                 .UseSetting("ConnectionStrings:Data", ConnectionString);
-            //add more settings like appsettings etc.
-
+            ////add more settings like appsettings etc.
+            
             TestServer = new TestServer(webBuilder);
+
+
 
             Client = TestServer.CreateClient();
             Client.BaseAddress = new Uri(Client.BaseAddress.ToString().Replace("http:", "https:"));
