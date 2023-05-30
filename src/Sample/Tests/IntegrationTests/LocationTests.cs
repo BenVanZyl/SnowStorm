@@ -32,5 +32,28 @@ namespace Tests.IntegrationTests
             regions.Any(w => w.RegionDescription.Trim() == "Northern").ShouldBeTrue();
             regions.Any(w => w.RegionDescription.Trim() == "Southern").ShouldBeTrue();
         }
+
+        [Theory]
+        [InlineData(1, "Eastern")]
+        [InlineData(2, "Western")]
+        [InlineData(3, "Northern")]
+        [InlineData(4, "Southern")]
+        public async Task ValidateGetRegionTest(int request, string result)
+        {
+            //Arrange
+            //Nothing to do.  Data is already there.
+
+            //Act
+            var response = await Client.GetAsync($"{Routes.LocationsRegions}/{request}");
+
+            //Assert
+            response.IsSuccessStatusCode.ShouldBeTrue();
+            string apiResponse = await response.Content.ReadAsStringAsync();
+            var region = JsonConvert.DeserializeObject<RegionDto>(apiResponse);
+
+            region.Id.ShouldBe(request);
+            region.RegionDescription.Trim().ShouldBe(result);
+
+        }
     }
 }
