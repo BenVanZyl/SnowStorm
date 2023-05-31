@@ -17,13 +17,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configs", "Configs", "{6170
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sample", "Sample", "{E2C97FF7-B536-483D-B760-D4B9C4CD241F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbScripts", "src\Sample\DbScripts\DbScripts.csproj", "{B47538DD-6572-4A36-8173-44B2E9828667}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbScripts", "src\Sample\DbScripts\DbScripts.csproj", "{B47538DD-6572-4A36-8173-44B2E9828667}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi", "src\Sample\WebApi\WebApi.csproj", "{31FF60D8-D6C0-4F53-A337-FECB9797DF69}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi", "src\Sample\WebApi\WebApi.csproj", "{31FF60D8-D6C0-4F53-A337-FECB9797DF69}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "src\Sample\Tests\Tests.csproj", "{77D863C8-B9E5-43AC-8397-5A7E979E4FE1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "src\Sample\Tests\Tests.csproj", "{77D863C8-B9E5-43AC-8397-5A7E979E4FE1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi.Shared", "src\Sample\WebApi.Shared\WebApi.Shared.csproj", "{64C0BC87-C04B-4077-8036-75A77A9DBAA7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi.Shared", "src\Sample\WebApi.Shared\WebApi.Shared.csproj", "{64C0BC87-C04B-4077-8036-75A77A9DBAA7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

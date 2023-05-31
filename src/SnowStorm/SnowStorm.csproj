@@ -37,6 +37,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="SnowStorm.Extensions" Version="1.0.0" />
   </ItemGroup>
   
   <ItemGroup>
@@ -46,10 +47,6 @@
     <Content Include="SnowStorm.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\GitHub\BvZ\SnowStorm.Extensions\src\SnowStorm.Extensions\SnowStorm.Extensions.csproj" />
   </ItemGroup>
 
 </Project>

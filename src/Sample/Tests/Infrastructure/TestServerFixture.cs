@@ -29,7 +29,8 @@ namespace Tests.Infrastructure
 
             var webBuilder = new WebHostBuilder()
                 .UseStartup<Startup>()  //startup in web api project.
-                .UseSetting("ConnectionStrings:Data", ConnectionString);
+                .UseSetting("ConnectionStrings:Data", ConnectionString)
+                .UseEnvironment("Development");
             ////add more settings like appsettings etc.
             
             TestServer = new TestServer(webBuilder);
