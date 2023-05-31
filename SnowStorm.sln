@@ -11,8 +11,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configs", "Configs", "{6170
 		azure-pipelines.yml = azure-pipelines.yml
 		CreateRelease.ps1 = CreateRelease.ps1
 		GitVersion.yml = GitVersion.yml
+		src\SnowStorm\License.txt = src\SnowStorm\License.txt
 		NuGet.config = NuGet.config
 		README.md = README.md
+		src\SnowStorm\SnowStorm.nuspec = src\SnowStorm\SnowStorm.nuspec
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sample", "Sample", "{E2C97FF7-B536-483D-B760-D4B9C4CD241F}"
