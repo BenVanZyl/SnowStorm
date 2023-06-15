@@ -15,7 +15,7 @@ namespace SnowStorm.Domain
         { }
 
         /// <summary>
-        /// Static helper property to assist with Unit and Integration Testingor were the Domain classes is in a different assembly...ll
+        /// Static helper property to assist with Unit and Integration Testing were the Domain classes is in a different assembly...ll
         /// </summary>
         public static Assembly? AppAssembly { get; set; } 
 
@@ -41,17 +41,18 @@ namespace SnowStorm.Domain
 
         public override int SaveChanges()
         {
-            AddAuitInfo();
+            AddAuditInfo();
             return base.SaveChanges();
         }
 
         public async Task<int> SaveChangesAsync()
         {
-            AddAuitInfo();
-            return await base.SaveChangesAsync();
+            AddAuditInfo();
+            int result = await base.SaveChangesAsync();
+            return result; 
         }
 
-        public virtual void AddAuitInfo()
+        public virtual void AddAuditInfo()
         {
             //TODO: Get User information to log audit info correctly.  Might need to do this from app...
 

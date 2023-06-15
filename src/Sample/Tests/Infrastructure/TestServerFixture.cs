@@ -1,15 +1,6 @@
 ﻿using DbScripts;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
-using Microsoft.VisualStudio.TestPlatform.TestHost;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using WebApi.Services.Infrastructure;
 
 namespace Tests.Infrastructure
@@ -17,12 +8,12 @@ namespace Tests.Infrastructure
     public class TestServerFixture : IDisposable
     {
         private static readonly object _lock = new object();
+        public static bool UpgradePerformed { get; set; } = false;
+        public static string ConnectionString { get; set; } = "";
 
         public TestServer TestServer { get; }
         public HttpClient Client { get; }
-        public bool UpgradePerformed { get; set; } = false;
-        public string ConnectionString { get; set; }
-
+        
         public TestServerFixture()
         {
             CreateTestDbWithDbUp();

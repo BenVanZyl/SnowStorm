@@ -14,8 +14,6 @@ namespace WebApi.Services.Domain
 
         public string RegionDescription { get; private set; }
 
-
-
         #region Methods
 
         internal static async Task<Region> Create(RegionDto data, bool autoSave = true)

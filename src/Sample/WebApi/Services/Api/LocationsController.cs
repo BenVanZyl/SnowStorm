@@ -11,6 +11,7 @@ using WebApi.Shared.Dto;
 
 namespace WebApi.Services.Api
 {
+    [AllowAnonymous]
     public class LocationsController : BaseController
     {
         public LocationsController(AppDbContext dataContext, IMediator mediator, ICurrentUser currentUser) : base(dataContext, mediator, currentUser)
@@ -19,8 +20,6 @@ namespace WebApi.Services.Api
 
         [HttpGet]
         [Route("api/locations/regions")]
-        [AllowAnonymous]
-        //[ValidateAntiForgeryToken()]
         public async Task<IActionResult> GetRegions()
         {
             try
@@ -37,8 +36,6 @@ namespace WebApi.Services.Api
 
         [HttpGet]
         [Route("api/locations/regions/{id:int}")]
-        [AllowAnonymous]
-        //[ValidateAntiForgeryToken()]
         public async Task<IActionResult> GetRegion(int id)
         {
             try
@@ -55,8 +52,6 @@ namespace WebApi.Services.Api
 
         [HttpPost]
         [Route("api/locations/regions")]
-        [AllowAnonymous]
-        //[ValidateAntiForgeryToken()]
         public async Task<IActionResult> PostRegion([FromBody] RegionDto data)
         {
             try

@@ -16,7 +16,7 @@ namespace WebApi.Shared.Dto
         {
             get
             {
-                int.TryParse(Message, out var result);
+                int.TryParse(Id, out var result);
                 return result;
             }
         }
@@ -25,7 +25,7 @@ namespace WebApi.Shared.Dto
         {
             get
             {
-                long.TryParse(Message, out var result);
+                long.TryParse(Id, out var result);
                 return result;
             }
         }

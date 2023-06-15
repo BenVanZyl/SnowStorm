@@ -2,7 +2,7 @@
 BEGIN
 	CREATE TABLE [dbo].[Region]
 	(
-		[RegionID] [int] NOT NULL Identity,
+		[RegionID] [int] Identity NOT NULL,
 		[RegionDescription] [nchar](50) NOT NULL,
 		 CONSTRAINT [PK_Region] PRIMARY KEY NONCLUSTERED 
 		(

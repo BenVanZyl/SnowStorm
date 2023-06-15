@@ -26,6 +26,10 @@ namespace DbScripts
                     Console.WriteLine(ex.StackTrace);
                 Console.WriteLine("--------------------------------");
             }
+
+#if DEBUG
+            Console.ReadKey();
+#endif
         }
     }
 }
