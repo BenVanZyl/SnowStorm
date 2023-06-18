@@ -48,6 +48,7 @@ namespace SnowStorm.Domain
         public async Task<int> SaveChangesAsync()
         {
             AddAuditInfo();
+            ChangeTracker.DetectChanges();            
             int result = await base.SaveChangesAsync();
             return result; 
         }
@@ -55,7 +56,7 @@ namespace SnowStorm.Domain
         public virtual void AddAuditInfo()
         {
             //TODO: Get User information to log audit info correctly.  Might need to do this from app...
-
+            ChangeTracker.DetectChanges();
             var entries = ChangeTracker.Entries().Where(x => x.Entity is DomainEntityWithIdWithAudit && (x.State == EntityState.Added || x.State == EntityState.Modified));
             foreach (var entry in entries)
             {
