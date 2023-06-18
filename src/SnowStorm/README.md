@@ -6,13 +6,17 @@ This project provides a sample implemetation of the CQRS and MediatR patterns.  
 # CQRS + MediatR pattern
 ## CQRS: Command Query Responsibility Segregation
     SnowStorm provides query execution functionailty.
-## MediatR: Implements Mediator Pattern
+## MediatR: Implements Mediator Pattern for handling commands
     https://github.com/jbogard/MediatR
 
 # Supported Platforms
 .Net 7 (Latest version)
 
 # Release Notes
+
+2023-06-01 (1.10.0)
+ - Bug fix related to EF Core not always detecting updated values.
+ - Sample application test updated to cleanup after itself.
 
 2023-06-01 (1.9.0)
  - Breaking changes on the way!
