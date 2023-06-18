@@ -10,6 +10,14 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="Infrastructure\DbCleanupScript.sql" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="Infrastructure\DbCleanupScript.sql" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="7.0.7" />
 		<PackageReference Include="Microsoft.AspNetCore.TestHost" Version="7.0.7" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.2" />

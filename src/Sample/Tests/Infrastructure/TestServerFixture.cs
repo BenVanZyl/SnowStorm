@@ -91,6 +91,8 @@ namespace Tests.Infrastructure
         {
             //throw new NotImplementedException();
             //TODO: Cleanup of test databases.
+            var cleanUp = new DbCleanup(_dbName, "Sample", ConnectionString);
+            cleanUp.Execute();
         }
 
     }
