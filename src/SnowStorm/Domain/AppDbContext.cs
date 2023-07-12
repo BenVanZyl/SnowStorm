@@ -8,19 +8,19 @@ using System.Threading.Tasks;
 
 namespace SnowStorm.Domain
 {
-    public class AppDbContext : DbContext
+    public partial class AppDbContext : DbContext
     {
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)
         { }
 
         /// <summary>
-        /// Static helper property to assist with Unit and Integration Testingor were the Domain classes is in a different assembly...ll
+        /// Static helper property to assist with Unit and Integration Testing were the Domain classes is in a different assembly...ll
         /// </summary>
         public static Assembly? AppAssembly { get; set; } 
 
         /// <summary>
-        /// Get the underlaying connectionstring for this DB Context
+        /// Get the underlaying connection string for this DB Context
         /// </summary>
         public string ConnectionString => this.Database.GetConnectionString();
 
@@ -41,20 +41,22 @@ namespace SnowStorm.Domain
 
         public override int SaveChanges()
         {
-            AddAuitInfo();
+            AddAuditInfo();
             return base.SaveChanges();
         }
 
         public async Task<int> SaveChangesAsync()
         {
-            AddAuitInfo();
-            return await base.SaveChangesAsync();
+            AddAuditInfo();
+            ChangeTracker.DetectChanges();            
+            int result = await base.SaveChangesAsync();
+            return result; 
         }
 
-        public virtual void AddAuitInfo()
+        public virtual void AddAuditInfo()
         {
             //TODO: Get User information to log audit info correctly.  Might need to do this from app...
-
+            ChangeTracker.DetectChanges();
             var entries = ChangeTracker.Entries().Where(x => x.Entity is DomainEntityWithIdWithAudit && (x.State == EntityState.Added || x.State == EntityState.Modified));
             foreach (var entry in entries)
             {

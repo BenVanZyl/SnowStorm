@@ -1,19 +1,17 @@
-﻿using MediatR;
-using Microsoft.Azure.Services.AppAuthentication;
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SnowStorm.Domain;
 using SnowStorm.QueryExecutors;
+using SnowStorm.Users;
 using System;
-using System.Net.NetworkInformation;
 using System.Reflection;
 
 namespace SnowStorm
 {
     public static class Setup
     {
-        public static void AddSnowStorm(this IServiceCollection services, string assemblyName, string connectionString, bool includeAuditUserInfo = true, int poolSize = 128)
+        public static void AddSnowStorm(this IServiceCollection services, string assemblyName, string connectionString, bool includeAuditUserInfo = false, int poolSize = 32)
         {
             if (string.IsNullOrWhiteSpace(assemblyName))
                 throw new InvalidOperationException($"SnowStorm.Setup.AddSnowStorm(...) : Missing assemblyName");
@@ -21,39 +19,42 @@ namespace SnowStorm
             Assembly appAssembly = Assembly.Load(assemblyName);
 
             //setup DbContext
-            AddAppDbContext(ref services, ref appAssembly, connectionString, poolSize: poolSize);
+            AddAppDbContext(services, appAssembly, connectionString, poolSize: poolSize);
 
             //setup query executors
-            AddQueryExecutor(ref services);
+            AddQueryExecutor(services);
 
             //Setup MediatR
-            AddMediator(ref services, appAssembly);
+            AddMediator(services, appAssembly);
 
             //setup automapper
-            AddAutoMapper(ref services, ref appAssembly);
+            AddAutoMapper(services, appAssembly);
 
             //audit user info
-            if (includeAuditUserInfo)
-                AddUserInfo(ref services);
+            //if (includeAuditUserInfo)
+            AddUserInfo(services);
+
+            //setup IOC container provider
+            Container.SetInstance(services.BuildServiceProvider());
         }
 
         /// <summary>
         /// builder.Services.AddHttpContextAccessor();  -- Required First
         /// </summary>
         /// <param name="services"></param>
-        private static void AddUserInfo(ref IServiceCollection services)
+        private static void AddUserInfo(IServiceCollection services)
         {
-            //services.AddHttpContextAccessor()
-            //services.AddScoped<ICurrentUserInfo, CurrentUserInfo>();
+            //services.AddHttpContextAccessor();
+            services.AddScoped<ICurrentUser, CurrentUser>();
         }
 
-        public static void AddQueryExecutor(ref IServiceCollection services)
+        [Obsolete]
+        public static void AddQueryExecutor(IServiceCollection services)
         {
-            services.AddScoped<IQueryableProvider, QueryableProvider>();
             services.AddScoped<IQueryExecutor, QueryExecutor>();
         }
 
-        public static void AddMediator(ref IServiceCollection services, Assembly appAssembly)
+        public static void AddMediator(IServiceCollection services, Assembly appAssembly)
         {
             if (appAssembly == null)
                 throw new InvalidOperationException($"SnowStorm.Setup.AddMediator(...) : Missing appAssembly.");
@@ -61,8 +62,8 @@ namespace SnowStorm
             //services.AddMediatR(appAssembly);
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(appAssembly));
         }
-                
-        public static void AddAutoMapper(ref IServiceCollection services, ref Assembly appAssembly)
+
+        public static void AddAutoMapper(IServiceCollection services, Assembly appAssembly)
         {
             if (appAssembly == null)
                 throw new InvalidOperationException($"SnowStorm.Setup.AddMediator(...) : Missing appAssembly.");
@@ -70,9 +71,11 @@ namespace SnowStorm
             services.AddAutoMapper(appAssembly);
         }
 
-        public static void AddAppDbContext(ref IServiceCollection services, ref Assembly appAssembly, string connectionString, int poolSize = 128)
+        public static void AddAppDbContext(IServiceCollection services, Assembly appAssembly, string connectionString, int poolSize = 32)
         {
             AppDbContext.AppAssembly = appAssembly;
+
+            services.AddScoped<IQueryableProvider, QueryableProvider>();
 
             //Auto apply azure managed identity connection to sql server if needed
             services.AddDbContextPool<AppDbContext>
@@ -80,10 +83,12 @@ namespace SnowStorm
                 {
                     if (connectionString.Contains(".database.windows.net", System.StringComparison.OrdinalIgnoreCase) && !connectionString.Contains("password", System.StringComparison.OrdinalIgnoreCase))
                     {   // SQL Server Db in Azure, using Azure AD integrated auth
+                        var credential = new Azure.Identity.DefaultAzureCredential();
+                        var token = credential.GetToken(new Azure.Core.TokenRequestContext(new[] { "https://database.windows.net/.default" }));
                         SqlConnection connection = new()
                         {
                             ConnectionString = connectionString,
-                            AccessToken = (new AzureServiceTokenProvider()).GetAccessTokenAsync("https://database.windows.net/").Result
+                            AccessToken = token.Token
                         };
                         o.UseSqlServer(connection, sqlServerOptionsAction: sqlOptions =>
                         {
