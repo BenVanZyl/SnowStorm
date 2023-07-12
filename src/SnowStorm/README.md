@@ -14,6 +14,10 @@ This project provides a sample implemetation of the CQRS and MediatR patterns.  
 
 # Release Notes
 
+2023-07-13 (1.11.0)
+ - Final version of current code base.  Next version will be 2.0.0 and will contain various breaking changes and the removal of depreciated functionality.
+ - Updated NuGet packages and resolving some compiler warnings.
+
 2023-06-01 (1.10.0)
  - Bug fix related to EF Core not always detecting updated values.
  - Sample application test updated to cleanup after itself.
