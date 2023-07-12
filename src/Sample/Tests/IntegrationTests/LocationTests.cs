@@ -7,6 +7,8 @@ using Tests.Infrastructure;
 using WebApi.Services.Domain;
 using WebApi.Shared;
 using WebApi.Shared.Dto;
+using WebApi.Shared.Dto.Locations;
+using WebApi.Shared.Dto.Regions;
 
 namespace Tests.IntegrationTests
 {
@@ -70,7 +72,7 @@ namespace Tests.IntegrationTests
             };
 
             //Act
-            var response = await Client.PostAsJsonAsync(Routes.LocationsRegions, data); 
+            var response = await Client.PostAsJsonAsync(Routes.LocationsRegions, data);
 
             //Assert
             response.IsSuccessStatusCode.ShouldBeTrue();
@@ -111,6 +113,40 @@ namespace Tests.IntegrationTests
             var validateData = await Client.GetFromJsonAsync<RegionDto>($"{Routes.LocationsRegions}/{result.Id}");
             validateData.ShouldNotBeNull();
             validateData.RegionDescription.ShouldBe(data.RegionDescription);
+
+        }
+
+        [Fact]
+        public async Task ValidateRegionPatchTest()
+        {
+            //Arrange
+            var data = await Client.GetFromJsonAsync<RegionDto>($"{Routes.LocationsRegions}/1");
+            data.ShouldNotBeNull();
+
+            var patchData = new RegionPatchDto()
+            {
+                Id = data.Id,
+                Name = "RegionDescription",
+                Value = $"{data.RegionDescription} abc"
+            };
+
+
+            //Act
+            var response = await Client.PatchAsJsonAsync(Routes.LocationsRegions, patchData);
+
+            //Assert
+            response.IsSuccessStatusCode.ShouldBeTrue();
+            string apiResponse = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<CommandResultDto>(apiResponse);
+            result.ShouldNotBeNull();
+            result.Success.ShouldBeTrue();
+            result.Message.ShouldBe(Messages.SuccessRecordUpdated);
+            result.Id.ShouldBe("1");
+
+            //Retrieve and confirm
+            var validateData = await Client.GetFromJsonAsync<RegionDto>($"{Routes.LocationsRegions}/{result.Id}");
+            validateData.ShouldNotBeNull();
+            validateData.RegionDescription.ShouldBe(patchData.Value);
 
         }
     }

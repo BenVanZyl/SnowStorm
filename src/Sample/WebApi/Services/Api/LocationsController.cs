@@ -7,7 +7,8 @@ using WebApi.Services.Commands.Locations;
 using WebApi.Services.Domain;
 using WebApi.Services.Queries.Locations;
 using WebApi.Services.Queries.Orders;
-using WebApi.Shared.Dto;
+using WebApi.Shared.Dto.Locations;
+using WebApi.Shared.Dto.Regions;
 
 namespace WebApi.Services.Api
 {
@@ -57,6 +58,22 @@ namespace WebApi.Services.Api
             try
             {
                 var result = await Mediator.Send(new RegionSaveCommand(data));
+                return Ok(result);
+            }
+            catch (System.Exception ex)
+            {
+                //Log.Error(ex, "GetOrders ERROR");
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpPatch]
+        [Route("api/locations/regions")]
+        public async Task<IActionResult> PatchRegion([FromBody] RegionPatchDto data)
+        {
+            try
+            {
+                var result = await Mediator.Send(new RegionPatchCommand(data));
                 return Ok(result);
             }
             catch (System.Exception ex)

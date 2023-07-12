@@ -10,6 +10,7 @@ namespace WebApi.Shared
     {
         public static string SuccessRecordCreated = "Record created.";
         public static string SuccessRecordUpdated = "Record updated.";
+        public static string NotFound = "Record not found.";
 
     }
 }

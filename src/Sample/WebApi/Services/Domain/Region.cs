@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SnowStorm;
 using SnowStorm.Domain;
-using WebApi.Shared.Dto;
+using WebApi.Shared.Dto.Regions;
 
 namespace WebApi.Services.Domain
 {

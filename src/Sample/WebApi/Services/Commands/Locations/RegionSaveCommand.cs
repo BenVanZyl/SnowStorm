@@ -5,6 +5,7 @@ using WebApi.Services.Domain;
 using WebApi.Services.Queries.Locations;
 using WebApi.Shared;
 using WebApi.Shared.Dto;
+using WebApi.Shared.Dto.Regions;
 
 namespace WebApi.Services.Commands.Locations
 {
@@ -18,13 +19,15 @@ namespace WebApi.Services.Commands.Locations
         }
     }
 
+    //public record RegionSaveCommand(RegionDto Data) : IRequest<CommandResultDto>;
+
     public class RegionSaveCommandHandler : IRequestHandler<RegionSaveCommand, CommandResultDto>
     {
         private readonly AppDbContext _dataContext;
 
-        public RegionSaveCommandHandler(AppDbContext datacontext)
+        public RegionSaveCommandHandler(AppDbContext dataContext)
         {
-            _dataContext = datacontext;
+            _dataContext = dataContext;
         }
 
         public async Task<CommandResultDto> Handle(RegionSaveCommand request, CancellationToken cancellationToken)
