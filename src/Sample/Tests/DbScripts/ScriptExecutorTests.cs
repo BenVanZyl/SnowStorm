@@ -14,7 +14,7 @@ namespace Tests.DbScripts
         private const string AssemblyNameToTest = "DbScripts";
 
         /// <summary>
-        /// Error in this test means there is a script that has not been marked as embedded resource.  Checck the error message and scripts.
+        /// Error in this test means there is a script that has not been marked as embedded resource.  Check the error message and scripts.
         /// </summary>
         [Fact]
         public void VerifyAllScriptsEmbedded()
@@ -27,7 +27,7 @@ namespace Tests.DbScripts
 
             //var scriptsEmbedded = Assembly.GetAssembly(typeof(ScriptExecutor)).GetManifestResourceNames();
             var scriptsEmbedded = Assembly.Load(AssemblyNameToTest).GetManifestResourceNames();
-            Console.WriteLine($" -- scriptsEmbedded Count = '{scriptsEmbedded.Count()}'");
+            Console.WriteLine($" -- scriptsEmbedded Count = '{scriptsEmbedded.Length}'");
 
             foreach (var f in scriptsOnDisk)
             {
@@ -54,7 +54,7 @@ namespace Tests.DbScripts
             }
         }
 
-        private string PathToScripts(string scriptPath)
+        private static string PathToScripts(string scriptPath)
         {
 
             Console.WriteLine(" ## Getting assemblyLocation ...");
@@ -66,7 +66,7 @@ namespace Tests.DbScripts
             Console.WriteLine($" ##   srcPosition = '{srcPosition}' ");
 
             Console.WriteLine(" ## Getting rootPath ...");
-            var rootPath = baseDirectory.Remove(srcPosition, baseDirectory.Count() - srcPosition);
+            var rootPath = baseDirectory.Remove(srcPosition, baseDirectory.Length - srcPosition);
             Console.WriteLine($" ##   rootPath = '{rootPath}' ");
             Directory.Exists(rootPath).ShouldBeTrue();
 
@@ -87,11 +87,11 @@ namespace Tests.DbScripts
             return path;
         }
 
-        private string GetFromResources(string resourceName)
+        private static string GetFromResources(string resourceName)
         {
-            Assembly assem = Assembly.GetAssembly(typeof(ScriptExecutor));
+            Assembly assembly = Assembly.GetAssembly(typeof(ScriptExecutor));
 
-            using Stream stream = assem.GetManifestResourceStream(resourceName);
+            using Stream stream = assembly.GetManifestResourceStream(resourceName);
             using var reader = new StreamReader(stream);
             return reader.ReadToEnd();
         } 

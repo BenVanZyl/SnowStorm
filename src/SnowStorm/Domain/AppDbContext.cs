@@ -20,7 +20,7 @@ namespace SnowStorm.Domain
         public static Assembly? AppAssembly { get; set; } 
 
         /// <summary>
-        /// Get the underlaying connectionstring for this DB Context
+        /// Get the underlaying connection string for this DB Context
         /// </summary>
         public string ConnectionString => this.Database.GetConnectionString();
 

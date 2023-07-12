@@ -8,9 +8,9 @@ namespace WebApi.Shared
 {
     public static class Messages
     {
-        public static string SuccessRecordCreated = "Record created.";
-        public static string SuccessRecordUpdated = "Record updated.";
-        public static string NotFound = "Record not found.";
+        public const string SuccessRecordCreated = "Record created.";
+        public const string SuccessRecordUpdated = "Record updated.";
+        public const string NotFound = "Record not found.";
 
     }
 }

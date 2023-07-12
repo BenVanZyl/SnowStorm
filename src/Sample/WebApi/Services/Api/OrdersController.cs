@@ -16,7 +16,6 @@ namespace WebApi.Services.Api
         [HttpGet]
         [Route("api/orders")]
         [AllowAnonymous]
-        //[ValidateAntiForgeryToken()]
         public async Task<IActionResult> GetOrders()
         {
             try
@@ -35,7 +34,6 @@ namespace WebApi.Services.Api
         [HttpPut]
         [Route("api/orders")]
         [AllowAnonymous]
-        //[ValidateAntiForgeryToken()]
         public async Task<IActionResult> PutOrders()
         {
             return Ok();
@@ -46,7 +44,6 @@ namespace WebApi.Services.Api
             //}
             //catch (System.Exception ex)
             //{
-            //    //Log.Error(ex, "GetOrders ERROR");
             //    return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             //}
 

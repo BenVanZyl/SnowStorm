@@ -8,9 +8,9 @@ namespace WebApi.Shared.Dto
 {
     public class CommandResultDto
     {
-        public bool Success { get; set; }
-        public string Message { get; set; }
-        public string Id { get; set; }
+        public bool Success { get; set; } = false;
+        public string Message { get; set; } = string.Empty;
+        public string Id { get; set; } = string.Empty;
 
         public int IdToInt
         {
