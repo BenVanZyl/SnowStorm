@@ -1,10 +1,7 @@
-﻿using Azure.Core;
-using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Shouldly;
 using System.Net.Http.Json;
 using Tests.Infrastructure;
-using WebApi.Services.Domain;
 using WebApi.Shared;
 using WebApi.Shared.Dto;
 using WebApi.Shared.Dto.Locations;
