@@ -21,13 +21,10 @@ namespace SnowStorm
             //setup DbContext
             AddAppDbContext(services, appAssembly, connectionString, poolSize: poolSize);
 
-            //setup query executors
-            AddQueryExecutor(services);
-
             //Setup MediatR
-            AddMediator(services, appAssembly);
+            //AddMediator(services, appAssembly);
 
-            //setup automapper
+            //setup auto mapper
             AddAutoMapper(services, appAssembly);
 
             //audit user info
@@ -48,20 +45,14 @@ namespace SnowStorm
             services.AddScoped<ICurrentUser, CurrentUser>();
         }
 
-        [Obsolete]
-        public static void AddQueryExecutor(IServiceCollection services)
-        {
-            services.AddScoped<IQueryExecutor, QueryExecutor>();
-        }
+        //public static void AddMediator(IServiceCollection services, Assembly appAssembly)
+        //{
+        //    if (appAssembly == null)
+        //        throw new InvalidOperationException($"SnowStorm.Setup.AddMediator(...) : Missing appAssembly.");
 
-        public static void AddMediator(IServiceCollection services, Assembly appAssembly)
-        {
-            if (appAssembly == null)
-                throw new InvalidOperationException($"SnowStorm.Setup.AddMediator(...) : Missing appAssembly.");
-
-            //services.AddMediatR(appAssembly);
-            services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(appAssembly));
-        }
+        //    //services.AddMediatR(appAssembly);
+        //    services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(appAssembly));
+        //}
 
         public static void AddAutoMapper(IServiceCollection services, Assembly appAssembly)
         {

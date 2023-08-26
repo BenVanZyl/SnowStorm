@@ -21,7 +21,18 @@ namespace WebApi.Services.Infrastructure
 
             services.AddHttpContextAccessor(); //TODO:  move into SnowStorm
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsAllowAll",
+                builder =>
+                {
+                    builder.WithOrigins("ApiClientCors").AllowAnyHeader().WithMethods("GET, PATCH, DELETE, PUT, POST, OPTIONS");
+                });
+            });
+
             services.AddSnowStorm("WebApi", ConnectionStringData);
+
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Startup>());
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

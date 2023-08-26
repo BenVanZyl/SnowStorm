@@ -6,7 +6,21 @@ namespace SnowStorm.Domain
     {
     }
 
-    public class DomainEntityWithId : IDomainEntityWithId
+    public class DomainEntityWithAudit : DomainEntity    {
+        public DateTime CreatedOn { get; private set; }
+        public DateTime ModifiedOn { get; private set; }
+
+        public virtual void SetCreatedOn()
+        {
+            CreatedOn = DateTime.Now;
+        }
+        public virtual void SetModifiedOn()
+        {
+            ModifiedOn = DateTime.Now;
+        }
+    }
+
+    public class DomainEntityWithId : DomainEntity
     {
         public long Id { get; set; }
     }
