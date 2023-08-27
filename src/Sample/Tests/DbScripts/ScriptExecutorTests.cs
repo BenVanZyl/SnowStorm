@@ -29,9 +29,9 @@ namespace Tests.DbScripts
             var scriptsEmbedded = Assembly.Load(AssemblyNameToTest).GetManifestResourceNames();
             Console.WriteLine($" -- scriptsEmbedded Count = '{scriptsEmbedded.Length}'");
 
-            foreach (var f in scriptsOnDisk)
+            foreach (var filename in scriptsOnDisk)
             {
-                scriptsEmbedded.ShouldContain(e => e.EndsWith(f),  "Script file: " + f);
+                scriptsEmbedded.ShouldContain(e => e.EndsWith(filename),  "Script file: " + filename);
             }
         }
 
@@ -89,9 +89,12 @@ namespace Tests.DbScripts
 
         private static string GetFromResources(string resourceName)
         {
-            Assembly assembly = Assembly.GetAssembly(typeof(ScriptExecutor));
+            Assembly? assembly = Assembly.GetAssembly(typeof(ScriptExecutor));
 
-            using Stream stream = assembly.GetManifestResourceStream(resourceName);
+            using Stream? stream = assembly?.GetManifestResourceStream(resourceName);
+            if (stream == null)
+                return "";
+
             using var reader = new StreamReader(stream);
             return reader.ReadToEnd();
         } 
