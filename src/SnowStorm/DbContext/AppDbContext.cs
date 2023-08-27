@@ -17,7 +17,7 @@ namespace SnowStorm.Domain
         /// <summary>
         /// Static helper property to assist with Unit and Integration Testing were the Domain classes is in a different assembly...ll
         /// </summary>
-        public static Assembly? AppAssembly { get; set; } 
+        public static Assembly AppAssembly { get; set; } 
 
         /// <summary>
         /// Get the underlaying connection string for this DB Context

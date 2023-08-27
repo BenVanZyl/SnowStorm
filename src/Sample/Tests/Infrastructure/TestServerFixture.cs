@@ -29,7 +29,8 @@ namespace Tests.Infrastructure
 
 
             Client = TestServer.CreateClient();
-            Client.BaseAddress = new Uri(Client.BaseAddress.ToString().Replace("http:", "https:"));
+            string httpsBaseAddress = Client.BaseAddress.ToString().Replace("http:", "https:");
+            Client.BaseAddress = new Uri(httpsBaseAddress);
 
             ////Client.cre
             //var hndl = TestServer.CreateHandler()
@@ -57,8 +58,7 @@ namespace Tests.Infrastructure
                     return; //has a connection string
 
                 //create cnn string
-                var cnnstring = $"Server=(localdb)\\mssqllocaldb;Database={DbName};Trusted_Connection=True;MultipleActiveResultSets=true";
-                ConnectionString = cnnstring;
+                ConnectionString = $"Server=(localdb)\\mssqllocaldb;Database={DbName};Trusted_Connection=True;MultipleActiveResultSets=true";
 
                 try
                 {
@@ -68,7 +68,8 @@ namespace Tests.Infrastructure
                 }
                 catch (Exception ex)
                 {
-                    throw ex;
+                    Console.WriteLine($"CreateTestDbWithDbUp FAILED: {ex.Message}");
+                    throw;
                 }
             }
         }
@@ -89,8 +90,7 @@ namespace Tests.Infrastructure
 
         public void Dispose()
         {
-            //throw new NotImplementedException();
-            //TODO: Cleanup of test databases.
+            // Cleanup of test databases.
             var cleanUp = new DbCleanup(_dbName, "Sample", ConnectionString);
             cleanUp.Execute();
         }
