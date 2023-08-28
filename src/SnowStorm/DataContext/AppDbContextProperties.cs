@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SnowStorm.QueryExecutors;
 
-namespace SnowStorm.Domain
+namespace SnowStorm.DataContext
 {
     public partial class AppDbContext
     {

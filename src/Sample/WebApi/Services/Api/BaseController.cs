@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using SnowStorm.Domain;
+using SnowStorm.DataContext;
 using SnowStorm.Users;
 
 namespace WebApi.Services.Api

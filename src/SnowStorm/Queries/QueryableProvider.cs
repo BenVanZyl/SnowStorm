@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SnowStorm.Domain;
+﻿using SnowStorm.DataContext;
 using System.Linq;
 
 namespace SnowStorm.QueryExecutors

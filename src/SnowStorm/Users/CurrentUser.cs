@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
-using SnowStorm.Domain;
+using SnowStorm.DataContext;
 using System.Threading.Tasks;
 
 namespace SnowStorm.Users

@@ -1,17 +1,15 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
+﻿using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using SnowStorm.Domain;
 using SnowStorm.Exceptions;
 using SnowStorm.QueryExecutors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace SnowStorm.Domain
+namespace SnowStorm.DataContext
 {
     public partial class AppDbContext
     {
@@ -97,6 +95,46 @@ namespace SnowStorm.Domain
             }
         }
 
+        public async Task<T> GetById<T>(string id) where T : DomainEntityWithIdString
+        {
+            var stopwatch = new System.Diagnostics.Stopwatch();
+            try
+            {
+                stopwatch.Start();
+                var result = await this.Set<T>().OrderByDescending(o => o.Id).SingleOrDefaultAsync(w => w.Id == id);
+                stopwatch.Stop();
+                _logger?.LogDebug(message: $"GetById query ran for {stopwatch.Elapsed.TotalSeconds} seconds.");
+                //null checks to be handle by client
+                return result;
+            }
+            catch (Exception ex)
+            {
+                stopwatch.Stop();
+                _logger?.LogError(ex, $"Error.  GetById({id}) : {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<T> GetById<T>(int id) where T : DomainEntityWithIdInt
+        {
+            var stopwatch = new System.Diagnostics.Stopwatch();
+            try
+            {
+                stopwatch.Start();
+                var result = await this.Set<T>().OrderByDescending(o => o.Id).SingleOrDefaultAsync(w => w.Id == id);
+                stopwatch.Stop();
+                _logger?.LogDebug(message: $"GetById query ran for {stopwatch.Elapsed.TotalSeconds} seconds.");
+                //null checks to be handle by client
+                return result;
+            }
+            catch (Exception ex)
+            {
+                stopwatch.Stop();
+                _logger?.LogError(ex, $"Error.  GetById({id}) : {ex.Message}");
+                throw;
+            }
+        }
+
         public async Task<T> GetById<T>(long id) where T : DomainEntityWithId
         {
             var stopwatch = new System.Diagnostics.Stopwatch();
@@ -113,6 +151,26 @@ namespace SnowStorm.Domain
             {
                 stopwatch.Stop();
                 _logger?.LogError(ex, $"Error.  GetById({id}) : {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<List<T>> GetAll<T>() where T : DomainEntity
+        {
+            var stopwatch = new System.Diagnostics.Stopwatch();
+            try
+            {
+                stopwatch.Start();
+                var result = await this.Set<T>().ToListAsync<T>(); //.OrderByDescending(o => o.Id).SingleOrDefaultAsync(w => w.Id == id);
+                stopwatch.Stop();
+                _logger?.LogDebug(message: $"GetAll query ran for {stopwatch.Elapsed.TotalSeconds} seconds.");
+                //null checks to be handle by client
+                return result;
+            }
+            catch (Exception ex)
+            {
+                stopwatch.Stop();
+                _logger?.LogError(ex, $"Error.  GetByAll() : {ex.Message}");
                 throw;
             }
         }

@@ -6,11 +6,11 @@ using WebApi.Shared.Dto.Regions;
 
 namespace WebApi.Services.Domain
 {
-    public class Region : IDomainEntity
+    public class Region : DomainEntityWithIdInt
     {
         protected Region() { }
 
-        public int Id { get; private set; }
+        //public int Id { get; private set; }
 
         public string RegionDescription { get; private set; }
 

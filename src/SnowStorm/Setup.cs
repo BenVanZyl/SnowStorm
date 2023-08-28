@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using SnowStorm.DataContext;
 using SnowStorm.Domain;
 using SnowStorm.QueryExecutors;
 using SnowStorm.Users;
@@ -21,9 +22,6 @@ namespace SnowStorm
             //setup DbContext
             AddAppDbContext(services, appAssembly, connectionString, poolSize: poolSize);
 
-            //Setup MediatR
-            //AddMediator(services, appAssembly);
-
             //setup auto mapper
             AddAutoMapper(services, appAssembly);
 
@@ -35,24 +33,15 @@ namespace SnowStorm
             Container.SetInstance(services.BuildServiceProvider());
         }
 
-        /// <summary>
-        /// builder.Services.AddHttpContextAccessor();  -- Required First
-        /// </summary>
-        /// <param name="services"></param>
+        //
+        // builder.Services.AddHttpContextAccessor();  -- Required First
+        //
+        
         private static void AddUserInfo(IServiceCollection services)
         {
             //services.AddHttpContextAccessor();
             services.AddScoped<ICurrentUser, CurrentUser>();
         }
-
-        //public static void AddMediator(IServiceCollection services, Assembly appAssembly)
-        //{
-        //    if (appAssembly == null)
-        //        throw new InvalidOperationException($"SnowStorm.Setup.AddMediator(...) : Missing appAssembly.");
-
-        //    //services.AddMediatR(appAssembly);
-        //    services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(appAssembly));
-        //}
 
         public static void AddAutoMapper(IServiceCollection services, Assembly appAssembly)
         {
@@ -97,13 +86,3 @@ namespace SnowStorm
         }
     }
 }
-
-
-/// Notes
-/// https://ovaismehboob.com/2018/01/31/implementing-mediator-pattern-in-net-core-using-mediatr/
-/// https://github.com/jbogard/MediatR/wiki
-/// https://github.com/jbogard/MediatR.Extensions.Microsoft.DependencyInjection
-///
-/// Install-Package MediatR
-///
-
