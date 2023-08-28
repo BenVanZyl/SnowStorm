@@ -5,9 +5,9 @@ namespace WebApi.Services.Queries.Locations
 {
     public class GetRegionQuery : IQueryResultSingle<Region>
     {
-        private readonly long _id;
+        private readonly int _id;
 
-        public GetRegionQuery(long id)
+        public GetRegionQuery(int id)
         {
             _id = id;
         }

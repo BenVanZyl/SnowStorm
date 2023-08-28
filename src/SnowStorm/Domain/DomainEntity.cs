@@ -20,6 +20,16 @@ namespace SnowStorm.Domain
         }
     }
 
+    public class DomainEntityWithIdString : DomainEntity
+    {
+        public string Id { get; set; }
+    }
+
+    public class DomainEntityWithIdInt : DomainEntity
+    {
+        public int Id { get; set; }
+    }
+
     public class DomainEntityWithId : DomainEntity
     {
         public long Id { get; set; }

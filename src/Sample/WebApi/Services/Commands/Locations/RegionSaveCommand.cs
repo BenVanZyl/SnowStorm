@@ -1,6 +1,5 @@
 ﻿using MediatR;
-using SnowStorm.Domain;
-using SnowStorm.QueryExecutors;
+using SnowStorm.DataContext;
 using WebApi.Services.Domain;
 using WebApi.Services.Queries.Locations;
 using WebApi.Shared;

@@ -1,12 +1,11 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SnowStorm.Domain;
+using SnowStorm.DataContext;
 using SnowStorm.Users;
 using WebApi.Services.Commands.Locations;
 using WebApi.Services.Domain;
 using WebApi.Services.Queries.Locations;
-using WebApi.Services.Queries.Orders;
 using WebApi.Shared.Dto.Locations;
 using WebApi.Shared.Dto.Regions;
 
@@ -36,12 +35,44 @@ namespace WebApi.Services.Api
         }
 
         [HttpGet]
+        [Route("api/locations/regions/no-query-class")]
+        public async Task<IActionResult> GetRegionsNoQueryClass()
+        {
+            try
+            {
+                var result = await DataContext.GetAll<Region>();
+                return Ok(result);
+            }
+            catch (System.Exception ex)
+            {
+                //Log.Error(ex, "GetOrders ERROR");
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpGet]
         [Route("api/locations/regions/{id:int}")]
         public async Task<IActionResult> GetRegion(int id)
         {
             try
             {
                 var result = await DataContext.Get(new GetRegionQuery(id));
+                return Ok(result);
+            }
+            catch (System.Exception ex)
+            {
+                //Log.Error(ex, "GetOrders ERROR");
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("api/locations/regions/{id:int}/no-query-class")]
+        public async Task<IActionResult> GetRegionNoQueryClass(int id)
+        {
+            try
+            {
+                var result = await DataContext.GetById<Region>(id);
                 return Ok(result);
             }
             catch (System.Exception ex)

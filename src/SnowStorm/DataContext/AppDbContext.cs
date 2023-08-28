@@ -1,12 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using SnowStorm.Domain;
 using System;
 using System.Data.Common;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace SnowStorm.Domain
+namespace SnowStorm.DataContext
 {
     public partial class AppDbContext : DbContext
     {

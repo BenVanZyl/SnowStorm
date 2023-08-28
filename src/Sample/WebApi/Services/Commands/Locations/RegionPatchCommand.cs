@@ -1,11 +1,9 @@
 ﻿using MediatR;
-using SnowStorm.Domain;
-using WebApi.Services.Domain;
+using SnowStorm.DataContext;
 using WebApi.Services.Queries.Locations;
 using WebApi.Shared;
 using WebApi.Shared.Dto;
 using WebApi.Shared.Dto.Locations;
-using WebApi.Shared.Dto.Regions;
 
 namespace WebApi.Services.Commands.Locations
 {

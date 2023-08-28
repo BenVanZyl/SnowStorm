@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SnowStorm.Domain;
+using SnowStorm.DataContext;
 using SnowStorm.Users;
 using WebApi.Services.Queries.Orders;
 
@@ -32,7 +32,7 @@ namespace WebApi.Services.Api
         }
 
         [HttpPut]
-        [Route("api/orders")]
+        [Route("api/orders")]        
         [AllowAnonymous]
         public async Task<IActionResult> PutOrders()
         {
