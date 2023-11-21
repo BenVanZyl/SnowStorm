@@ -4,20 +4,15 @@ namespace SnowStorm.Domain
 {
     public class DomainEntity : IDomainEntity
     {
+
     }
 
     public class DomainEntityWithAudit : DomainEntity    {
         public DateTime CreatedOn { get; private set; }
         public DateTime ModifiedOn { get; private set; }
 
-        public virtual void SetCreatedOn()
-        {
-            CreatedOn = DateTime.Now;
-        }
-        public virtual void SetModifiedOn()
-        {
-            ModifiedOn = DateTime.Now;
-        }
+        public virtual void SetCreatedOn() => CreatedOn = DateTime.Now;
+        public virtual void SetModifiedOn() => ModifiedOn = DateTime.Now;
     }
 
     public class DomainEntityWithIdString : DomainEntity
@@ -40,14 +35,8 @@ namespace SnowStorm.Domain
         public DateTime CreatedOn { get; private set; }
         public DateTime ModifiedOn { get; private set; }
 
-        public virtual void SetCreatedOn()
-        {
-            CreatedOn = DateTime.Now;
-        }
-        public virtual void SetModifiedOn()
-        {
-            ModifiedOn = DateTime.Now;
-        }
+        public virtual void SetCreatedOn() => CreatedOn = DateTime.Now;
+        public virtual void SetModifiedOn() => ModifiedOn = DateTime.Now;
     }
 
     public class DomainEntityWithIdWithAuditUserId : DomainEntityWithIdWithAudit
@@ -58,12 +47,13 @@ namespace SnowStorm.Domain
         public override void SetCreatedOn()
         {
             base.SetCreatedOn();
-            CreatedBy = -1; //todo: get from current user in di container
+            CreatedBy = Container.GetCurrentUserId();
         }
+
         public override void SetModifiedOn()
         {
             base.SetModifiedOn();
-            ModifiedBy = -1; //todo: get from current user in di container
+            ModifiedBy = Container.GetCurrentUserId();
         }
     }
 
@@ -75,12 +65,29 @@ namespace SnowStorm.Domain
         public override void SetCreatedOn()
         {
             base.SetCreatedOn();
-            CreatedBy = "SYSTEM"; //todo: get from current user in di container
+            CreatedBy = Container.GetCurrentUserName();
         }
         public override void SetModifiedOn()
         {
             base.SetModifiedOn();
-            ModifiedBy = "SYSTEM"; //todo: get from current user in di container
+            ModifiedBy = Container.GetCurrentUserName();
+        }
+    }
+
+    public class DomainEntityWithIdWithAuditAspNetUserGuid : DomainEntityWithIdWithAudit
+    {
+        public string CreatedBy { get; private set; }
+        public string ModifiedBy { get; private set; }
+
+        public override void SetCreatedOn()
+        {
+            base.SetCreatedOn();
+            CreatedBy = Container.GetCurrentAspNetUserGuid();
+        }
+        public override void SetModifiedOn()
+        {
+            base.SetModifiedOn();
+            ModifiedBy = Container.GetCurrentAspNetUserGuid();
         }
     }
 }

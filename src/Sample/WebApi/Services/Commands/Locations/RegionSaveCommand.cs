@@ -37,7 +37,7 @@ namespace WebApi.Services.Commands.Locations
                 var value = await _dataContext.Get(new GetRegionQuery(request.Data.Id));
                 if (value == null)
                 {
-                    value = await Region.Create(request.Data);
+                    value = await Region.Create(request.Data, false);
                     result.Message = Messages.SuccessRecordCreated;
                 }
                 else

@@ -30,7 +30,7 @@ namespace WebApi.Services.Infrastructure
                 });
             });
 
-            services.AddSnowStorm("WebApi", ConnectionStringData);
+            services.AddSnowStorm("WebApi", ConnectionStringData, includeAuditUserInfo: true);
 
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Startup>());
         }

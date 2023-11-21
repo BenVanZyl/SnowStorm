@@ -35,7 +35,8 @@ namespace SnowStorm.DataContext
                     }
                     catch (Exception ex)
                     {
-                        _logger?.LogError(ex, $"Error: AppDbContext.Get<T>(IQueryResultList<T>...) with sorting : {ex.Message} ");
+                        string message = $"Error: AppDbContext.Get<T>(IQueryResultList<T>...) with sorting : {ex.Message} ";
+                        _logger?.LogError(ex, message);
                         throw;
                     }
 
@@ -43,7 +44,8 @@ namespace SnowStorm.DataContext
             }
             catch (Exception ex)
             {
-                _logger?.LogError(ex, $"Error: AppDbContext.Get<T>(IQueryResultList<T>...) with sorting : {ex.Message} ");
+                string message = $"Error: AppDbContext.Get<T>(IQueryResultList<T>...) with sorting : {ex.Message} ";
+                _logger?.LogError(ex, message);
                 throw;
             }
         }
@@ -66,7 +68,8 @@ namespace SnowStorm.DataContext
             }
             catch (Exception ex)
             {
-                _logger?.LogError(ex, $"Error: CastingBuilder.Get<T>(IQueryResultSingle<T>...) : {ex.Message} ");
+                string message = $"Error: CastingBuilder.Get<T>(IQueryResultSingle<T>...) : {ex.Message} ";
+                _logger?.LogError(ex, message);
                 throw;
             }
         }
@@ -90,7 +93,7 @@ namespace SnowStorm.DataContext
             }
             catch (Exception ex)
             {
-                //_logger?.LogError(ex, $"Error: CastingBuilder.Get<T>(IQueryResultList<T>...) : {ex.Message} ");
+                _logger?.LogError(ex, $"Error: Get<T,TDto>(IQueryResultList<T>...) : {ex.Message} ");
                 throw;
             }
         }
@@ -155,13 +158,18 @@ namespace SnowStorm.DataContext
             }
         }
 
-        public async Task<List<T>> GetAll<T>() where T : DomainEntity
+        /// <summary>
+        /// Read-only list of the all the rows of the selected table.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public async Task<List<T>> GetAll<T>() where T : class, IDomainEntity
         {
             var stopwatch = new System.Diagnostics.Stopwatch();
             try
             {
                 stopwatch.Start();
-                var result = await this.Set<T>().ToListAsync<T>(); //.OrderByDescending(o => o.Id).SingleOrDefaultAsync(w => w.Id == id);
+                var result = await this.Set<T>().ToListAsync(); //.OrderByDescending(o => o.Id).SingleOrDefaultAsync(w => w.Id == id);
                 stopwatch.Stop();
                 _logger?.LogDebug(message: $"GetAll query ran for {stopwatch.Elapsed.TotalSeconds} seconds.");
                 //null checks to be handle by client
@@ -170,9 +178,9 @@ namespace SnowStorm.DataContext
             catch (Exception ex)
             {
                 stopwatch.Stop();
-                _logger?.LogError(ex, $"Error.  GetByAll() : {ex.Message}");
+                _logger?.LogError(ex, $"Error.  GetAll() : {ex.Message}");
                 throw;
-            }
+            } 
         }
 
         public async Task<T> Get<T>(Func<Task<T>> GetResult, DbContext dbContext, object query)

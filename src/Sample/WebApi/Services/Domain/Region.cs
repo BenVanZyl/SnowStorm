@@ -24,11 +24,7 @@ namespace WebApi.Services.Domain
             var dataContext = Container.GetAppDbContext();
 
             var v = new Region(data);
-            await dataContext.Add<Region>(v);
-
-            if (autoSave)
-                await dataContext.Save();
-
+            await dataContext.Add<Region>(v, autoSave);
 
             return v;
         }

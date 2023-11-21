@@ -5,11 +5,11 @@ using System;
 
 namespace SnowStorm.Users
 {
-    public class AspNetUser : IDomainEntity
+    public class AspNetUser : DomainEntityWithIdString
     {
         protected AspNetUser() { }
 
-        public string Id { get; private set; } //GUID
+        //public string Id { get; private set; } //GUID
         public string UserName { get; private set; }
         public string NormalizedUserName { get; private set; }
         public string Email { get; private set; }

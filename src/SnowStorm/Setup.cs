@@ -26,8 +26,8 @@ namespace SnowStorm
             AddAutoMapper(services, appAssembly);
 
             //audit user info
-            //if (includeAuditUserInfo)
-            AddUserInfo(services);
+            if (includeAuditUserInfo)
+                AddUserInfo(services);
 
             //setup IOC container provider
             Container.SetInstance(services.BuildServiceProvider());

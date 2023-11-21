@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using SnowStorm.DataContext;
+using SnowStorm.Extensions;
+using System;
 using System.Threading.Tasks;
 
 namespace SnowStorm.Users
@@ -13,8 +15,8 @@ namespace SnowStorm.Users
         public string UserName { get; }
         public bool IsAuthenticated { get; }
 
-        public Task GetUserId();
-        public Task GetUserGuid();
+        public Task<long?> GetUserId();
+        public Task<string> GetUserGuid();
     }
 
     public class CurrentUser : ICurrentUser
@@ -25,7 +27,7 @@ namespace SnowStorm.Users
             DataContext = dataContext;
             HttpContextAccessor = httpContextAccessor;
 
-            
+
         }
 
         public virtual AppDbContext DataContext { get; }
@@ -37,32 +39,43 @@ namespace SnowStorm.Users
 
         public virtual bool IsAuthenticated => Context.User.Identity.IsAuthenticated;
 
-        public virtual long? UserId { get; set; }
+        public virtual long? UserId { get; set; } = null;
 
         public virtual string UserGuid { get; set; }
 
         public virtual string GetUserName()
         {
-            string userName = Context.User.Identity.Name;
-
-            Task.Run(async () => await GetUserId());
-
-            return userName;
+            try
+            {
+                string userName = Context.User.Identity.Name;
+                return userName;
+            }
+            catch (Exception ex)
+            {
+                throw new NullReferenceException("User not signed in.", ex);
+            }
         }
 
-        public virtual Task GetUserId()
+        public virtual Task<long?> GetUserId()
         {
-            UserId = null;
-            return Task.CompletedTask;
+            return Task.FromResult(UserId);
         }
 
-        public virtual async Task GetUserGuid()
+        public virtual async Task<string> GetUserGuid()
         {
+            if (UserGuid.HasValue())
+                return UserGuid;
+
             UserGuid = string.Empty;
 
             var v = await DataContext.Get(new GetAspNetUserQuery().WithEmail(UserName));
 
-            
+            if (v == null)
+                return string.Empty;
+
+            UserGuid = v.Id;
+
+            return UserGuid;
         }
     }
 }
