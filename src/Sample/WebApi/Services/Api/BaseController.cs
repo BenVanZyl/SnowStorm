@@ -7,16 +7,16 @@ namespace WebApi.Services.Api
 {
     public class BaseController : Controller
     {
-        public BaseController(AppDbContext dataContext, IMediator mediator, ICurrentUser currentUser)
+        public BaseController(AppDbContext dataContext, IMediator mediator) //, ICurrentUser currentUser
         {
             DataContext = dataContext;
             Mediator = mediator;
-            CurrentUser = currentUser;
+            //CurrentUser = currentUser;
         }
 
 
         public AppDbContext DataContext { get; set; }
         public IMediator Mediator { get; set; }
-        public ICurrentUser CurrentUser { get; set; }
+        //public ICurrentUser CurrentUser { get; set; }
     }
 }

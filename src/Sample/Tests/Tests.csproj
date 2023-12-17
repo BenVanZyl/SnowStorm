@@ -36,9 +36,17 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\SnowStorm\SnowStorm.csproj" />
-		<ProjectReference Include="..\DbScripts\DbScripts.csproj" />
+		<ProjectReference Include="..\DbScripts\WebSample.DbScripts.csproj" />
 		<ProjectReference Include="..\WebApi.Shared\WebApi.Shared.csproj" />
 		<ProjectReference Include="..\WebApi\WebApi.csproj" />
+		<ProjectReference Include="..\WebSample.DbScripts\WebSample.DbScripts.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="IntegrationTests\Properties\launchSettings.json">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+	  </None>
 	</ItemGroup>
 
 </Project>

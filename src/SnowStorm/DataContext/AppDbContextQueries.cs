@@ -13,7 +13,6 @@ namespace SnowStorm.DataContext
 {
     public partial class AppDbContext
     {
-
         public Task<T> Get<T>(IQueryResult<T> query) where T : class, IDomainEntity
         {
             return Get(async () => await query.Get(QueryableProvider), this, query);
@@ -39,7 +38,6 @@ namespace SnowStorm.DataContext
                         _logger?.LogError(ex, message);
                         throw;
                     }
-
                 }, this, query);
             }
             catch (Exception ex)
@@ -49,7 +47,6 @@ namespace SnowStorm.DataContext
                 throw;
             }
         }
-
 
         public Task<TDto> Get<T, TDto>(IQueryResultSingle<T> query, bool defaultIfMissing = true) where T : class, IDomainEntity
         {
@@ -63,7 +60,6 @@ namespace SnowStorm.DataContext
                         throw new GenericException($"'{typeof(T).Name}': Status404 - NotFound");
 
                     return result;
-
                 }, this, query);
             }
             catch (Exception ex)
@@ -88,7 +84,6 @@ namespace SnowStorm.DataContext
                     var queryable = query.Get(QueryableProvider).ProjectTo<TDto>(Mapper.ConfigurationProvider);
 
                     return await queryable.ToListAsync();
-
                 }, this, query);
             }
             catch (Exception ex)
@@ -180,7 +175,7 @@ namespace SnowStorm.DataContext
                 stopwatch.Stop();
                 _logger?.LogError(ex, $"Error.  GetAll() : {ex.Message}");
                 throw;
-            } 
+            }
         }
 
         public async Task<T> Get<T>(Func<Task<T>> GetResult, DbContext dbContext, object query)

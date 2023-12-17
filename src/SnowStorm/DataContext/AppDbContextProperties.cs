@@ -8,6 +8,7 @@ namespace SnowStorm.DataContext
     public partial class AppDbContext
     {
         private IQueryableProvider _queryableProvider;
+
         public IQueryableProvider QueryableProvider
         {
             get
@@ -22,6 +23,7 @@ namespace SnowStorm.DataContext
         }
 
         private IMapper _mapper;
+
         public IMapper Mapper
         {
             get
@@ -36,6 +38,7 @@ namespace SnowStorm.DataContext
         }
 
         private ILogger<AppDbContext> _logger = null;
+
         public ILogger<AppDbContext> Logger
         {
             get
@@ -48,6 +51,5 @@ namespace SnowStorm.DataContext
                 return _logger;
             }
         }
-
     }
 }

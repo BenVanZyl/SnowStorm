@@ -7,10 +7,12 @@ namespace SnowStorm.Users
 {
     public class AspNetUser : DomainEntityWithIdString
     {
-        protected AspNetUser() { }
+        protected AspNetUser()
+        { }
 
         //public string Id { get; private set; } //GUID
         public string UserName { get; private set; }
+
         public string NormalizedUserName { get; private set; }
         public string Email { get; private set; }
         public string NormalizedEmail { get; private set; }
@@ -27,11 +29,8 @@ namespace SnowStorm.Users
 
 
 
-        #region Methods
-
-        #endregion Methods
-
         #region Configuration
+
         internal class Mapping : IEntityTypeConfiguration<AspNetUser>
         {
             public void Configure(EntityTypeBuilder<AspNetUser> builder)
@@ -49,11 +48,9 @@ namespace SnowStorm.Users
                 builder.Property(p => p.SecurityStamp).IsRequired();
                 builder.Property(p => p.ConcurrencyStamp).IsRequired();
                 builder.Property(p => p.PhoneNumber).IsRequired();
-
             }
         }
-        #endregion //config
+
+        #endregion Configuration
     }
-
-
 }

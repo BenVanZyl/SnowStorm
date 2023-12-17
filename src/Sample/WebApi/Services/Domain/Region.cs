@@ -12,7 +12,7 @@ namespace WebApi.Services.Domain
 
         //public int Id { get; private set; }
 
-        public string RegionDescription { get; private set; }
+        public string RegionDescription { get; private set; } = "";
 
         #region Methods
 

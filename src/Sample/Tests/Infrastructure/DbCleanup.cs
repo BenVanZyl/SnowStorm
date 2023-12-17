@@ -21,7 +21,7 @@ namespace Tests.Infrastructure
         public void Execute()
         {
             //define command object
-            SqlCommand cmd = null;
+            SqlCommand? cmd = null;
 
             try
             {

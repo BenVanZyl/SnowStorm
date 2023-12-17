@@ -4,14 +4,15 @@ namespace SnowStorm.Domain
 {
     public class DomainEntity : IDomainEntity
     {
-
     }
 
-    public class DomainEntityWithAudit : DomainEntity    {
+    public class DomainEntityWithAudit : DomainEntity
+    {
         public DateTime CreatedOn { get; private set; }
         public DateTime ModifiedOn { get; private set; }
 
         public virtual void SetCreatedOn() => CreatedOn = DateTime.Now;
+
         public virtual void SetModifiedOn() => ModifiedOn = DateTime.Now;
     }
 
@@ -36,6 +37,7 @@ namespace SnowStorm.Domain
         public DateTime ModifiedOn { get; private set; }
 
         public virtual void SetCreatedOn() => CreatedOn = DateTime.Now;
+
         public virtual void SetModifiedOn() => ModifiedOn = DateTime.Now;
     }
 
@@ -67,6 +69,7 @@ namespace SnowStorm.Domain
             base.SetCreatedOn();
             CreatedBy = Container.GetCurrentUserName();
         }
+
         public override void SetModifiedOn()
         {
             base.SetModifiedOn();
@@ -84,6 +87,7 @@ namespace SnowStorm.Domain
             base.SetCreatedOn();
             CreatedBy = Container.GetCurrentAspNetUserGuid();
         }
+
         public override void SetModifiedOn()
         {
             base.SetModifiedOn();

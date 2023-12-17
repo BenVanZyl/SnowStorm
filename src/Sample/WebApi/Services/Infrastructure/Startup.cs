@@ -44,11 +44,11 @@ namespace WebApi.Services.Infrastructure
                 app.UseSwaggerUI();
             }
 
-            app.UseHttpsRedirection();
-
-            app.UseAuthorization();
+            app.UseHttpsRedirection();            
 
             app.UseRouting();
+
+            app.UseAuthorization();
 
             //app.MapControllers();
             app.UseEndpoints(endpoints =>

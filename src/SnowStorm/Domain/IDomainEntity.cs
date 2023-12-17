@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SnowStorm.Domain
+﻿namespace SnowStorm.Domain
 {
     public interface IDomainEntity
     {

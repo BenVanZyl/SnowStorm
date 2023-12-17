@@ -14,7 +14,7 @@ namespace WebApi.Services.Api
     [AllowAnonymous]
     public class LocationsController : BaseController
     {
-        public LocationsController(AppDbContext dataContext, IMediator mediator, ICurrentUser currentUser) : base(dataContext, mediator, currentUser)
+        public LocationsController(AppDbContext dataContext, IMediator mediator) : base(dataContext, mediator)
         {
         }
 

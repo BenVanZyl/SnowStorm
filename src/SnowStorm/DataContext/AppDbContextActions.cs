@@ -1,15 +1,18 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.Extensions.Logging;
+using Microsoft.Identity.Client;
 using SnowStorm.Domain;
 using SnowStorm.Exceptions;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SnowStorm.DataContext
 {
     public partial class AppDbContext
     {
-
+        
         public async Task<T> Add<T>(T domainEntity, bool saveChanges = true) where T : class, IDomainEntity
         {
             try

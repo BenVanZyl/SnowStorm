@@ -1,9 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
-using SnowStorm.Domain;
-using System;
-using System.Collections.Generic;
+﻿using SnowStorm.Domain;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace SnowStorm.QueryExecutors
@@ -22,5 +18,4 @@ namespace SnowStorm.QueryExecutors
     {
         IQueryable<T> Get(IQueryableProvider queryableProvider);
     }
-
 }

@@ -2,7 +2,6 @@
 using SnowStorm.DataContext;
 using SnowStorm.Users;
 using System;
-using System.Reflection.Metadata.Ecma335;
 using System.Threading.Tasks;
 
 namespace SnowStorm
@@ -26,7 +25,6 @@ namespace SnowStorm
             }
             catch (Exception ex)
             {
-
                 throw new ArgumentNullException("SnowStorm.Container failed to retrieve DataContext", ex);
             }
         }

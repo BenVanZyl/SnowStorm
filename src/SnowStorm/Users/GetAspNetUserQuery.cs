@@ -1,10 +1,8 @@
 ﻿using Microsoft.Data.SqlClient;
-using Microsoft.Identity.Client;
 using SnowStorm.Extensions;
 using SnowStorm.QueryExecutors;
-using SnowStorm.Users;
-using System.Linq;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SnowStorm.Users
@@ -14,11 +12,12 @@ namespace SnowStorm.Users
         private string _guid;
         private string _email;
 
-        public GetAspNetUserQuery WithGuid(string guid) 
+        public GetAspNetUserQuery WithGuid(string guid)
         {
             _guid = guid;
             return this;
         }
+
         public GetAspNetUserQuery WithEmail(string email)
         {
             _email = email;
@@ -35,11 +34,8 @@ namespace SnowStorm.Users
             if (_email.HasValue())
                 query = query.Where(w => w.Email == _email);
 
-
             return query.AsQueryable();
         }
-
-        //TODO: Change this to use a raw sql or a sql command instead of EF.
 
         public async Task<string> GetUserGuid(string email)
         {
@@ -47,31 +43,30 @@ namespace SnowStorm.Users
             try
             {
                 var db = Container.GetAppDbContext();
-                
-                cmd = new SqlCommand("Select From", new SqlConnection(db.ConnectionString));
-                
+
+                cmd = new SqlCommand("Select Id From dbo.AspNetUsers Where Email = @email", new SqlConnection(db.ConnectionString));
+
                 if (cmd.Connection == null)
                     throw new NullReferenceException("SqlConnection to ASPNet User Db.");
                 if (cmd.Connection.State != System.Data.ConnectionState.Open)
                     await cmd.Connection.OpenAsync();
-                
+
                 cmd.Parameters.Clear();
                 cmd.Parameters.Add(new SqlParameter("@email", email));
-             
+
                 var result = await cmd.ExecuteScalarAsync();
 
                 return result.ToString();
             }
             catch (Exception ex)
             {
-                //Log the error and return empty string.
+                //Log the error and return empty string.             
                 return string.Empty;
             }
-            finally 
-            { 
+            finally
+            {
                 if (cmd != null && cmd.Connection != null && cmd.Connection.State != System.Data.ConnectionState.Closed)
                     cmd.Connection.Close();
-
             }
         }
     }

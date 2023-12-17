@@ -9,7 +9,7 @@ namespace WebApi.Services.Api
 {
     public class OrdersController : BaseController
     {
-        public OrdersController(AppDbContext dataContext, IMediator mediator, ICurrentUser currentUser) : base(dataContext, mediator, currentUser)
+        public OrdersController(AppDbContext dataContext, IMediator mediator) : base(dataContext, mediator)
         {
         }
 

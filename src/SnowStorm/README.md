@@ -8,6 +8,17 @@ https://github.com/BenVanZyl/SnowStorm
 
 # How to use
 
+# Sample App
+
+Located under: *src\Sample\*
+Root Namespace: *WebSample.SnowStorm* 
+
+This is a Blazor WebAssembly app using a .NET CORE hosted backend using REST API.
+Using DbUp to manage changes to the database and to run end to end testing.
+
+Tests for this application is End-to-End based and run as unit tests.  It is a more practical approach and reduces the risks that your app might pass test but break in production.  What it runs is what you get.
+
+
 # Supported Platforms
 .Net 7 (Latest version) 
 
@@ -18,6 +29,8 @@ https://github.com/BenVanZyl/SnowStorm
  - Removing obsolete code.
  - Removing QueryExecutor as this functionality is fully integrated into the AppDbContext.
  - Moved AppDbContext to DbContext folder and namespace.
+ - Change sample application to a Blazor WebAssembly app with ASP.NET CORE hosted backend.
+ - Added End-to-End testing for the sample app. 
  - Bug fixes.
  - Beta: Use CurrentUser to extract user info from HttpContext (id, name, guid)
    - could recquire the host app to inject HttpContextAccessor.

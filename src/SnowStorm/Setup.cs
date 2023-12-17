@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SnowStorm.DataContext;
-using SnowStorm.Domain;
 using SnowStorm.QueryExecutors;
 using SnowStorm.Users;
 using System;
@@ -12,12 +11,27 @@ namespace SnowStorm
 {
     public static class Setup
     {
+        public static void AddSnowStorm(this IServiceCollection services, string connectionString, bool includeAuditUserInfo = false, int poolSize = 32)
+        {
+            Assembly appAssembly = Assembly.GetCallingAssembly();
+
+            AddSnowStorm(services, appAssembly, connectionString, includeAuditUserInfo, poolSize);
+        }
+
         public static void AddSnowStorm(this IServiceCollection services, string assemblyName, string connectionString, bool includeAuditUserInfo = false, int poolSize = 32)
         {
             if (string.IsNullOrWhiteSpace(assemblyName))
                 throw new InvalidOperationException($"SnowStorm.Setup.AddSnowStorm(...) : Missing assemblyName");
 
             Assembly appAssembly = Assembly.Load(assemblyName);
+
+            AddSnowStorm(services, appAssembly, connectionString, includeAuditUserInfo, poolSize);
+        }
+
+        public static void AddSnowStorm(this IServiceCollection services, Assembly appAssembly, string connectionString, bool includeAuditUserInfo = false, int poolSize = 32)
+        {
+            if (appAssembly == null)
+                throw new InvalidOperationException($"SnowStorm.Setup.AddSnowStorm(...) : Missing assembly");
 
             //setup DbContext
             AddAppDbContext(services, appAssembly, connectionString, poolSize: poolSize);
@@ -36,7 +50,7 @@ namespace SnowStorm
         //
         // builder.Services.AddHttpContextAccessor();  -- Required First
         //
-        
+
         private static void AddUserInfo(IServiceCollection services)
         {
             //services.AddHttpContextAccessor();

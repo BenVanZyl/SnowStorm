@@ -26,9 +26,10 @@ namespace Tests.Infrastructure
             
             TestServer = new TestServer(webBuilder);
 
-
-
             Client = TestServer.CreateClient();
+            if (Client == null || Client.BaseAddress == null)
+                throw new NullReferenceException(nameof(Client));
+
             string httpsBaseAddress = Client.BaseAddress.ToString().Replace("http:", "https:");
             Client.BaseAddress = new Uri(httpsBaseAddress);
 

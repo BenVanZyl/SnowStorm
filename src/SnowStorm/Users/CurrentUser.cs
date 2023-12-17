@@ -16,18 +16,16 @@ namespace SnowStorm.Users
         public bool IsAuthenticated { get; }
 
         public Task<long?> GetUserId();
+
         public Task<string> GetUserGuid();
     }
 
     public class CurrentUser : ICurrentUser
     {
-
         public CurrentUser(AppDbContext dataContext, IHttpContextAccessor httpContextAccessor)
         {
             DataContext = dataContext;
             HttpContextAccessor = httpContextAccessor;
-
-
         }
 
         public virtual AppDbContext DataContext { get; }
