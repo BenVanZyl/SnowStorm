@@ -3,7 +3,7 @@ BEGIN
 	CREATE TABLE dbo.WeatherReport
 	(
 		Id bigint Identity NOT NULL,
-		Description varchar(50) NOT NULL,
+		ReportName varchar(50) NOT NULL,
 		CreatedOn	datetime NOT NULL,
 		ModifiedOn	datetime NOT NULL,
 		

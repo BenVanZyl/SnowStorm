@@ -100,14 +100,14 @@ namespace WebSample.Test.IntegrationTests
         public string GetWeatherForecastMvcBased()
         {
             string results = string.Empty;
-            var t = Task.Run(async () => { results = await Client.GetStringAsync("WeatherForecast"); });
+            var t = Task.Run(async () => { results = await Http.GetStringAsync("WeatherForecast"); });
             t.Wait();
             return results;
         }
         public string GetWeatherForecastRestBased()
         {
             string results = string.Empty;
-            var t = Task.Run(async () => { results = await Client.GetStringAsync("api/weather-forecasts/generate"); });
+            var t = Task.Run(async () => { results = await Http.GetStringAsync("api/weather-forecasts/generate"); });
             t.Wait();
             return results;
         }

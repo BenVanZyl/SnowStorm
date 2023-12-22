@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using System.Xml.Linq;
 using WebSample.DbScripts;
 using WebSample.SnowStorm;
-using WebSample.Tests.Infrastructure;
 
 namespace WebSample.Test.Infrastructure
 {
@@ -23,19 +21,20 @@ namespace WebSample.Test.Infrastructure
             .UseEnvironment("Development");
 
             base.ConfigureWebHost(builder);
-        
+
         }
 
         protected override void Dispose(bool disposing)
         {
             if (!disposing)
             {
+                //TODO: this must run as the last action!!
                 // Cleanup of test databases.
-                var cleanUp = new DbCleanup(DbName, CoreDbName, ConnectionString);
-                cleanUp.Execute();
+                // var cleanUp = new DbCleanup(DbName, CoreDbName, ConnectionString);
+                // cleanUp.Execute();
             }
 
-            base.Dispose(disposing);
+            //base.Dispose(disposing);
         }
 
 

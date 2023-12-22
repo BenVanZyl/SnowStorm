@@ -19,21 +19,31 @@ namespace WebSample.SnowStorm.Server.Services.Commands
     public class AddWeatherReportCommandHandler : IRequestHandler<AddWeatherReportCommand, bool>
     {
         private readonly AppDbContext _dataContext;
+        private readonly IMediator _mediator;
 
-        public AddWeatherReportCommandHandler(AppDbContext dataContext)
+        public AddWeatherReportCommandHandler(AppDbContext dataContext, IMediator mediator)
         {
             _dataContext = dataContext;
+            _mediator = mediator;
         }
 
         public async Task<bool> Handle(AddWeatherReportCommand request, CancellationToken cancellationToken)
         {
-            var value = await _dataContext.Get(new GetWeatherReportQuery(request.Data.Description));
+            if (string.IsNullOrEmpty(request.Data.ReportName))
+                throw new NullReferenceException("Missing report name");
+
+            if (request.Data.WeatherData == null || request.Data.WeatherData.Length == 0)
+                throw new NullReferenceException("Missing report date");
+
+            var value = await _dataContext.Get(new GetWeatherReportQuery(request.Data.ReportName));
 
             if (value == null)
                 value = await WeatherReport.Create(request.Data);
             else
-                throw new InvalidDataException($"Report name already exists: {request.Data.Description}");
-            
+                throw new InvalidDataException($"Report name already exists: {request.Data.ReportName}");
+
+            var dataAdded = await _mediator.Send(new AddWeatherDataCommand(request.Data.WeatherData).WithReportId(value.Id));
+
             return true;
         }
     }

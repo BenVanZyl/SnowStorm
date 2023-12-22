@@ -9,7 +9,7 @@ namespace WebSample.SnowStorm.Server.Services.Queries
         public IQueryable<WeatherReport> Get(IQueryableProvider queryableProvider)
         {
             return queryableProvider.Query<WeatherReport>()
-               .OrderBy(o => o.Description)
+               .OrderBy(o => o.ReportName)
                .AsQueryable();
         }
     }

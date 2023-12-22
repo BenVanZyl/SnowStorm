@@ -10,6 +10,7 @@ namespace WebSample.SnowStorm.Server.Services.Commands
     public class AddWeatherDataCommand : IRequest<bool>
     {
         public List<WeatherDataDto> Data { get; set; }
+        public long? ReportId { get; set; }
 
         public AddWeatherDataCommand(WeatherDataDto data) => Data = new() { data };
 
@@ -20,6 +21,13 @@ namespace WebSample.SnowStorm.Server.Services.Commands
                 .Select(s => new WeatherDataDto() { ForecastDate = s.Date, TemperatureC = s.TemperatureC, Summary = s.Summary })
                 .OrderBy(o => o.ForecastDate)
                 .ToList();
+
+        public AddWeatherDataCommand  WithReportId(long id)
+        {
+            ReportId = id;
+            return this;
+        }
+
     }
 
     public class AddWeatherDataCommandHandler : IRequestHandler<AddWeatherDataCommand, bool>
@@ -40,6 +48,9 @@ namespace WebSample.SnowStorm.Server.Services.Commands
             {
                 foreach (var data in request.Data)
                 {
+                    if (request.ReportId.HasValue)
+                        data.ReportId = request.ReportId.Value;
+
                     _ = await WeatherData.Create(data, false);
                 }
 

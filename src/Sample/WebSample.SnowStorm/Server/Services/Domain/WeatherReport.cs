@@ -10,7 +10,7 @@ namespace WebSample.SnowStorm.Server.Services.Domain
     {
         protected WeatherReport() { }
 
-        public string Description { get; private set; }
+        public string ReportName { get; private set; }
 
 
         public List<WeatherData> WeatherData { get; set; }
@@ -37,13 +37,13 @@ namespace WebSample.SnowStorm.Server.Services.Domain
 
         public void Save(WeatherReportDto data)
         {
-            SetDescription(data.Description);
+            SetDescription(data.ReportName);
         }
 
         public void SetDescription(string v)
         {
-            if (Description != v)
-                Description = v;
+            if (ReportName != v)
+                ReportName = v;
         }
 
         #endregion Methods
@@ -58,7 +58,7 @@ namespace WebSample.SnowStorm.Server.Services.Domain
                 builder.HasKey(u => u.Id);  // PK.
                 builder.Property(p => p.Id).HasColumnName("Id");
 
-                builder.Property(p => p.Description).HasMaxLength(50).IsRequired();
+                builder.Property(p => p.ReportName).HasMaxLength(50).IsRequired();
                 builder.Property(p => p.CreatedOn).IsRequired();
                 builder.Property(p => p.ModifiedOn).IsRequired();
 

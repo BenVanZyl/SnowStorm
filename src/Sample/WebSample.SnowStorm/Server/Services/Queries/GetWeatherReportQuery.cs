@@ -29,7 +29,7 @@ namespace WebSample.SnowStorm.Server.Services.Queries
                 query = query.Where(w => w.Id == _id.Value);
 
             if (_descriptionContains.HasValue())
-                query = query.Where(w => w.Description == _descriptionContains);
+                query = query.Where(w => w.ReportName == _descriptionContains);
 
             //query = query.Include(i => i.wea)
 

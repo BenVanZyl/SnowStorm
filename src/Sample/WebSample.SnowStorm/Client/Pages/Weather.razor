@@ -37,7 +37,7 @@
     <div class="row">
         <div class="col">
             <InputText id="ReportNameText" @bind-Value="@ReportName"></InputText>
-            <button class="btn btn-primary" @onclick="SaveReport">Save Report</button>
+            <button id="SaveReportButton" class="btn btn-primary" @onclick="SaveReport">Save Report</button>
         </div>
     </div>
 
@@ -109,7 +109,7 @@
 
             var data = new WeatherReportDto()
                 {
-                    Description = ReportName,
+                    ReportName = ReportName,
                     WeatherData = forecasts
                 };
 
@@ -118,7 +118,6 @@
                 InfoMessage = "Report saved";
             else
                 ErrMessage = $"Error saving report. {result.StatusCode} - {result.ReasonPhrase}";
-
 
         }
         catch (Exception ex)

@@ -9,7 +9,7 @@ namespace WebSample.SnowStorm.Shared.Dtos
     public class WeatherReportDto
     {
         public long Id { get; set; }
-        public string Description { get; set; }
+        public string ReportName { get; set; }
         
         public WeatherForecast[]? WeatherData { get; set; }
 

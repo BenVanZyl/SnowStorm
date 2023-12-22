@@ -22,7 +22,8 @@ namespace WebSample.SnowStorm
 
             string AppDataConnectionString = builder.Configuration.GetConnectionString("AppData") ?? throw new NullReferenceException("Missing AppData Connection String!");
             //builder.Services.AddSnowStorm("WebSample.SnowStorm.Server", AppDataConnectionString, includeAuditUserInfo: false);
-            builder.Services.AddSnowStorm(Assembly.GetExecutingAssembly(), AppDataConnectionString, includeAuditUserInfo: false);
+            //builder.Services.AddSnowStorm(Assembly.GetExecutingAssembly(), AppDataConnectionString, includeAuditUserInfo: false);
+            builder.Services.AddSnowStorm(AppDataConnectionString, includeAuditUserInfo: false);
 
             builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 

@@ -1,5 +1,6 @@
 ﻿using Bunit;
 using Microsoft.Extensions.DependencyInjection;
+using Shouldly;
 using WebSample.SnowStorm.Client.Pages;
 using WebSample.Test.Infrastructure;
 
@@ -48,7 +49,6 @@ namespace WebSample.Test.IntegrationTests
             var tbl = result as AngleSharp.Html.Dom.IHtmlTableElement;
             Assert.NotNull(tbl);
             Assert.Matches("6", tbl.Rows.Count().ToString());
-
         }
 
         [Fact]
@@ -69,12 +69,34 @@ namespace WebSample.Test.IntegrationTests
             Assert.NotNull(tbl);
 
             Assert.Matches("11", tbl.Rows.Count().ToString());
-
         }
+
+        [Fact]
+        public async Task SaveWeatherForecastFromRestApiOnButtonClick()
+        {
+            // Arrange: render the Counter.razor component
+            var cut = RenderComponent<Weather>();
+            cut.WaitForState(() => cut.FindAll("table").Count > 0);
+            //var buttonElement = cut.Find("button");
+
+            // Act: page load occurs automatically
+            //buttonElement.Click()
+            await cut.Find("button").ClickAsync(null);
+            //cut.WaitForState(() => cut.Nodes.Any(w => w.TextContent.Contains("Report saved", StringComparison.OrdinalIgnoreCase)), TimeSpan.FromSeconds(10));
+
+            // Assert: first find the <p> element, then verify its content
+            var result = cut.Nodes.FirstOrDefault(w => w.TextContent.Contains("Report saved", StringComparison.OrdinalIgnoreCase));
+            if (result == null)
+            {
+                Console.WriteLine("error");
+            }
+            result.ShouldNotBeNull();
+        }
+
 
         private void InitApi()
         {
-            Services.AddSingleton(Client);
+            Services.AddSingleton(Http);
         }
 
 
