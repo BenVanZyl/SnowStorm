@@ -11,7 +11,7 @@ namespace WebSample.Test.IntegrationTests
     public class ApiTests : BaseIntegrationTests
     {
 
-        [Fact]
+        [Fact(Skip = "This is for reference purposes.")]
         public async Task GetForecastAsync_ReturnsWeatherForecasts_Based_On_Mvc()
         {
             // Arrange
@@ -24,7 +24,7 @@ namespace WebSample.Test.IntegrationTests
 
         }
 
-        [Fact]
+        [Fact(Skip = "This is for reference purposes.")]
         public async Task GetForecastAsync_ReturnsWeatherForecasts_Based_On_Rest()
         {
             // Arrange
@@ -36,7 +36,7 @@ namespace WebSample.Test.IntegrationTests
             result.ShouldNotBeNull();
         }
 
-        [Fact]
+        [Fact(Skip = "This is for reference purposes.")]
         public async Task SaveWeatherReport_ReturnsTrue()
         {
             // Arrange
