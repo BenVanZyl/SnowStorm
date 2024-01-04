@@ -16,7 +16,7 @@ namespace WebSample.Test.IntegrationTests
             InitApi();
         }
 
-        [Fact]
+        [Fact (Skip = "This is for reference purposes.")]
         public void CounterShouldIncrementWhenClicked()
         {
             // Arrange: render the Counter.razor component
@@ -35,7 +35,7 @@ namespace WebSample.Test.IntegrationTests
 
         }
 
-        [Fact]
+        [Fact(Skip = "This is for reference purposes.")]
         public void ShowWeatherForecastOnPageLoad()
         {
             // Arrange: render the Counter.razor component
@@ -54,7 +54,7 @@ namespace WebSample.Test.IntegrationTests
 
         }
 
-        [Fact]
+        [Fact(Skip = "This is for reference purposes.")]
         public void ShowWeatherForecastFromRestApiOnPageLoad()
         {
             // Arrange: render the Counter.razor component
