@@ -24,7 +24,7 @@ Tests for this application is End-to-End based and run as unit tests.  It is a m
 
 # Latest Release Notes
 
-2023-0x-xx (2.0.0)
+2024-01-04 (2.0.0)
  - BREAKING CODE!
  - Removing obsolete code.
  - Removing QueryExecutor as this functionality is fully integrated into the AppDbContext.
@@ -38,3 +38,4 @@ Tests for this application is End-to-End based and run as unit tests.  It is a m
  - Beta: When saving, use CurrentUser and reflection to update audit properties. 
  - Beta: GetById<T> methods added to reduce the need for query objects.
  - Beta: GetAll<T> method to get all the rows from a table.  This will reduce the need for query classes for reference data like dropdowns.
+
