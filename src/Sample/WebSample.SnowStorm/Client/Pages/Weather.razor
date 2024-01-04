@@ -1,0 +1,144 @@
+﻿@page "/weather"
+@using WebSample.SnowStorm.Shared
+@using WebSample.SnowStorm.Shared.Dtos
+
+@inject HttpClient Http
+
+<PageTitle>Weather Forecasts</PageTitle>
+
+<h3>WeatherForecasts</h3>
+
+<div class="alert-info">
+    <p>
+        <span class="oi-info"></span>
+        This pages uses the REST API pattern for connecting to the back end API.
+    </p>
+</div>
+
+
+@if (isLoading)
+{
+    <p><em>Loading...</em></p>
+}
+
+@if (!string.IsNullOrEmpty(ErrMessage))
+{
+    <p class="alert-danger"><em>@ErrMessage</em></p>
+}
+
+@if (!string.IsNullOrEmpty(InfoMessage))
+{
+    <p class="alert-info"><em>@InfoMessage</em></p>
+}
+
+
+@if (forecasts != null)
+{
+    <div class="row">
+        <div class="col">
+            <InputText id="ReportNameText" @bind-Value="@ReportName"></InputText>
+            <button id="SaveReportButton" class="btn btn-primary" @onclick="SaveReport">Save Report</button>
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Temp. (C)</th>
+                <th>Temp. (F)</th>
+                <th>Summary</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var forecast in forecasts)
+            {
+                <tr>
+                    <td>@forecast.Date.ToShortDateString()</td>
+                    <td>@forecast.TemperatureC</td>
+                    <td>@forecast.TemperatureF</td>
+                    <td>@forecast.Summary</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private WeatherForecast[]? forecasts;
+    private string ReportName = "";
+    private bool isLoading = false;
+
+    private string ErrMessage = "";
+    private string InfoMessage = "";
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetForecast();
+    }
+
+    private async Task GetForecast()
+    {
+        try
+        {
+            isLoading = true;
+            ResetMessages();
+            SetReportName();
+            forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("api/weather-forecasts/generate");
+
+            if (forecasts == null)
+                throw new System.Exception("404: NO DATA.");
+        }
+        catch (Exception ex)
+        {
+            ErrMessage = $"Error getting forecast. {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task SaveReport()
+    {
+        try
+        {
+            isLoading = true;
+            ResetMessages();
+
+            var data = new WeatherReportDto()
+                {
+                    ReportName = ReportName,
+                    WeatherData = forecasts
+                };
+
+            var result = await Http.PostAsJsonAsync("api/weather-forecasts/reports", data);
+            if (result.IsSuccessStatusCode)
+                InfoMessage = "Report saved";
+            else
+                ErrMessage = $"Error saving report. {result.StatusCode} - {result.ReasonPhrase}";
+
+        }
+        catch (Exception ex)
+        {
+            ErrMessage = $"Error getting forecast. {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private void SetReportName()
+    {
+        ReportName = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+    }
+
+    private void ResetMessages()
+    {
+        ErrMessage = "";
+        InfoMessage = "";
+    }
+
+}

@@ -32,6 +32,5 @@ namespace SnowStorm
         /// If True then the code is running as normal and not in a unit test.
         /// </summary>
         public static bool Normal => !UnitTest;
-
     }
 }
