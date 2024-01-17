@@ -40,7 +40,7 @@ namespace WebSample.Test.Infrastructure
 
         #region Using DbUp to spin up database and run scripts.
 
-        private static readonly object _lock = new object();
+        private static readonly object _lock = new();
         public static bool UpgradePerformed { get; set; } = false;
         public static string ConnectionString { get; set; } = "";
 

@@ -69,7 +69,7 @@ namespace WebSample.Tests.Infrastructure
 
         private string GetScriptContent()
         {
-            var assembly = AppDomain.CurrentDomain.GetAssemblies().First(w => w.FullName.Contains("Tests"));
+            var assembly = AppDomain.CurrentDomain.GetAssemblies().First(w => !string.IsNullOrEmpty(w.FullName) && w.FullName.Contains("Tests"));
             string scriptName = assembly.GetManifestResourceNames().First(w => w.EndsWith("DbCleanupScript.sql"));
 
             using Stream? stream = assembly.GetManifestResourceStream(scriptName);
