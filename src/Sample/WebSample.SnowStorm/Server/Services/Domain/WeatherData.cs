@@ -14,7 +14,7 @@ namespace WebSample.SnowStorm.Server.Services.Domain
         public long ReportId { get; private set; }
         public DateTime ForecastDate { get; private set; }
         public int TemperatureC { get; private set; }
-        public string Summary { get; private set; }
+        public string? Summary { get; private set; }
 
         [ForeignKey("ReportId")]
         public WeatherReport WeatherReport { get; private set; }
@@ -42,6 +42,12 @@ namespace WebSample.SnowStorm.Server.Services.Domain
 
         public void Save(WeatherDataDto data)
         {
+            if (data == null)
+                throw new NullReferenceException("Missing data: WeatherData");
+
+            if (!data.ReportId.HasValue)
+                throw new NullReferenceException("Missing data: WeatherData");
+
             SetReportId(data.ReportId.Value);
             SetForecastDate(data.ForecastDate.ToDateTime(new TimeOnly(0, 0)));
             SetTemperatureC(data.TemperatureC);
@@ -67,7 +73,7 @@ namespace WebSample.SnowStorm.Server.Services.Domain
                 TemperatureC = v;
         }
 
-        public void SetSummary(string v)
+        public void SetSummary(string? v)
         {
             if (Summary != v)
                 Summary = v;

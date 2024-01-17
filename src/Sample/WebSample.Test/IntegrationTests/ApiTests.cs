@@ -11,7 +11,7 @@ namespace WebSample.Test.IntegrationTests
     public class ApiTests : BaseIntegrationTests
     {
 
-        [Fact(Skip = "This is for reference purposes.")]
+        [Fact]
         public async Task GetForecastAsync_ReturnsWeatherForecasts_Based_On_Mvc()
         {
             // Arrange
@@ -24,7 +24,7 @@ namespace WebSample.Test.IntegrationTests
 
         }
 
-        [Fact(Skip = "This is for reference purposes.")]
+        [Fact]
         public async Task GetForecastAsync_ReturnsWeatherForecasts_Based_On_Rest()
         {
             // Arrange
@@ -36,7 +36,8 @@ namespace WebSample.Test.IntegrationTests
             result.ShouldNotBeNull();
         }
 
-        [Fact(Skip = "This is for reference purposes.")]
+        // enabling this causes a conflict with the ui test for saving when all run together.
+        [Fact(Skip = "This is for reference purposes.")] 
         public async Task SaveWeatherReport_ReturnsTrue()
         {
             // Arrange
