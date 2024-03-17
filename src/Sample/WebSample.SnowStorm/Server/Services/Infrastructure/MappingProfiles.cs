@@ -8,9 +8,10 @@ namespace WebSample.SnowStorm.Server.Services.Infrastructure
     {
         public MappingProfiles()
         {
-            CreateMap<WeatherReport, WeatherReportDto>().ReverseMap();
+            CreateMap<WeatherReport, WeatherReportDto>()
+                .ForMember(d => d.WeatherData, m => m.Ignore());
 
-            CreateMap<WeatherData, WeatherDataDto>().ReverseMap();
+            CreateMap<WeatherData, WeatherDataDto>();
 
         }
     }

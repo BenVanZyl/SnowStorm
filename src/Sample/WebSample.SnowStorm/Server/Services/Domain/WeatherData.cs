@@ -29,7 +29,8 @@ namespace WebSample.SnowStorm.Server.Services.Domain
 
             var dataContext = Container.GetAppDbContext();
 
-            var v = new WeatherData(data);
+            var v = new WeatherData();
+            v.Save(data);
             await dataContext.Add<WeatherData>(v, autoSave);
 
             return v;
@@ -49,7 +50,7 @@ namespace WebSample.SnowStorm.Server.Services.Domain
                 throw new NullReferenceException("Missing data: WeatherData");
 
             SetReportId(data.ReportId.Value);
-            SetForecastDate(data.ForecastDate.ToDateTime(new TimeOnly(0, 0)));
+            SetForecastDate(data.ForecastDate);
             SetTemperatureC(data.TemperatureC);
             SetSummary(data.Summary);
 

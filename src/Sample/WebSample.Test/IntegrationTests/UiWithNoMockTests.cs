@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using WebSample.SnowStorm.Client.Pages;
 using WebSample.Test.Infrastructure;
+using WebSample.Tests.Infrastructure;
 
 namespace WebSample.Test.IntegrationTests
 {
@@ -71,7 +72,7 @@ namespace WebSample.Test.IntegrationTests
             Assert.Matches("11", tbl.Rows.Count().ToString());
         }
 
-        [Fact]
+        [Fact]// [Fact(Skip = "bug")]
         public async Task SaveWeatherForecastFromRestApiOnButtonClick()
         {
             // Arrange: render the Counter.razor component

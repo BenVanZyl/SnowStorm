@@ -15,7 +15,7 @@
     </releaseNotes>
   </metadata>
   <files>
-    <!-- targeting netcore6.0 -->
-    <file src="bin\$configuration$\net6.0\SnowStorm.*" target="lib\net6.0" />
+    <!-- targeting netcore7.0 -->
+	<file src="bin\$configuration$\net7.0\SnowStorm.*" target="lib\net7.0" />
   </files>
 </package>

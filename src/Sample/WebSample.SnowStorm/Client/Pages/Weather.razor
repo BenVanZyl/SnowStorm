@@ -18,7 +18,7 @@
 
 @if (isLoading)
 {
-    <p><em>Loading...</em></p>
+    <p><Spinner Text="Loading"></Spinner></p>
 }
 
 @if (!string.IsNullOrEmpty(ErrMessage))
@@ -38,6 +38,7 @@
         <div class="col">
             <InputText id="ReportNameText" @bind-Value="@ReportName"></InputText>
             <button id="SaveReportButton" class="btn btn-primary" @onclick="SaveReport">Save Report</button>
+            <button id="GenerateReportButton" class="btn btn-primary" @onclick="GenerateReport">Generate Report</button>
         </div>
     </div>
 
@@ -98,6 +99,11 @@
         {
             isLoading = false;
         }
+    }
+
+    private async Task GenerateReport()
+    {
+        await GetForecast();
     }
 
     private async Task SaveReport()

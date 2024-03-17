@@ -30,6 +30,17 @@ namespace WebSample.SnowStorm.Server.Services.Domain
             return v;
         }
 
+        internal static async Task<WeatherReport> Create(string reportName, bool autoSave = true)
+        {
+            var dataContext = Container.GetAppDbContext();
+
+            var v = new WeatherReport();
+            v.SetReportName(reportName);
+            await dataContext.Add<WeatherReport>(v, autoSave);
+
+            return v;
+        }
+        
         private WeatherReport(WeatherReportDto data)
         {
             Save(data);
@@ -37,10 +48,10 @@ namespace WebSample.SnowStorm.Server.Services.Domain
 
         public void Save(WeatherReportDto data)
         {
-            SetDescription(data.ReportName);
+            SetReportName(data.ReportName);
         }
 
-        public void SetDescription(string v)
+        public void SetReportName(string v)
         {
             if (ReportName != v)
                 ReportName = v;

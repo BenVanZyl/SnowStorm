@@ -6,7 +6,7 @@ using WebSample.SnowStorm.Shared.Dtos;
 
 namespace WebSample.SnowStorm.Server.Services.Commands
 {
-    public class AddWeatherReportCommand : IRequest<bool>
+    public class AddWeatherReportCommand : IRequest<long>
     {
         public WeatherReportDto Data { get; set; }
 
@@ -16,35 +16,53 @@ namespace WebSample.SnowStorm.Server.Services.Commands
         }
     }
 
-    public class AddWeatherReportCommandHandler : IRequestHandler<AddWeatherReportCommand, bool>
+    public class AddWeatherReportCommandHandler : IRequestHandler<AddWeatherReportCommand, long>
     {
-        private readonly AppDbContext _dataContext;
+        private readonly AppDbContext _db;
         private readonly IMediator _mediator;
+        private readonly ILogger<AddWeatherReportCommandHandler> _logger;
 
-        public AddWeatherReportCommandHandler(AppDbContext dataContext, IMediator mediator)
+        public AddWeatherReportCommandHandler(AppDbContext dataContext, IMediator mediator, ILogger<AddWeatherReportCommandHandler> logger)
         {
-            _dataContext = dataContext;
+            _db = dataContext;
             _mediator = mediator;
+            _logger = logger;
         }
 
-        public async Task<bool> Handle(AddWeatherReportCommand request, CancellationToken cancellationToken)
+        public async Task<long> Handle(AddWeatherReportCommand request, CancellationToken cancellationToken)
         {
+            _logger.LogDebug($"{request.Data.ReportName}; {request.Data.WeatherData?.Length}; {request.Data.WeatherData};  ");
+
             if (string.IsNullOrEmpty(request.Data.ReportName))
                 throw new NullReferenceException("Missing report name");
 
             if (request.Data.WeatherData == null || request.Data.WeatherData.Length == 0)
                 throw new NullReferenceException("Missing report date");
 
-            var value = await _dataContext.Get(new GetWeatherReportQuery(request.Data.ReportName));
+            try
+            {
+                var value = await _db.Get(new GetWeatherReportQuery(request.Data.ReportName));
 
-            if (value == null)
-                value = await WeatherReport.Create(request.Data);
-            else
-                throw new InvalidDataException($"Report name already exists: {request.Data.ReportName}");
+                //await _db.Database.BeginTransactionAsync();
 
-            var dataAdded = await _mediator.Send(new AddWeatherDataCommand(request.Data.WeatherData).WithReportId(value.Id));
+                if (value == null)
+                    value = await WeatherReport.Create(request.Data.ReportName);
+                else
+                    throw new InvalidDataException($"Report name already exists: {request.Data.ReportName}");
 
-            return true;
+                var dataAdded = await _mediator.Send(new AddWeatherDataCommand(request.Data.WeatherData).WithReportId(value.Id));
+                
+                await _db.Save();
+
+                //await _db.Database.CommitTransactionAsync(cancellationToken);
+                return value.Id;
+            }
+            catch (Exception ex)
+            {
+                //await _db.Database.RollbackTransactionAsync(cancellationToken);
+                _logger.LogError(ex, $"Save Failed. {ex.Message}");
+                throw new InvalidDataException("Failed to save Weather Data.");
+            }
         }
     }
 }

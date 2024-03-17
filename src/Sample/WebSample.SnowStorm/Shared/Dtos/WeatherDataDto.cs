@@ -10,7 +10,7 @@ namespace WebSample.SnowStorm.Shared.Dtos
     {
         public long? Id { get; set; }
         public long? ReportId { get; set; }
-        public DateOnly ForecastDate { get; set; }
+        public DateTime ForecastDate { get; set; }
         public int TemperatureC { get; set; }
         public string? Summary { get; set; }
 

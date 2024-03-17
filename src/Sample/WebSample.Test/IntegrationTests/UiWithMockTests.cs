@@ -3,10 +3,11 @@ using Microsoft.Extensions.DependencyInjection;
 using RichardSzalay.MockHttp;
 using WebSample.SnowStorm.Client.Pages;
 using WebSample.Test.Infrastructure;
+using WebSample.Tests.Infrastructure;
 
 namespace WebSample.Test.IntegrationTests
 {
-    public class UiWithMockTests :BaseIntegrationTests
+    public class UiWithMockTests : BaseIntegrationTests
     {
         public const string appJson = "application/json";
         public const string baseAdr = "https://localhost/";
@@ -16,7 +17,7 @@ namespace WebSample.Test.IntegrationTests
             InitApi();
         }
 
-        [Fact (Skip = "This is for reference purposes.")]
+        [Fact]
         public void CounterShouldIncrementWhenClicked()
         {
             // Arrange: render the Counter.razor component
@@ -35,7 +36,7 @@ namespace WebSample.Test.IntegrationTests
 
         }
 
-        [Fact(Skip = "This is for reference purposes.")]
+        [Fact]
         public void ShowWeatherForecastOnPageLoad()
         {
             // Arrange: render the Counter.razor component
@@ -54,7 +55,7 @@ namespace WebSample.Test.IntegrationTests
 
         }
 
-        [Fact(Skip = "This is for reference purposes.")]
+        [Fact]
         public void ShowWeatherForecastFromRestApiOnPageLoad()
         {
             // Arrange: render the Counter.razor component

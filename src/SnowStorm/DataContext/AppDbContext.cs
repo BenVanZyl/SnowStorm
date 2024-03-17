@@ -45,8 +45,11 @@ namespace SnowStorm.DataContext
 
         public override int SaveChanges()
         {
-            AddAuditInfo();
-            return base.SaveChanges();
+            int result = 0;
+            var t = Task.Run(async () => result = await this.SaveChangesAsync());
+            t.Wait();
+
+            return result;
         }
 
         public async Task<int> SaveChangesAsync()

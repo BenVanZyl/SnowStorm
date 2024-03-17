@@ -61,13 +61,10 @@ namespace WebSample.Tests.Infrastructure
                 //close command and connection
                 if (cmd != null && cmd.Connection != null && cmd.Connection.State != ConnectionState.Closed)
                     cmd.Connection.Close();
-
-                if (cmd != null)
-                    cmd = null;
             }
         }
 
-        private string GetScriptContent()
+        private static string GetScriptContent()
         {
             var assembly = AppDomain.CurrentDomain.GetAssemblies().First(w => !string.IsNullOrEmpty(w.FullName) && w.FullName.Contains("Tests"));
             string scriptName = assembly.GetManifestResourceNames().First(w => w.EndsWith("DbCleanupScript.sql"));
