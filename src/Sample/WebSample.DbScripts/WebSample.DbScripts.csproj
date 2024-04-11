@@ -28,7 +28,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Azure.Identity" Version="1.10.4" />
+		<PackageReference Include="Azure.Identity" Version="1.11.0" />
 		<PackageReference Include="dbup-core" Version="5.0.76" />
 		<PackageReference Include="dbup-sqlserver" Version="5.0.40" />
 		<PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.0" />
