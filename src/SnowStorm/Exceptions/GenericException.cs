@@ -18,8 +18,5 @@ namespace SnowStorm.Exceptions
         {
         }
 
-        protected GenericException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
     }
 }
