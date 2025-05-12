@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SnowStorm.QueryExecutors
+namespace SnowStorm.Queries
 {
     public interface IQueryResult<T>
     {

@@ -1,5 +1,6 @@
 ﻿using Bunit;
 using Shouldly;
+using System.Diagnostics;
 using System.Net.Http.Json;
 using WebSample.SnowStorm.Shared;
 using WebSample.SnowStorm.Shared.Dtos;
@@ -57,7 +58,7 @@ namespace WebSample.Test.IntegrationTests
             var result = await Http.PostAsJsonAsync("api/weather-forecasts/reports", data);
 
             // Assert
-            if (result == null)
+            if (result == null || !result.IsSuccessStatusCode)
             {
                 Console.WriteLine("error");
             }
@@ -80,6 +81,40 @@ namespace WebSample.Test.IntegrationTests
             {
                 weatherData.Exists(w => w.ReportId == id && w.ForecastDate == item.Date && w.TemperatureC == item.TemperatureC).ShouldBeTrue();
             }
+        }
+
+        [Fact]
+        public async Task PerformanceTestingSync()
+        {
+            var stopwatch = new System.Diagnostics.Stopwatch();
+            stopwatch.Start();
+            for (int i = 1; i < 1000; i++)
+            {
+                await SaveWeatherReport_ReturnsSuccess();
+            }
+            stopwatch.Stop();
+            Console.WriteLine($"PerformanceTestingSync() ran for {stopwatch.Elapsed.TotalSeconds} seconds.");
+        }
+
+        [Theory]
+        [InlineData(10, 10)]
+        [InlineData(100, 10)]
+        [InlineData(1000, 30, 4)]
+        [InlineData(10000, 200, 4)]
+        public async Task LoadTestingAsync(int iterations, double maxSeconds, int maxParallelism = 2)
+        {
+            var stopwatch = new System.Diagnostics.Stopwatch();
+            stopwatch.Start();
+
+            ParallelOptions options = new() { MaxDegreeOfParallelism = maxParallelism };
+            await Parallel.ForAsync(1, iterations, options, async (i, ct) =>
+            {
+                await SaveWeatherReport_ReturnsSuccess();
+            });
+            stopwatch.Stop();
+            double totalSeconds = stopwatch.Elapsed.TotalSeconds;
+            totalSeconds.ShouldBeLessThan(maxSeconds);
+            
         }
 
         #region Helpers.

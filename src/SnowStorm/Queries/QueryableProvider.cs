@@ -1,16 +1,11 @@
 ﻿using SnowStorm.DataContext;
 using System.Linq;
 
-namespace SnowStorm.QueryExecutors
+namespace SnowStorm.Queries
 {
-    public class QueryableProvider : IQueryableProvider
+    public class QueryableProvider(AppDbContext dbContext) : IQueryableProvider
     {
-        private readonly AppDbContext _dbContext;
-
-        public QueryableProvider(AppDbContext dbContext)
-        {
-            _dbContext = dbContext;
-        }
+        private readonly AppDbContext _dbContext = dbContext;
 
         public IQueryable<T> Query<T>() where T : class
         {

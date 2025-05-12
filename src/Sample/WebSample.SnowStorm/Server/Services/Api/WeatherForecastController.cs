@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using SnowStorm.DataContext;
+using SnowStorm.Queries;
 using WebSample.SnowStorm.Server.Services.Commands;
 using WebSample.SnowStorm.Server.Services.Domain;
 using WebSample.SnowStorm.Server.Services.Queries;
@@ -16,18 +17,18 @@ namespace WebSample.SnowStorm.Server.Services.Api
     {
         private readonly IMediator _mediator;
         private readonly ILogger<WeatherForecastController> _logger;
-        private readonly AppDbContext _db;
+        private readonly QueryRunner _queries;
 
         private static readonly string[] Summaries = new[]
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger, IMediator mediator, AppDbContext db)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, IMediator mediator, QueryRunner queries)
         {
             _logger = logger;
             _mediator = mediator;
-            _db = db;
+            _queries = queries;
         }
 
         [HttpGet]
@@ -51,7 +52,7 @@ namespace WebSample.SnowStorm.Server.Services.Api
         {
             try
             {
-                var results = await _db.Get<WeatherReport, WeatherReportDto>(new GetWeatherReportsQuery());
+                var results = await _queries.Get<WeatherReport, WeatherReportDto>(new GetWeatherReportsQuery());
                 return results;
             }
             catch (Exception ex)
@@ -68,7 +69,7 @@ namespace WebSample.SnowStorm.Server.Services.Api
         {
             try
             {
-                var results = await _db.Get<WeatherReport, WeatherReportDto>(new GetWeatherReportQuery(id));
+                var results = await _queries.Get<WeatherReport, WeatherReportDto>(new GetWeatherReportQuery(id));
                 if (results == null)
                     throw new Exception("Report not found");
 
@@ -88,7 +89,7 @@ namespace WebSample.SnowStorm.Server.Services.Api
         {
             try
             {
-                var results = await _db.Get<WeatherData, WeatherDataDto>(new GetWeatherForReportQuery(id));
+                var results = await _queries.Get<WeatherData, WeatherDataDto>(new GetWeatherForReportQuery(id));
                 if (results == null)
                     throw new Exception("Report not found");
 

@@ -4,6 +4,7 @@ using SnowStorm.Domain;
 using System.ComponentModel.DataAnnotations.Schema;
 using WebSample.SnowStorm.Shared.Dtos;
 using SnowStorm;
+using SnowStorm.DataContext;
 
 namespace WebSample.SnowStorm.Server.Services.Domain
 {
@@ -22,12 +23,10 @@ namespace WebSample.SnowStorm.Server.Services.Domain
 
         #region Methods
 
-        internal static async Task<WeatherData> Create(WeatherDataDto data, bool autoSave = true)
+        internal static async Task<WeatherData> Create(AppDbContext dataContext, WeatherDataDto data, bool autoSave = true)
         {
             if (data == null)
                 throw new NullReferenceException("Create Failed due to missing data!: WeatherData");
-
-            var dataContext = Container.GetAppDbContext();
 
             var v = new WeatherData();
             v.Save(data);

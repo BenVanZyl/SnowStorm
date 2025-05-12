@@ -1,7 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SnowStorm.DataContext;
 using SnowStorm.Queries;
+using SnowStorm.Users;
 using System;
 using System.Reflection;
 
@@ -38,27 +40,27 @@ namespace SnowStorm
             AddAutoMapper(services, appAssembly);
 
             //audit user info
-            //if (includeAuditUserInfo)
-            //    AddUserInfo(services);
+            if (includeAuditUserInfo)
+                AddUserInfo(services);
 
             //setup IOC container provider
-            //Container.SetInstance(services.BuildServiceProvider());
+            Container.SetInstance(services.BuildServiceProvider());
         }
 
         //
         // builder.Services.AddHttpContextAccessor();  -- Required First
         //
 
-        //private static void AddUserInfo(IServiceCollection services)
-        //{
-        //    //services.AddHttpContextAccessor();
-        //    //services.AddScoped<ICurrentUser, CurrentUser>();
-        //}
+        private static void AddUserInfo(IServiceCollection services)
+        {
+            //services.AddHttpContextAccessor();
+            services.AddScoped<ICurrentUser, CurrentUser>();
+        }
 
         public static void AddAutoMapper(IServiceCollection services, Assembly appAssembly)
         {
             if (appAssembly == null)
-                throw new InvalidOperationException($"SnowStorm.Setup.AddAutoMapper(...) : Missing appAssembly.");
+                throw new InvalidOperationException($"SnowStorm.Setup.AddMediator(...) : Missing appAssembly.");
 
             services.AddAutoMapper(appAssembly);
         }
@@ -73,8 +75,9 @@ namespace SnowStorm
             services.AddDbContextFactory<AppDbContext>(o =>
                 {
                     o.UseSqlServer(connectionString);
+                
                 },
-                ServiceLifetime.Scoped
+                ServiceLifetime.Singleton
             );
 
             //Auto apply azure managed identity connection to sql server if needed

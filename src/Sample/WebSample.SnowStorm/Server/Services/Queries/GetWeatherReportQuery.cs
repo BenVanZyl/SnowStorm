@@ -1,7 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
 using SnowStorm.Extensions;
-using SnowStorm.QueryExecutors;
-using System.Security.Cryptography;
+using SnowStorm.Queries;
 using WebSample.SnowStorm.Server.Services.Domain;
 
 namespace WebSample.SnowStorm.Server.Services.Queries

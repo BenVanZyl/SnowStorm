@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using SnowStorm.DataContext;
+using SnowStorm.Queries;
 using WebSample.SnowStorm.Server.Services.Domain;
 using WebSample.SnowStorm.Server.Services.Queries;
 using WebSample.SnowStorm.Shared.Dtos;
@@ -18,13 +19,15 @@ namespace WebSample.SnowStorm.Server.Services.Commands
 
     public class AddWeatherReportCommandHandler : IRequestHandler<AddWeatherReportCommand, long>
     {
-        private readonly AppDbContext _db;
+        private readonly AppDbContext _dataContext;
         private readonly IMediator _mediator;
         private readonly ILogger<AddWeatherReportCommandHandler> _logger;
+        private readonly QueryRunner _queries;
 
-        public AddWeatherReportCommandHandler(AppDbContext dataContext, IMediator mediator, ILogger<AddWeatherReportCommandHandler> logger)
+        public AddWeatherReportCommandHandler(AppDbContext dataContext, QueryRunner queries, IMediator mediator, ILogger<AddWeatherReportCommandHandler> logger)
         {
-            _db = dataContext;
+            _dataContext = dataContext;
+            _queries = queries;
             _mediator = mediator;
             _logger = logger;
         }
@@ -41,18 +44,18 @@ namespace WebSample.SnowStorm.Server.Services.Commands
 
             try
             {
-                var value = await _db.Get(new GetWeatherReportQuery(request.Data.ReportName));
+                var value = await _queries.Get(new GetWeatherReportQuery(request.Data.ReportName));
 
                 //await _db.Database.BeginTransactionAsync();
 
                 if (value == null)
-                    value = await WeatherReport.Create(request.Data.ReportName);
+                    value = await WeatherReport.Create(_dataContext, request.Data.ReportName);
                 else
                     throw new InvalidDataException($"Report name already exists: {request.Data.ReportName}");
 
                 var dataAdded = await _mediator.Send(new AddWeatherDataCommand(request.Data.WeatherData).WithReportId(value.Id));
                 
-                await _db.Save();
+                await _dataContext.Save();
 
                 //await _db.Database.CommitTransactionAsync(cancellationToken);
                 return value.Id;

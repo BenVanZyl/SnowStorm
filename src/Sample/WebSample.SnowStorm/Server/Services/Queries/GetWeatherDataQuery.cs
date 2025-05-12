@@ -1,4 +1,5 @@
-﻿using SnowStorm.QueryExecutors;
+﻿using SnowStorm;
+using SnowStorm.Queries;
 using WebSample.SnowStorm.Server.Services.Domain;
 
 namespace WebSample.SnowStorm.Server.Services.Queries

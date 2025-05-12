@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using SnowStorm.DataContext;
 using SnowStorm.Extensions;
+using SnowStorm.Queries;
 using System;
 using System.Threading.Tasks;
 
@@ -9,6 +10,7 @@ namespace SnowStorm.Users
     public interface ICurrentUser
     {
         public AppDbContext DataContext { get; }
+        public QueryRunner Queries { get; }
         public IHttpContextAccessor HttpContextAccessor { get; }
         public HttpContext Context { get; }
         public long? UserId { get; set; }
@@ -20,16 +22,11 @@ namespace SnowStorm.Users
         public Task<string> GetUserGuid();
     }
 
-    public class CurrentUser : ICurrentUser
+    public class CurrentUser(AppDbContext dataContext, QueryRunner queries, IHttpContextAccessor httpContextAccessor) : ICurrentUser
     {
-        public CurrentUser(AppDbContext dataContext, IHttpContextAccessor httpContextAccessor)
-        {
-            DataContext = dataContext;
-            HttpContextAccessor = httpContextAccessor;
-        }
-
-        public virtual AppDbContext DataContext { get; }
-        public virtual IHttpContextAccessor HttpContextAccessor { get; }
+        public virtual AppDbContext DataContext { get; } = dataContext;
+        public virtual QueryRunner Queries { get; } = queries;
+        public virtual IHttpContextAccessor HttpContextAccessor { get; } = httpContextAccessor;
 
         public virtual HttpContext Context => HttpContextAccessor.HttpContext;
 
@@ -66,7 +63,7 @@ namespace SnowStorm.Users
 
             UserGuid = string.Empty;
 
-            var v = await DataContext.Get(new GetAspNetUserQuery().WithEmail(UserName));
+            var v = await Queries.Get(new GetAspNetUserQuery().WithEmail(UserName));
 
             if (v == null)
                 return string.Empty;

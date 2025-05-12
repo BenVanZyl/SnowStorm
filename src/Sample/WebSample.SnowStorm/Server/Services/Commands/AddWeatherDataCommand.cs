@@ -51,7 +51,7 @@ namespace WebSample.SnowStorm.Server.Services.Commands
                     if (request.ReportId.HasValue)
                         data.ReportId = request.ReportId.Value;
 
-                    _ = await WeatherData.Create(data); 
+                    _ = await WeatherData.Create(_dataContext, data); 
                 }
 
             }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using SnowStorm.Domain;
 using System;
 using System.Data.Common;
@@ -10,11 +11,8 @@ using System.Threading.Tasks;
 
 namespace SnowStorm.DataContext
 {
-    public partial class AppDbContext : DbContext
+    public partial class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options)
-            : base(options)
-        { }
 
         /// <summary>
         /// Static helper property to assist with Unit and Integration Testing were the Domain classes is in a different assembly...ll
@@ -41,65 +39,6 @@ namespace SnowStorm.DataContext
             modelBuilder.ApplyConfigurationsFromAssembly(AppAssembly);
 
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-        }
-
-        public override int SaveChanges()
-        {
-            int result = 0;
-            var t = Task.Run(async () => result = await this.SaveChangesAsync());
-            t.Wait();
-
-            return result;
-        }
-
-        public async Task<int> SaveChangesAsync()
-        {
-            AddAuditInfo();
-            ChangeTracker.DetectChanges();
-            int result = await base.SaveChangesAsync();
-            return result;
-        }
-
-        public virtual void AddAuditInfo()
-        {
-            ChangeTracker.DetectChanges();
-
-            var entries = ChangeTracker.Entries().Where(x => x.Entity is DomainEntity && (x.State == EntityState.Added || x.State == EntityState.Modified));
-            foreach (var entry in entries)
-            {
-                if (entry.State == EntityState.Added)
-                    ExecuteMethod(entry.Entity, "SetCreatedOn");
-
-                ExecuteMethod(entry.Entity, "SetModifiedOn");
-            }
-        }
-
-        public virtual async Task<object> Run(string sql)
-        {
-            var results = await this.Database.ExecuteSqlRawAsync(sql);
-            return results;
-        }
-
-        public virtual void ExecuteMethod(object objectToUse, string methodName)
-        {
-            try
-            {
-                var type = objectToUse.GetType();
-                if (type == null)
-                    return;
-
-                MethodInfo method = type.GetMethod(methodName, BindingFlags.Instance | BindingFlags.Public);
-                if (method == null)
-                    return;
-
-                method.Invoke(objectToUse, null);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-                throw;
-            }
-
         }
 
     }
