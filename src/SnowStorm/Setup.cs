@@ -9,24 +9,24 @@ namespace SnowStorm
 {
     public static class Setup
     {
-        public static void AddSnowStorm(this IServiceCollection services, string connectionString, bool includeAuditUserInfo = false, int poolSize = 32)
+        public static void AddSnowStorm(this IServiceCollection services, string connectionString, int poolSize = 32)
         {
             Assembly appAssembly = Assembly.GetCallingAssembly();
 
-            AddSnowStorm(services, appAssembly, connectionString, includeAuditUserInfo, poolSize);
+            AddSnowStorm(services, appAssembly, connectionString, poolSize);
         }
 
-        public static void AddSnowStorm(this IServiceCollection services, string assemblyName, string connectionString, bool includeAuditUserInfo = false, int poolSize = 32)
+        public static void AddSnowStorm(this IServiceCollection services, string assemblyName, string connectionString, int poolSize = 32)
         {
             if (string.IsNullOrWhiteSpace(assemblyName))
                 throw new InvalidOperationException($"SnowStorm.Setup.AddSnowStorm(...) : Missing assemblyName");
 
             Assembly appAssembly = Assembly.Load(assemblyName);
 
-            AddSnowStorm(services, appAssembly, connectionString, includeAuditUserInfo, poolSize);
+            AddSnowStorm(services, appAssembly, connectionString, poolSize);
         }
 
-        public static void AddSnowStorm(this IServiceCollection services, Assembly appAssembly, string connectionString, bool includeAuditUserInfo = false, int poolSize = 32)
+        public static void AddSnowStorm(this IServiceCollection services, Assembly appAssembly, string connectionString, int poolSize = 32)
         {
             if (appAssembly == null)
                 throw new InvalidOperationException($"SnowStorm.Setup.AddSnowStorm(...) : Missing assembly");

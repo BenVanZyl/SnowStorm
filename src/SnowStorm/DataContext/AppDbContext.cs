@@ -1,13 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using SnowStorm.Domain;
 using System;
 using System.Data.Common;
-using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 
 namespace SnowStorm.DataContext
 {

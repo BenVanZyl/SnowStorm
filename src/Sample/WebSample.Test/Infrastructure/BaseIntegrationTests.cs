@@ -1,5 +1,4 @@
 ﻿using Bunit;
-using WebSample.Tests.Infrastructure;
 
 namespace WebSample.Test.Infrastructure
 {
