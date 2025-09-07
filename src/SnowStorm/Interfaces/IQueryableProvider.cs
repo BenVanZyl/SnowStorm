@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace SnowStorm.QueryExecutors
+namespace SnowStorm.Interfaces
 {
     public interface IQueryableProvider
     {

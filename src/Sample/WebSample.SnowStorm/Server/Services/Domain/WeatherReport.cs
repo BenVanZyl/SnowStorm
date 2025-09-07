@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SnowStorm;
-using SnowStorm.Domain;
 using WebSample.SnowStorm.Shared.Dtos;
 
 namespace WebSample.SnowStorm.Server.Services.Domain
@@ -12,40 +11,31 @@ namespace WebSample.SnowStorm.Server.Services.Domain
 
         public string ReportName { get; private set; }
 
-
         public List<WeatherData> WeatherData { get; set; }
 
         #region Methods
 
-        internal static async Task<WeatherReport> Create(WeatherReportDto data, bool autoSave = true)
+        internal static async Task<WeatherReport> Create(QueryRunner queryRunner, WeatherReportDto data, bool autoSave = true)
         {
             if (data == null)
                 throw new NullReferenceException("Create Failed due to missing data!: WeatherReport");
 
-            var dataContext = Container.GetAppDbContext();
-
-            var v = new WeatherReport(data);
-            await dataContext.Add<WeatherReport>(v, autoSave);
+            var v = new WeatherReport();
+            v.Save(data);
+            await queryRunner.Add<WeatherReport>(v, autoSave);
           
             return v;
         }
 
-        internal static async Task<WeatherReport> Create(string reportName, bool autoSave = true)
+        internal static async Task<WeatherReport> Create(QueryRunner queryRunner, string reportName, bool autoSave = true)
         {
-            var dataContext = Container.GetAppDbContext();
-
             var v = new WeatherReport();
             v.SetReportName(reportName);
-            await dataContext.Add<WeatherReport>(v, autoSave);
+            await queryRunner.Add<WeatherReport>(v, autoSave);
 
             return v;
         }
         
-        private WeatherReport(WeatherReportDto data)
-        {
-            Save(data);
-        }
-
         public void Save(WeatherReportDto data)
         {
             SetReportName(data.ReportName);

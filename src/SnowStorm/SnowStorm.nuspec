@@ -7,15 +7,17 @@
     <projectUrl>https://github.com/benvanzyl/snowstorm</projectUrl>
 	<license src="license.txt"/>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
-    <description>This is class library to support implementing the CQRS pattern. For implementation sample and more info see the following: https://github.com/BenVanZyl/Reliance  This is work in progress (WiP) and nowhere near to production ready code.  Welcome to throw a Pull Request in the hat.
-    </description>
+    <description>
+		This is class library to support implementing the CQRS pattern using Entity Framework. For implementation sample and more info see the following: https://github.com/BenVanZyl/SnowStorm/tree/main/src/Sample 
+		This is a continuous work in progress (WiP) and you should use your own copy of the code should you want to use it in your own production environment.  Welcome to throw a Pull Request in the hat.
+	</description>
     <releaseNotes>
       -- Work in Progress --
 
     </releaseNotes>
   </metadata>
   <files>
-    <!-- targeting netcore7.0 -->
-	<file src="bin\$configuration$\net7.0\SnowStorm.*" target="lib\net7.0" />
+    <!-- targeting netcore9.0 -->
+	<file src="bin\$configuration$\net9.0\SnowStorm.*" target="lib\net9.0" />
   </files>
 </package>

@@ -1,7 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
 using SnowStorm.Extensions;
-using SnowStorm.QueryExecutors;
-using System.Security.Cryptography;
+using SnowStorm.Interfaces;
 using WebSample.SnowStorm.Server.Services.Domain;
 
 namespace WebSample.SnowStorm.Server.Services.Queries
@@ -21,6 +20,11 @@ namespace WebSample.SnowStorm.Server.Services.Queries
             _descriptionContains = descriptionContains;
         }
 
+        public Task Delete(IQueryableProvider queryableProvider)
+        {
+            throw new NotImplementedException();
+        }
+
         public IQueryable<WeatherReport> Get(IQueryableProvider queryableProvider)
         {
             var query = queryableProvider.Query<WeatherReport>();
@@ -34,6 +38,11 @@ namespace WebSample.SnowStorm.Server.Services.Queries
             //query = query.Include(i => i.wea)
 
             return query;
+        }
+
+        public Task Update(IQueryableProvider queryableProvider)
+        {
+            throw new NotImplementedException();
         }
     }
 }

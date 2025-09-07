@@ -1,62 +1,44 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using SnowStorm.Domain;
 using System;
 using System.Data.Common;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
-namespace SnowStorm.DataContext
+namespace SnowStorm
 {
-    public partial class AppDbContext : DbContext
+    public class DataContext(DbContextOptions<DataContext> options) : DbContext(options)
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options)
-            : base(options)
-        { }
+        public static Assembly AppAssembly { get; set; } = default!;
 
         /// <summary>
-        /// Static helper property to assist with Unit and Integration Testing were the Domain classes is in a different assembly...ll
+        /// Get the underlying connection string for this DB Context
         /// </summary>
-        public static Assembly AppAssembly { get; set; }
+        public string ConnectionString => Database != null ? Database.GetConnectionString() : "not provided!";
 
         /// <summary>
-        /// Get the underlaying connection string for this DB Context
+        /// Get the underlying connection for this DB Context
         /// </summary>
-        public string ConnectionString => this.Database.GetConnectionString();
-
-        /// <summary>
-        /// Get the underlaying connection for this DB Context
-        /// </summary>
-        public DbConnection Connection => this.Database.GetDbConnection();
+        public DbConnection Connection => Database.GetDbConnection();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            if (AppAssembly == null)
-                throw new InvalidOperationException($"SnowStorm.Domain.AppDbContext(...) : Missing appAssembly.");
-
             modelBuilder.ApplyConfigurationsFromAssembly(AppAssembly);
 
-            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            //modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            //modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetCallingAssembly());
+            //modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetEntryAssembly());
+            
         }
 
         public override int SaveChanges()
         {
-            int result = 0;
-            var t = Task.Run(async () => result = await this.SaveChangesAsync());
-            t.Wait();
-
-            return result;
-        }
-
-        public async Task<int> SaveChangesAsync()
-        {
             AddAuditInfo();
             ChangeTracker.DetectChanges();
-            int result = await base.SaveChangesAsync();
+            int result = base.SaveChanges();
             return result;
         }
 
@@ -72,12 +54,6 @@ namespace SnowStorm.DataContext
 
                 ExecuteMethod(entry.Entity, "SetModifiedOn");
             }
-        }
-
-        public virtual async Task<object> Run(string sql)
-        {
-            var results = await this.Database.ExecuteSqlRawAsync(sql);
-            return results;
         }
 
         public virtual void ExecuteMethod(object objectToUse, string methodName)
@@ -101,7 +77,5 @@ namespace SnowStorm.DataContext
             }
 
         }
-
     }
 }
-

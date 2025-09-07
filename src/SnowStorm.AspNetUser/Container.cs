@@ -1,8 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using SnowStorm.DataContext;
 using SnowStorm.Users;
-using System;
-using System.Threading.Tasks;
 
 namespace SnowStorm
 {
@@ -17,11 +14,11 @@ namespace SnowStorm
 
         public static IServiceProvider Instance => _instance ?? throw new InvalidOperationException("Service provider instance has not been set.");
 
-        public static AppDbContext GetAppDbContext()
+        public static DataContext GetAppDbContext()
         {
             try
             {
-                return Instance.GetService<AppDbContext>();
+                return Instance.GetService<DataContext>();
             }
             catch (Exception ex)
             {

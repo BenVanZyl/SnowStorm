@@ -1,10 +1,7 @@
-﻿using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using SnowStorm.DataContext;
-using SnowStorm.QueryExecutors;
+using SnowStorm.Interfaces;
 using SnowStorm.Users;
-using System;
 using System.Reflection;
 
 namespace SnowStorm
@@ -67,36 +64,47 @@ namespace SnowStorm
 
         public static void AddAppDbContext(IServiceCollection services, Assembly appAssembly, string connectionString, int poolSize = 32)
         {
-            AppDbContext.AppAssembly = appAssembly;
+            //DataContext.AppAssembly = appAssembly;
 
             services.AddScoped<IQueryableProvider, QueryableProvider>();
+            services.AddScoped<QueryRunner>();
+
+            services.AddDbContextFactory<DataContext>(o =>
+                {
+                    o.UseSqlServer(connectionString);
+                
+                },
+                ServiceLifetime.Singleton
+            );
 
             //Auto apply azure managed identity connection to sql server if needed
-            services.AddDbContextPool<AppDbContext>
-            (o =>
-                {
-                    if (connectionString.Contains(".database.windows.net", System.StringComparison.OrdinalIgnoreCase) && !connectionString.Contains("password", System.StringComparison.OrdinalIgnoreCase))
-                    {   // SQL Server Db in Azure, using Azure AD integrated auth
-                        var credential = new Azure.Identity.DefaultAzureCredential();
-                        var token = credential.GetToken(new Azure.Core.TokenRequestContext(new[] { "https://database.windows.net/.default" }));
-                        SqlConnection connection = new()
-                        {
-                            ConnectionString = connectionString,
-                            AccessToken = token.Token
-                        };
-                        o.UseSqlServer(connection, sqlServerOptionsAction: sqlOptions =>
-                        {
-                            sqlOptions.EnableRetryOnFailure();
-                        });
-                    }
-                    else
-                        o.UseSqlServer(connectionString, sqlServerOptionsAction: sqlOptions =>
-                        {
-                            sqlOptions.EnableRetryOnFailure();
-                        }); //identity provided in string, straight sql connection
-                },
-                poolSize: poolSize
-            );
+            //services.AddDbContextPool<AppDbContext>
+            //(o =>
+            //    {
+            //        o.EnableThreadSafetyChecks();
+            //        if (connectionString.Contains(".database.windows.net", System.StringComparison.OrdinalIgnoreCase) && !connectionString.Contains("password", System.StringComparison.OrdinalIgnoreCase))
+            //        {   // SQL Server Db in Azure, using Azure AD integrated auth
+            //            var credential = new Azure.Identity.DefaultAzureCredential();
+            //            var token = credential.GetToken(new Azure.Core.TokenRequestContext(new[] { "https://database.windows.net/.default" }));
+            //            SqlConnection connection = new()
+            //            {
+            //                ConnectionString = connectionString,
+            //                AccessToken = token.Token
+            //            };
+            //            o.UseSqlServer(connection, sqlServerOptionsAction: sqlOptions =>
+            //            {
+            //                sqlOptions.EnableRetryOnFailure();
+            //            });
+            //        }
+            //        else
+            //            o.UseSqlServer(connectionString, sqlServerOptionsAction: sqlOptions =>
+            //            {
+            //                sqlOptions.EnableRetryOnFailure();
+            //            }); //identity provided in string, straight sql connection
+            //    },
+            //    poolSize: poolSize
+            //);
+
         }
     }
 }

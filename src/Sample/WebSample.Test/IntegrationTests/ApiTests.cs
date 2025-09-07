@@ -4,8 +4,6 @@ using System.Net.Http.Json;
 using WebSample.SnowStorm.Shared;
 using WebSample.SnowStorm.Shared.Dtos;
 using WebSample.Test.Infrastructure;
-using WebSample.Tests.Infrastructure;
-using static System.Net.WebRequestMethods;
 
 namespace WebSample.Test.IntegrationTests
 {
@@ -57,7 +55,7 @@ namespace WebSample.Test.IntegrationTests
             var result = await Http.PostAsJsonAsync("api/weather-forecasts/reports", data);
 
             // Assert
-            if (result == null)
+            if (result == null || !result.IsSuccessStatusCode)
             {
                 Console.WriteLine("error");
             }
@@ -66,7 +64,7 @@ namespace WebSample.Test.IntegrationTests
 
             var id = await result.Content.ReadFromJsonAsync<long>();
 
-            //get the record from the backend and verify that the data is there.
+            //get the record from the back end and verify that the data is there.
             var report = await Http.GetFromJsonAsync<WeatherReportDto>($"api/weather-forecasts/{id}");
             report.ShouldNotBeNull();
             report.Id.ShouldBe(id);
@@ -80,6 +78,40 @@ namespace WebSample.Test.IntegrationTests
             {
                 weatherData.Exists(w => w.ReportId == id && w.ForecastDate == item.Date && w.TemperatureC == item.TemperatureC).ShouldBeTrue();
             }
+        }
+
+        [Fact]
+        public async Task PerformanceTestingSync()
+        {
+            var stopwatch = new System.Diagnostics.Stopwatch();
+            stopwatch.Start();
+            for (int i = 1; i < 1000; i++)
+            {
+                await SaveWeatherReport_ReturnsSuccess();
+            }
+            stopwatch.Stop();
+            Console.WriteLine($"PerformanceTestingSync() ran for {stopwatch.Elapsed.TotalSeconds} seconds.");
+        }
+
+        [Theory]
+        [InlineData(10, 10)]
+        [InlineData(100, 30)]
+        [InlineData(1000, 60, 4)]
+        [InlineData(10000, 300, 4)]
+        public async Task LoadTestingAsync(int iterations, double maxSeconds, int maxParallelism = 2)
+        {
+            var stopwatch = new System.Diagnostics.Stopwatch();
+            stopwatch.Start();
+
+            ParallelOptions options = new() { MaxDegreeOfParallelism = maxParallelism };
+            await Parallel.ForAsync(1, iterations, options, async (i, ct) =>
+            {
+                await SaveWeatherReport_ReturnsSuccess();
+            });
+            stopwatch.Stop();
+            double totalSeconds = stopwatch.Elapsed.TotalSeconds;
+            totalSeconds.ShouldBeLessThan(maxSeconds);
+            
         }
 
         #region Helpers.

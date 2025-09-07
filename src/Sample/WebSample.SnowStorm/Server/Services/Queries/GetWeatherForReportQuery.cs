@@ -1,5 +1,4 @@
-﻿using SnowStorm.QueryExecutors;
-using System.Security.Cryptography;
+﻿using SnowStorm.Interfaces;
 using WebSample.SnowStorm.Server.Services.Domain;
 
 namespace WebSample.SnowStorm.Server.Services.Queries
