@@ -1,9 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using SnowStorm.Extensions;
-using SnowStorm.Queries;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
+using SnowStorm.Interfaces;
 
 namespace SnowStorm.Users
 {

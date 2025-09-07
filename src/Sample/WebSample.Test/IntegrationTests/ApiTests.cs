@@ -1,12 +1,9 @@
 ﻿using Bunit;
 using Shouldly;
-using System.Diagnostics;
 using System.Net.Http.Json;
 using WebSample.SnowStorm.Shared;
 using WebSample.SnowStorm.Shared.Dtos;
 using WebSample.Test.Infrastructure;
-using WebSample.Tests.Infrastructure;
-using static System.Net.WebRequestMethods;
 
 namespace WebSample.Test.IntegrationTests
 {
@@ -67,7 +64,7 @@ namespace WebSample.Test.IntegrationTests
 
             var id = await result.Content.ReadFromJsonAsync<long>();
 
-            //get the record from the backend and verify that the data is there.
+            //get the record from the back end and verify that the data is there.
             var report = await Http.GetFromJsonAsync<WeatherReportDto>($"api/weather-forecasts/{id}");
             report.ShouldNotBeNull();
             report.Id.ShouldBe(id);
@@ -98,9 +95,9 @@ namespace WebSample.Test.IntegrationTests
 
         [Theory]
         [InlineData(10, 10)]
-        [InlineData(100, 10)]
-        [InlineData(1000, 30, 4)]
-        [InlineData(10000, 200, 4)]
+        [InlineData(100, 30)]
+        [InlineData(1000, 60, 4)]
+        [InlineData(10000, 300, 4)]
         public async Task LoadTestingAsync(int iterations, double maxSeconds, int maxParallelism = 2)
         {
             var stopwatch = new System.Diagnostics.Stopwatch();

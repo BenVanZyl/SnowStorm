@@ -1,7 +1,6 @@
 ﻿using MediatR;
-using SnowStorm.DataContext;
+using SnowStorm;
 using WebSample.SnowStorm.Server.Services.Domain;
-using WebSample.SnowStorm.Server.Services.Queries;
 using WebSample.SnowStorm.Shared;
 using WebSample.SnowStorm.Shared.Dtos;
 
@@ -32,11 +31,11 @@ namespace WebSample.SnowStorm.Server.Services.Commands
 
     public class AddWeatherDataCommandHandler : IRequestHandler<AddWeatherDataCommand, bool>
     {
-        private readonly AppDbContext _dataContext;
+        private readonly QueryRunner _queryRunner;
 
-        public AddWeatherDataCommandHandler(AppDbContext dataContext)
+        public AddWeatherDataCommandHandler(QueryRunner queryRunner)
         {
-            _dataContext = dataContext;
+            _queryRunner = queryRunner;
         }
 
         public async Task<bool> Handle(AddWeatherDataCommand request, CancellationToken cancellationToken)
@@ -51,13 +50,13 @@ namespace WebSample.SnowStorm.Server.Services.Commands
                     if (request.ReportId.HasValue)
                         data.ReportId = request.ReportId.Value;
 
-                    _ = await WeatherData.Create(_dataContext, data); 
+                    _ = await WeatherData.Create(_queryRunner, data); 
                 }
 
             }
             catch (Exception)
             {
-                _dataContext.ChangeTracker.Clear();
+                //_queryRunner.ChangeTracker.Clear();
                 throw new IOException("Cannot save weather data. Transaction cancelled.");
             }
             

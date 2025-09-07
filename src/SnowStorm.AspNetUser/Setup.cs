@@ -1,10 +1,7 @@
-﻿using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using SnowStorm.DataContext;
-using SnowStorm.Queries;
+using SnowStorm.Interfaces;
 using SnowStorm.Users;
-using System;
 using System.Reflection;
 
 namespace SnowStorm
@@ -67,12 +64,12 @@ namespace SnowStorm
 
         public static void AddAppDbContext(IServiceCollection services, Assembly appAssembly, string connectionString, int poolSize = 32)
         {
-            AppDbContext.AppAssembly = appAssembly;
+            //DataContext.AppAssembly = appAssembly;
 
             services.AddScoped<IQueryableProvider, QueryableProvider>();
             services.AddScoped<QueryRunner>();
 
-            services.AddDbContextFactory<AppDbContext>(o =>
+            services.AddDbContextFactory<DataContext>(o =>
                 {
                     o.UseSqlServer(connectionString);
                 

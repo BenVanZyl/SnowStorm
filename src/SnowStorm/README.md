@@ -25,7 +25,7 @@ The test provides a sample of
 
 
 # Supported Platforms
-.Net 7 (Latest version) 
+.Net 9 (Latest version) 
 
 # Latest Release Notes
 
@@ -55,3 +55,9 @@ The test provides a sample of
  - Beta: GetById<T> methods added to reduce the need for query objects.
  - Beta: GetAll<T> method to get all the rows from a table.  This will reduce the need for query classes for reference data like dropdowns.
 
+ 2025-09-01 (3.0.0)
+ - BREAKING CODE!
+ - implemented .Net 9.
+ - Complete rewrite and restructure of the code.
+ - The aim here is to provide the minimal code to make this work and easier to understand.
+ - 

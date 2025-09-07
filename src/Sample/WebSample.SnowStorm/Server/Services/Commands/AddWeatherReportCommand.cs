@@ -1,6 +1,5 @@
 ﻿using MediatR;
-using SnowStorm.DataContext;
-using SnowStorm.Queries;
+using SnowStorm;
 using WebSample.SnowStorm.Server.Services.Domain;
 using WebSample.SnowStorm.Server.Services.Queries;
 using WebSample.SnowStorm.Shared.Dtos;
@@ -19,12 +18,12 @@ namespace WebSample.SnowStorm.Server.Services.Commands
 
     public class AddWeatherReportCommandHandler : IRequestHandler<AddWeatherReportCommand, long>
     {
-        private readonly AppDbContext _dataContext;
+        private readonly DataContext _dataContext;
         private readonly IMediator _mediator;
         private readonly ILogger<AddWeatherReportCommandHandler> _logger;
         private readonly QueryRunner _queries;
 
-        public AddWeatherReportCommandHandler(AppDbContext dataContext, QueryRunner queries, IMediator mediator, ILogger<AddWeatherReportCommandHandler> logger)
+        public AddWeatherReportCommandHandler(DataContext dataContext, QueryRunner queries, IMediator mediator, ILogger<AddWeatherReportCommandHandler> logger)
         {
             _dataContext = dataContext;
             _queries = queries;
@@ -49,15 +48,15 @@ namespace WebSample.SnowStorm.Server.Services.Commands
                 //await _db.Database.BeginTransactionAsync();
 
                 if (value == null)
-                    value = await WeatherReport.Create(_dataContext, request.Data.ReportName);
+                    value = await WeatherReport.Create(_queries, request.Data.ReportName);
                 else
                     throw new InvalidDataException($"Report name already exists: {request.Data.ReportName}");
 
                 var dataAdded = await _mediator.Send(new AddWeatherDataCommand(request.Data.WeatherData).WithReportId(value.Id));
                 
-                await _dataContext.Save();
+                _queries.Save();
 
-                //await _db.Database.CommitTransactionAsync(cancellationToken);
+           
                 return value.Id;
             }
             catch (Exception ex)

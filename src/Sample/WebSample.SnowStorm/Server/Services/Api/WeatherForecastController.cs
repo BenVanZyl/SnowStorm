@@ -1,9 +1,7 @@
 ﻿using Azure;
 using MediatR;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using SnowStorm.DataContext;
-using SnowStorm.Queries;
+using SnowStorm;
 using WebSample.SnowStorm.Server.Services.Commands;
 using WebSample.SnowStorm.Server.Services.Domain;
 using WebSample.SnowStorm.Server.Services.Queries;
@@ -37,7 +35,7 @@ namespace WebSample.SnowStorm.Server.Services.Api
         {
             return Enumerable.Range(1, 10).Select(index => new WeatherForecast
             {
-                Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)).ToDateTime(new TimeOnly(0,0)),
+                Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)).ToDateTime(new TimeOnly(0, 0)),
                 TemperatureC = Random.Shared.Next(-20, 55),
                 Summary = Summaries[Random.Shared.Next(Summaries.Length)]
             })

@@ -1,8 +1,27 @@
 ﻿using System;
 
 namespace SnowStorm.Domain
-{ 
-    
+{
+    public class DomainEntityWithAudit : DomainEntity
+    {
+        public DateTime CreatedOn { get; private set; }
+        public DateTime ModifiedOn { get; private set; }
+
+        public virtual void SetCreatedOn() => CreatedOn = DateTime.Now;
+
+        public virtual void SetModifiedOn() => ModifiedOn = DateTime.Now;
+    }
+
+    public class DomainEntityWithIdWithAudit : DomainEntityWithId
+    {
+        public DateTime CreatedOn { get; private set; }
+        public DateTime ModifiedOn { get; private set; }
+
+        public virtual void SetCreatedOn() => CreatedOn = DateTime.Now;
+
+        public virtual void SetModifiedOn() => ModifiedOn = DateTime.Now;
+    }
+
     public class DomainEntityWithIdWithAuditUserId : DomainEntityWithIdWithAudit
     {
         public long CreatedBy { get; private set; }
