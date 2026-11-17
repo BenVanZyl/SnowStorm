@@ -14,7 +14,7 @@ namespace WebSample.SnowStorm
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
 
-            //setup api with swagger
+            //setup API with swagger
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -22,7 +22,7 @@ namespace WebSample.SnowStorm
 
             //setup snowstorm
             string AppDataConnectionString = builder.Configuration.GetConnectionString("AppData") ?? throw new NullReferenceException("Missing AppData Connection String!");
-            builder.Services.AddSnowStorm(AppDataConnectionString, "WebSample.SnowStorm.Server");
+            builder.Services.AddSnowStorm(AppDataConnectionString); //, "WebSample.SnowStorm.Server");
 
             builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 

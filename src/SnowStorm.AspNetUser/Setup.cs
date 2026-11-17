@@ -31,7 +31,7 @@ namespace SnowStorm
                 throw new InvalidOperationException($"SnowStorm.Setup.AddSnowStorm(...) : Missing assembly");
 
             //setup DbContext
-            AddAppDbContext(services, appAssembly, connectionString, poolSize: poolSize);
+            AddDataContext(services, appAssembly, connectionString, poolSize: poolSize);
 
             //setup auto mapper
             AddAutoMapper(services, appAssembly);
@@ -59,10 +59,10 @@ namespace SnowStorm
             if (appAssembly == null)
                 throw new InvalidOperationException($"SnowStorm.Setup.AddMediator(...) : Missing appAssembly.");
 
-            services.AddAutoMapper(appAssembly);
+            services.AddAutoMapper(cfg => { }, appAssembly);
         }
 
-        public static void AddAppDbContext(IServiceCollection services, Assembly appAssembly, string connectionString, int poolSize = 32)
+        public static void AddDataContext(IServiceCollection services, Assembly appAssembly, string connectionString, int poolSize = 32)
         {
             //DataContext.AppAssembly = appAssembly;
 
@@ -78,7 +78,7 @@ namespace SnowStorm
             );
 
             //Auto apply azure managed identity connection to sql server if needed
-            //services.AddDbContextPool<AppDbContext>
+            //services.AddDbContextPool<DataContext>
             //(o =>
             //    {
             //        o.EnableThreadSafetyChecks();

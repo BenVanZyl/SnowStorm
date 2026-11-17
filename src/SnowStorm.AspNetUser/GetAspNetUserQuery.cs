@@ -39,7 +39,7 @@ namespace SnowStorm.Users
             SqlCommand cmd = null;
             try
             {
-                var db = Container.GetAppDbContext();
+                var db = Container.GetDataContext();
 
                 cmd = new SqlCommand("Select Id From dbo.AspNetUsers Where Email = @email", new SqlConnection(db.ConnectionString));
 
@@ -65,6 +65,16 @@ namespace SnowStorm.Users
                 if (cmd != null && cmd.Connection != null && cmd.Connection.State != System.Data.ConnectionState.Closed)
                     cmd.Connection.Close();
             }
+        }
+
+        public Task Update(IQueryableProvider queryableProvider)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task Delete(IQueryableProvider queryableProvider)
+        {
+            throw new NotImplementedException();
         }
     }
 }

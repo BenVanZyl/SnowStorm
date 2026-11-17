@@ -26,11 +26,11 @@ namespace SnowStorm
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.ApplyConfigurationsFromAssembly(AppAssembly);
+            //modelBuilder.ApplyConfigurationsFromAssembly(AppAssembly);
 
-            //modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-            //modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetCallingAssembly());
-            //modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetEntryAssembly());
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetCallingAssembly());
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetEntryAssembly());
             
         }
 
