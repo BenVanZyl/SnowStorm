@@ -3,8 +3,8 @@
 namespace WebSample.Test.Infrastructure
 {
     [Collection("All Tests Complete")]
-    public class BaseIntegrationTests : TestContext//, ICollectionFixture<AllTestsCompleteFixture>
-    {        
+    public class BaseIntegrationTests : BunitContext //, ICollectionFixture<AllTestsCompleteFixture>
+    {
         public BaseIntegrationTests()
         {
             Factory = new TestAppFactory();

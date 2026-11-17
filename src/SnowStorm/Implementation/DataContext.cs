@@ -3,8 +3,6 @@ using System;
 using System.Data.Common;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 
 namespace SnowStorm
 {
@@ -26,12 +24,12 @@ namespace SnowStorm
         {
             base.OnModelCreating(modelBuilder);
 
-            //modelBuilder.ApplyConfigurationsFromAssembly(AppAssembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(AppAssembly);
 
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetCallingAssembly());
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetEntryAssembly());
-            
+
         }
 
         public override int SaveChanges()

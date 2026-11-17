@@ -19,18 +19,15 @@ namespace SnowStorm
 
             services.AddAutoMapper(cfg => { }, DataContext.AppAssembly);
 
-            //services.AddAutoMapper(Assembly.GetCallingAssembly());
-            //services.AddAutoMapper(Assembly.GetEntryAssembly());            
-            //services.AddAutoMapper(Assembly.GetExecutingAssembly());
-
             services.AddScoped<IQueryableProvider, QueryableProvider>();
             services.AddScoped<QueryRunner>();
 
             services.AddDbContextFactory<DataContext>(o =>
-            {
-                o.UseSqlServer(connectionString, options => options.EnableRetryOnFailure(3));
-            }, 
-            ServiceLifetime.Scoped);
+                {
+                    o.UseSqlServer(connectionString, options => options.EnableRetryOnFailure(3));
+                },
+                ServiceLifetime.Scoped
+            );
         }
     }
 }
