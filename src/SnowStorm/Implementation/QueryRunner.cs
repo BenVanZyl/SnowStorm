@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿// Ignore Spelling: Dto
+
+using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -35,7 +37,7 @@ namespace SnowStorm
             }
             catch (Exception ex)
             {
-                string message = $"Error: QueryRunner.Get<T>(IQueryResultSingle<T>...) with sorting : {ex.Message} ";
+                string message = $"Error: QueryRunner.Get<T>(IQueryResultSingle<T>...) : {ex.Message} ";
                 _logger?.LogError(ex, message);
                 throw;
             }
@@ -69,6 +71,7 @@ namespace SnowStorm
             }
             catch (Exception ex)
             {
+                ex.Data.Add("Query", query);
                 _logger?.LogError(ex, $"Error: QueryRunner.Get<T>(IQueryResultList<T>...) : {ex.Message} ");
                 throw;
             }
@@ -83,6 +86,7 @@ namespace SnowStorm
             }
             catch (Exception ex)
             {
+                ex.Data.Add("Query", query);
                 _logger?.LogError(ex, $"Error: QueryRunner.Get<T,TDto>(IQueryResultList<T>...) : {ex.Message} ");
                 throw;
             }

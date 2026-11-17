@@ -14,7 +14,7 @@ namespace SnowStorm
 
         public static IServiceProvider Instance => _instance ?? throw new InvalidOperationException("Service provider instance has not been set.");
 
-        public static DataContext GetAppDbContext()
+        public static DataContext GetDataContext()
         {
             try
             {

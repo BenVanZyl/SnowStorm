@@ -32,7 +32,7 @@ namespace SnowStorm.Users
 
         public virtual long? UserId { get; set; } = null;
 
-        public virtual string UserGuid { get; set; }
+        public virtual string UserGuid { get; set; } = string.Empty;
 
         public virtual string GetUserName()
         {

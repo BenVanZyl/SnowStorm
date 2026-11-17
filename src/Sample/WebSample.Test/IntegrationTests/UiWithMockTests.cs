@@ -13,7 +13,7 @@ namespace WebSample.Test.IntegrationTests
         public const string baseAdr = "https://localhost/";
 
         public UiWithMockTests()
-        {     
+        {
             InitApi();
         }
 
@@ -21,9 +21,8 @@ namespace WebSample.Test.IntegrationTests
         public void CounterShouldIncrementWhenClicked()
         {
             // Arrange: render the Counter.razor component
-            //InitApi(1);
+            var cut = Render<Counter>();
 
-            var cut = RenderComponent<Counter>();
             // Wait for the component to finish rendering
             cut.WaitForState(() => cut.FindAll("p").Count > 0);
 
@@ -33,17 +32,13 @@ namespace WebSample.Test.IntegrationTests
 
             // Assert: first find the <p> element, then verify its content
             cut.Find("p").MarkupMatches("<p role=\"status\">Current count: 1</p>");
-
         }
 
         [Fact]
         public void ShowWeatherForecastOnPageLoad()
         {
             // Arrange: render the Counter.razor component
-            //InitApi(2);
-
-            // Act: page load occurs automatically
-            var cut = RenderComponent<FetchData>();
+            var cut = Render<FetchData>();
             cut.WaitForState(() => cut.FindAll("table").Count > 0);
 
             // Assert: first find the <p> element, then verify its content
@@ -59,9 +54,7 @@ namespace WebSample.Test.IntegrationTests
         public void ShowWeatherForecastFromRestApiOnPageLoad()
         {
             // Arrange: render the Counter.razor component
-
-            // Act: page load occurs automatically
-            var cut = RenderComponent<Weather>();
+            var cut = Render<Weather>();
             cut.WaitForState(() => cut.FindAll("table").Count > 0);
 
             // Assert: first find the <p> element, then verify its content
@@ -71,7 +64,6 @@ namespace WebSample.Test.IntegrationTests
             Assert.NotNull(tbl);
 
             Assert.Matches("11", tbl.Rows.Count().ToString());
-
         }
 
         private void InitApi()
@@ -79,7 +71,7 @@ namespace WebSample.Test.IntegrationTests
             var mockHttpClient = GetMockClient();
             Services.AddSingleton(mockHttpClient);
         }
-        
+
         private HttpClient GetMockClient()
         {
             var mockHttp = new MockHttpMessageHandler(BackendDefinitionBehavior.Always);
@@ -112,6 +104,5 @@ namespace WebSample.Test.IntegrationTests
             t.Wait();
             return results;
         }
-
     }
 }

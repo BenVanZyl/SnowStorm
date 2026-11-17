@@ -1,5 +1,4 @@
-﻿using Azure;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SnowStorm;
 using WebSample.SnowStorm.Server.Services.Commands;
@@ -17,10 +16,10 @@ namespace WebSample.SnowStorm.Server.Services.Api
         private readonly ILogger<WeatherForecastController> _logger;
         private readonly QueryRunner _queries;
 
-        private static readonly string[] Summaries = new[]
-        {
+        private static readonly string[] Summaries =
+        [
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
+        ];
 
         public WeatherForecastController(ILogger<WeatherForecastController> logger, IMediator mediator, QueryRunner queries)
         {
@@ -42,8 +41,6 @@ namespace WebSample.SnowStorm.Server.Services.Api
             .ToArray();
         }
 
-
-
         [HttpGet]
         [Route("/api/weather-forecasts/reports")]
         public async Task<IEnumerable<WeatherReportDto>> GetReports()
@@ -56,7 +53,7 @@ namespace WebSample.SnowStorm.Server.Services.Api
             catch (Exception ex)
             {
                 _logger.LogError(ex, "GetReports ERROR");
-                throw new RequestFailedException(ex.Message);
+                throw new InvalidOperationException(ex.Message, ex);
             }
         }
 
@@ -76,7 +73,7 @@ namespace WebSample.SnowStorm.Server.Services.Api
             catch (Exception ex)
             {
                 _logger.LogError(ex, "GetWeatherReport ERROR");
-                throw new RequestFailedException(ex.Message);
+                throw new InvalidOperationException(ex.Message, ex);
             }
         }
 
@@ -96,11 +93,9 @@ namespace WebSample.SnowStorm.Server.Services.Api
             catch (Exception ex)
             {
                 _logger.LogError(ex, "GetWeatherDataForReport ERROR");
-                throw new RequestFailedException(ex.Message);
+                throw new InvalidOperationException(ex.Message, ex);
             }
         }
-
-
 
         [HttpPost]
         [Route("/api/weather-forecasts/reports")]
@@ -108,14 +103,14 @@ namespace WebSample.SnowStorm.Server.Services.Api
         {
             try
             {
-                _logger.LogDebug($"{data.ReportName}; {data.WeatherData?.Length}; {data.WeatherData};  ");
+                _logger.LogDebug("{ReportName}; {Length}; {WeatherData};", data.ReportName, data.WeatherData?.Length, data.WeatherData);
                 var result = await _mediator.Send(new AddWeatherReportCommand(data));
                 return result;
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError(ex, "PostReport ERROR");
-                throw new RequestFailedException(ex.Message);
+                throw new InvalidOperationException(ex.Message, ex);
             }
         }
     }

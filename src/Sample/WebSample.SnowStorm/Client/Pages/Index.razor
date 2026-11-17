@@ -4,6 +4,103 @@
 
 <h1>Hello, world!</h1>
 
-Welcome to your new app.
+<div class="row">
+    <div class="col-lg-6 col-md-6 col-sm-12">
+    
+        <div class="card shadow p-3 mb-5  rounded">
+            <div class="card-header fw-bold text-uppercase">
+                Purpose
+            </div>
+            <div class="card-body fst-italic text-">
+                <p>
+                    This application provides a sample base for testing the SnowStorm components and provide a sample of how an application could hang together.
+                    This application is scalable and can be used as small web app or a full enterprise level application.
+                </p>
+            </div>
+            <div class="card-footer">
+            </div>
+        </div>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+        <div class="card shadow p-3 mb-5 rounded">
+            <div class="card-header fw-bold text-uppercase">
+                Technical Overview
+            </div>
+            <div class="card-body fst-italic">
+                <p>
+                    This application consists of a Blazor Web Assembly application using a ASP.NET Core REST API application to provide back-end
+                    services like data access and CRUD operations.
+                </p>
+                <p>
+                    It uses a  DbUp project to keep the database schema up to date and is used in the code testing of the application.
+                </p>
+            </div>
+            <div class="card-footer">
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-lg-6 col-md-6 col-sm-12">
+        <div class="card shadow p-3 mb-5 rounded">
+            <div class="card-header fw-bold text-uppercase">
+                Functional
+            </div>
+            <div class="card-body fst-italic">
+                <p>
+                    Overview of the features of the application.  The business problem being solved.
+                </p>
+                <p><b>Creating and storing weather forecast data for a region per day.</b></p>
+                <ul>
+                    <li>
+                        Regions
+                        <ul>
+                            <li>View Regions</li>
+                            <li>Create Region</li>
+                            <li>Update Region</li>
+                            <li>Delete Region</li>
+                        </ul>
+                    </li>
+                    <li>
+                        Weather Forecasts
+                        <ul>
+                            <li>View weather forecast for today for all regions.</li>
+                            <li>View weather forecast for selected date and selected region.</li>
+                            <li>
+                                Generate new forecast for selected day and specified region.
+                                <ul>
+                                    <li>If forecast exists, then update the existing records.</li>
+                                </ul>
+                            </li>
+                            <li>Delete existing forecast for selected day and specified region.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-footer small fw-bold">
+                Snow storms are a specific weather phenomena...
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6 col-md-6 col-sm-12">
+        <div class="card shadow p-3 mb-5 rounded">
+            <div class="card-header  fw-bold text-uppercase">
+                Testing
+            </div>
+            <div class="card-body fst-italic">
+                <p>
+                    This application uses <b>Functional End to End testing</b> instead of normal unit testing.  This means that nothing that is accessible in the solution is mocked.
+                    All internal components are tested together as a unit.  This ensures that you code will deploy and run where as mocked unit tests gives you zero gaurentee that your
+                    code will run once deployed.
+                </p>
+                <p>
+                    The testing project in this solution provides several examples of how this functional end to end testing could be done.
+                </p>
+            </div>
+            <div class="card-footer">
+            </div>
+        </div>
+    </div>
+
+   
+</div>

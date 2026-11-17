@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using WebSample.SnowStorm.Client.Pages;
 using WebSample.Test.Infrastructure;
-using WebSample.Tests.Infrastructure;
 
 namespace WebSample.Test.IntegrationTests
 {
@@ -21,8 +20,8 @@ namespace WebSample.Test.IntegrationTests
         public void CounterShouldIncrementWhenClicked()
         {
             // Arrange: render the Counter.razor component
+            var cut = Render<Counter>();
 
-            var cut = RenderComponent<Counter>();
             // Wait for the component to finish rendering
             cut.WaitForState(() => cut.FindAll("p").Count > 0);
 
@@ -32,16 +31,13 @@ namespace WebSample.Test.IntegrationTests
 
             // Assert: first find the <p> element, then verify its content
             cut.Find("p").MarkupMatches("<p role=\"status\">Current count: 1</p>");
-
         }
 
         [Fact]
         public void ShowWeatherForecastOnPageLoad()
         {
             // Arrange: render the Counter.razor component
-            
-            // Act: page load occurs automatically
-            var cut = RenderComponent<FetchData>();
+            var cut = Render<FetchData>();
             cut.WaitForState(() => cut.FindAll("table").Count > 0);
 
             // Assert: first find the <p> element, then verify its content
@@ -56,11 +52,7 @@ namespace WebSample.Test.IntegrationTests
         public void ShowWeatherForecastFromRestApiOnPageLoad()
         {
             // Arrange: render the Counter.razor component
-            //await InitApi();
-
-            // Act: page load occurs automatically
-            var cut = RenderComponent<Weather>();
-
+            var cut = Render<Weather>();
             cut.WaitForState(() => cut.FindAll("table").Count > 0);
 
             // Assert: first find the <p> element, then verify its content
@@ -72,18 +64,15 @@ namespace WebSample.Test.IntegrationTests
             Assert.Matches("11", tbl.Rows.Count().ToString());
         }
 
-        [Fact]// [Fact(Skip = "bug")]
+        [Fact]
         public async Task SaveWeatherForecastFromRestApiOnButtonClick()
         {
             // Arrange: render the Counter.razor component
-            var cut = RenderComponent<Weather>();
+            var cut = Render<Weather>();
             cut.WaitForState(() => cut.FindAll("table").Count > 0);
-            //var buttonElement = cut.Find("button");
 
             // Act: page load occurs automatically
-            //buttonElement.Click()
             await cut.Find("button").ClickAsync(null);
-            //cut.WaitForState(() => cut.Nodes.Any(w => w.TextContent.Contains("Report saved", StringComparison.OrdinalIgnoreCase)), TimeSpan.FromSeconds(10));
 
             // Assert: first find the <p> element, then verify its content
             var result = cut.Nodes.FirstOrDefault(w => w.TextContent.Contains("Report saved", StringComparison.OrdinalIgnoreCase));
@@ -94,13 +83,9 @@ namespace WebSample.Test.IntegrationTests
             result.ShouldNotBeNull();
         }
 
-
         private void InitApi()
         {
             Services.AddSingleton(Http);
         }
-
-
-
     }
 }
